@@ -1,5 +1,6 @@
 # DUT-HelpDesk
 
 ## Team
-Dylan Hall
-Evan Teague
+- Dylan Hall
+- Evan Teague
+- Jishen Harilal
