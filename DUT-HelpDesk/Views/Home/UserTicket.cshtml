@@ -1,0 +1,32 @@
+﻿@model IEnumerable<DUT_HelpDesk.Model.Ticket>
+@{
+    ViewData["Title"] = "UserTicket";
+    string[] tickets = new string[3];
+}
+
+<div>
+    <h1>My Tickets</h1>
+    <a asp-area="" asp-controller="Home" asp-action="CreateTicket">Create New</a>
+    <br />
+    <table class="table table-responsive table-hover">
+        <tr>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+        <br />
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Subject)</td>
+                <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
+                <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                <td><a href="">View</a></td>
+            </tr>
+        }
+    </table>
+</div>
+
+
+
