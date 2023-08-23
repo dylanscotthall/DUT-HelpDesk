@@ -22,7 +22,7 @@
                 <td>@Html.DisplayFor(modelItem => item.Subject)</td>
                 <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
                 <td>@Html.DisplayFor(modelItem => item.Status)</td>
-                <td><a href="">View</a></td>
+                <td>@Html.ActionLink("View", "ViewTicket", new { id=item.TicketId })</td>
             </tr>
         }
     </table>
