@@ -44,6 +44,25 @@ namespace DUT_HelpDesk.Controllers
             return View(ticket);
         }
 
+        public IActionResult CreateTicket()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> CreateTicket(Ticket ticket)
+        {
+            if(ticket != null)
+            {
+                await db.Tickets.AddAsync(ticket);
+                return RedirectToAction("UserTicket");
+            }
+            else
+            {
+                return View(ticket);
+            }
+
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
