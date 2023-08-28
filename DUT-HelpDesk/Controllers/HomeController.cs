@@ -8,7 +8,7 @@ namespace DUT_HelpDesk.Controllers
 {
     public class HomeController : Controller
     {
-        private DutHelpDeskContext db = new DutHelpDeskContext();
+        private DutHelpdeskdbContext db = new DutHelpdeskdbContext();
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
@@ -36,7 +36,7 @@ namespace DUT_HelpDesk.Controllers
             {
                 return StatusCode(400);
             }
-            Ticket ticket = db.Tickets.Find(id);
+            Models.Ticket ticket = db.Tickets.Find(id);
             if (ticket == null)
             {
                 return StatusCode(400);
