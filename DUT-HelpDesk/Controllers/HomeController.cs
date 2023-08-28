@@ -49,7 +49,7 @@ namespace DUT_HelpDesk.Controllers
             return View();
         }
 
-        public async Task<IActionResult> CreateTicket(Ticket ticket)
+        public async Task<IActionResult> CreateTicket(Models.Ticket ticket)
         {
             if(ticket != null)
             {
