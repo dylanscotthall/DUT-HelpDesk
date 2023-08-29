@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DUT_HelpDesk.NewModels;
+﻿namespace DUT_HelpDesk.DatabaseModels;
 
 public partial class Attachment
 {

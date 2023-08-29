@@ -1,4 +1,4 @@
-namespace DUT_HelpDesk.Models
+﻿namespace DUT_HelpDesk.DatabaseModels
 {
     public class ErrorViewModel
     {
