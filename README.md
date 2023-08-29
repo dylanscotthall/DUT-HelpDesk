@@ -8,4 +8,5 @@
 - Keval Rohith
 - Deylin Nair
 - Ayrton Mulqueeny
+- Fawwaz Osman
   
