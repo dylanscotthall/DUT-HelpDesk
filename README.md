@@ -6,4 +6,7 @@
 - Jishen Harilal
 - Ricardo Yishak Sánchez
 - Keval Rohith
+- Deylin Nair
 - Ayrton Mulqueeny
+- Fawwaz Osman
+  

@@ -1,9 +1,11 @@
-﻿using DUT_HelpDesk.Model;
-using DUT_HelpDesk.Models;
+﻿using DUT_HelpDesk.DatabaseModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+<<<<<<< HEAD
 using System.Net;
 using System.Text;
+=======
+>>>>>>> 96fc06050157d34f500dc3a8043399373408460c
 
 namespace DUT_HelpDesk.Controllers
 {
@@ -37,12 +39,19 @@ namespace DUT_HelpDesk.Controllers
             {
                 return StatusCode(400);
             }
+<<<<<<< HEAD
             NewModels.Ticket ticket = db.Tickets.Find(id);
+=======
+            Ticket ticket = db.Tickets.Find(id);
+>>>>>>> 96fc06050157d34f500dc3a8043399373408460c
             if (ticket == null)
             {
                 return StatusCode(400);
             }
-            return View(ticket);
+            else
+            {
+                return View(ticket);
+            }
         }
 
         public IActionResult CreateTicket()
@@ -107,7 +116,7 @@ namespace DUT_HelpDesk.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new DatabaseModels.ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
