@@ -1,17 +1,15 @@
 ﻿using DUT_HelpDesk.DatabaseModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-<<<<<<< HEAD
 using System.Net;
 using System.Text;
-=======
->>>>>>> 96fc06050157d34f500dc3a8043399373408460c
+
 
 namespace DUT_HelpDesk.Controllers
 {
     public class HomeController : Controller
     {
-        private NewModels.DutHelpdeskdbContext db = new NewModels.DutHelpdeskdbContext();
+        private DatabaseModels.DutHelpdeskdbContext db = new DatabaseModels.DutHelpdeskdbContext();
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
@@ -39,11 +37,10 @@ namespace DUT_HelpDesk.Controllers
             {
                 return StatusCode(400);
             }
-<<<<<<< HEAD
-            NewModels.Ticket ticket = db.Tickets.Find(id);
-=======
+
             Ticket ticket = db.Tickets.Find(id);
->>>>>>> 96fc06050157d34f500dc3a8043399373408460c
+            
+
             if (ticket == null)
             {
                 return StatusCode(400);
