@@ -1,4 +1,4 @@
-﻿@model DUT_HelpDesk.Model.Ticket
+﻿@model DUT_HelpDesk.DatabaseModels.Ticket
 
 @{
     ViewBag.Title = "UserTicket";
@@ -15,8 +15,8 @@
         </dt>
         <dt>
             <p>
-                @Html.DisplayNameFor(model => model.Status):
-                @Html.DisplayTextFor(model => model.Status)
+                @Html.DisplayNameFor(model => model.QueryBody):
+                @Html.DisplayTextFor(model => model.QueryBody)
             </p>
         </dt>
         <dt>
@@ -25,15 +25,9 @@
                 @Html.DisplayTextFor(model => model.DateCreated)
             </p>
         </dt>
-        <dt>
-            <p>
-                @Html.DisplayNameFor(model => model.Replies):
-                @Html.DisplayTextFor(model => model.Replies)
-            </p>
-        </dt>
     </dl>
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.TicketId }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to My Tickets", "UserTicket")
 </p>

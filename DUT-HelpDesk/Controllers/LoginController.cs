@@ -1,4 +1,4 @@
-﻿using DUT_HelpDesk.NewModels;
+﻿using DUT_HelpDesk.DatabaseModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DUT_HelpDesk.Controllers
@@ -25,7 +25,7 @@ namespace DUT_HelpDesk.Controllers
 
             else 
             {
-                return RedirectToAction("UserAttachment", "Home");   
+                return RedirectToAction("Index", "Home");   
             }
         }
     }

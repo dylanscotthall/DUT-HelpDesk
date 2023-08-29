@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DUT_HelpDesk.Models;
+namespace DUT_HelpDesk.DatabaseModels;
 
 public partial class Technician
 {
@@ -10,8 +10,6 @@ public partial class Technician
     public int? UserId { get; set; }
 
     public DateTime? DateJoined { get; set; }
-
-    public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 
