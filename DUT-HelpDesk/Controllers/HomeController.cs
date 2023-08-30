@@ -57,7 +57,7 @@ namespace DUT_HelpDesk.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTicket(TicketViewModel ticket)
+        public async Task<IActionResult> CreateTicket(TicketViewModel model)
         {
            
             
@@ -67,26 +67,42 @@ namespace DUT_HelpDesk.Controllers
                 //get current user
 
 
+                Ticket ticket = new Ticket() 
+                { 
+                    //userid
+                    //technicianid
+                    Subject = model.Subject,
+                    QueryBody = model.QueryBody,
+                    Status = "Available",
+                    Priority = "Low",
+                    DateCreated = DateTime.Now,
+                    
+                };
+
                 //add ticket to db
                 //get ticet id for attachment
-                if(ticket.File != null)
+                if(model.File != null)
                 {
+                
                     using (var stream = new MemoryStream())
                     {
-                        await ticket.File.CopyToAsync(stream);
+                        await model.File.CopyToAsync(stream);
 
                         stream.Seek(0, SeekOrigin.Begin);
 
+                        Ticket[] currentTicket = db.Tickets.Where(t => t == ticket).ToArray();
                         var uploadedFile = new Attachment()
                         {
-                            //get ticketid
-                            FileName = ticket.File.Name,
+                            TicketId = currentTicket[0].TicketId,
+                            FileName = model.File.Name,
                             FileContent = stream.ToArray(),
-                            ContentType = ticket.File.ContentType
+                            ContentType = model.File.ContentType
                         };
-
+                        
                         db.Attachments.Add(uploadedFile);
+                        db.SaveChanges();
                     }
+                    
                 }
 
                     
@@ -96,9 +112,14 @@ namespace DUT_HelpDesk.Controllers
             }
 
             
-            return View(ticket);
+            return View(model);
 
 
+        }
+
+        public DateTime getCurrentDateTime()
+        {
+            return DateTime.Now; 
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
