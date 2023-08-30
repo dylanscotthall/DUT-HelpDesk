@@ -65,6 +65,10 @@ namespace DUT_HelpDesk.Controllers
             if (ModelState.IsValid)
             {
                 //get current user
+
+
+                //add ticket to db
+                //get ticet id for attachment
                 if(ticket.File != null)
                 {
                     using (var stream = new MemoryStream())
@@ -75,9 +79,10 @@ namespace DUT_HelpDesk.Controllers
 
                         var uploadedFile = new Attachment()
                         {
-                            
+                            //get ticketid
                             FileName = ticket.File.Name,
-                            FileContent = stream.ToArray()
+                            FileContent = stream.ToArray(),
+                            ContentType = ticket.File.ContentType
                         };
 
                         db.Attachments.Add(uploadedFile);
@@ -95,44 +100,6 @@ namespace DUT_HelpDesk.Controllers
 
 
         }
-
-        [HttpPost]
-        public async Task<ActionResult> AddAttachment(IFormFile file)
-        {
-            Console.WriteLine($"File content type: {file.ContentType}");
-            if (file != null && file.Length > 0)
-            {
-
-                using (var stream = new MemoryStream())
-                {
-                    await file.CopyToAsync(stream);
-
-                    stream.Seek(0, SeekOrigin.Begin);
-
-                    using (var streamReader = new StreamReader(stream, Encoding.UTF8))
-                    {
-                        string content = await streamReader.ReadToEndAsync();
-
-
-
-                    }
-                    //var uploadedFile = new NewModels.File
-                    //{
-                       // FileName = file.FileName,
-                       // FileContent = stream.ToArray(),
-
-                    //};
-
-                    //NewModels.TestFiles2Context db = new NewModels.TestFiles2Context();
-                    //uploadedFile.FileId = 8;
-                    //db.Files.Add(uploadedFile);
-                    //await db.SaveChangesAsync();
-                }
-            }
-
-            return RedirectToAction("CreateTicket", "Home");
-        }
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
