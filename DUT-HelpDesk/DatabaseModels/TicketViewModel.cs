@@ -7,7 +7,7 @@
 
         public string? QueryBody { get; set; }
 
-        public IFormFile? userFile { get; set; }
+        public IFormFile? File { get; set; }
         
     }
 }

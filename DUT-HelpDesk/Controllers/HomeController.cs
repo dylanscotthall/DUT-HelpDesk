@@ -57,29 +57,41 @@ namespace DUT_HelpDesk.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTicket(TicketViewModel model)
+        public async Task<IActionResult> CreateTicket(TicketViewModel ticket)
         {
            
             
               
             if (ModelState.IsValid)
             {
-                // Access the uploaded file using model.File
+                //get current user
+                if(ticket.File != null)
+                {
+                    using (var stream = new MemoryStream())
+                    {
+                        await ticket.File.CopyToAsync(stream);
 
+                        stream.Seek(0, SeekOrigin.Begin);
 
-                //await db.Tickets.AddAsync(ticket);
-                Console.WriteLine($"{model.Subject}");
-                    // Process the uploaded file
-                    // For example, you can save it to disk or store in a database
+                        var uploadedFile = new Attachment()
+                        {
+                            
+                            FileName = ticket.File.Name,
+                            FileContent = stream.ToArray()
+                        };
+
+                        db.Attachments.Add(uploadedFile);
+                    }
+                }
+
+                    
                 
 
-                // Process other form data (Subject, QueryBody) here
-
-                // Redirect or return appropriate view
+                
             }
 
-            // If ModelState is not valid, return the view with validation errors
-            return View(model);
+            
+            return View(ticket);
 
 
         }
