@@ -1,4 +1,4 @@
-﻿@model DUT_HelpDesk.NewModels.TicketViewModel
+﻿@model DUT_HelpDesk.DatabaseModels.TicketViewModel
 
 @{
     ViewData["Title"] = "CreateTicket";
@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="CreateTicket">
+        <form method="post"  asp-action="CreateTicket" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             
             
@@ -26,21 +26,13 @@
                 <span asp-validation-for="QueryBody" class="text-danger"></span>
             </div>
             <br />
-            
-            <div class="form-group">
-                <label asp-for="File" class="control-label"> Attachments</label>
-                @using (Html.BeginForm("CreateTicket", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                {
-                    
-                    <input asp-for="File" type="file" name="file" />
-                    
-                    
-                }
+            <div>
+                <label asp-for="userFile" class="control-label"></label>
+                <input asp-for="userFile" class="form-control" />
             </div>
-
             <br />
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create Ticket" class="btn btn-primary" />
             </div>
         </form>
     </div>

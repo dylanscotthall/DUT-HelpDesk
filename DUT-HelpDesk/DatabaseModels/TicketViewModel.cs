@@ -1,4 +1,4 @@
-﻿namespace DUT_HelpDesk.NewModels
+﻿namespace DUT_HelpDesk.DatabaseModels
 {
     public class TicketViewModel
     {
@@ -7,7 +7,7 @@
 
         public string? QueryBody { get; set; }
 
-        public IFormFile? File { get; set; }
+        public IFormFile? userFile { get; set; }
         
     }
 }
