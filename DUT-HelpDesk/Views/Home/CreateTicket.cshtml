@@ -1,0 +1,47 @@
+﻿@model DUT_HelpDesk.DatabaseModels.TicketViewModel
+
+@{
+    ViewData["Title"] = "CreateTicket";
+}
+
+<h1>Create Ticket</h1>
+
+<h4>Ticket</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post"  asp-action="CreateTicket" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            
+            <div class="form-group">
+                <label asp-for="Subject" class="control-label"></label>
+                <input asp-for="Subject" class="form-control" />
+                <span asp-validation-for="Subject" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="QueryBody" class="control-label">Query</label>
+                <input asp-for="QueryBody" class="form-control" />
+                <span asp-validation-for="QueryBody" class="text-danger"></span>
+            </div>
+            <br />
+            <div>
+                <label asp-for="File" class="control-label">Attachment</label>
+                <input asp-for="File" class="form-control" />
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Create Ticket" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<br />
+<div>
+    <a asp-action="UserTicket">Back to my tickets</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
