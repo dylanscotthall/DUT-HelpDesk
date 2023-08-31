@@ -1,4 +1,5 @@
 ﻿using DUT_HelpDesk.DatabaseModels;
+using Firebase.Auth;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Net;
@@ -11,10 +12,13 @@ namespace DUT_HelpDesk.Controllers
     {
         private DatabaseModels.DutHelpdeskdbContext db = new DatabaseModels.DutHelpdeskdbContext();
         private readonly ILogger<HomeController> _logger;
+        FirebaseAuthProvider auth;
 
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
+            auth = new FirebaseAuthProvider(
+                          new FirebaseConfig("AIzaSyDbriiQXcud__j4B6rbGh3brehz9DnBrRM"));
         }
 
         public IActionResult Index()
@@ -59,17 +63,20 @@ namespace DUT_HelpDesk.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTicket(TicketViewModel model)
         {
-           
+            
             
               
             if (ModelState.IsValid)
             {
                 //get current user
+                string token =  HttpContext.Session.GetString("_UserToken");
+                var userFbId = await auth.GetUserAsync(token);
 
-
-                Ticket ticket = new Ticket() 
-                { 
+                var currentUser = db.Users.Where(u => u.FbId.Equals(userFbId.LocalId)).FirstOrDefault();
+                Ticket ticket = new Ticket()
+                {
                     //userid 
+                    UserId = currentUser.UserId,
                     //technicianid to be assigned later
                     Subject = model.Subject,
                     QueryBody = model.QueryBody,

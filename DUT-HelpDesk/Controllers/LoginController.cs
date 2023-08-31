@@ -14,7 +14,7 @@ namespace DUT_HelpDesk.Controllers
             auth = new FirebaseAuthProvider(
                            new FirebaseConfig("AIzaSyDbriiQXcud__j4B6rbGh3brehz9DnBrRM"));
         }
-
+        
         public IActionResult Login()
         {
             return View();
