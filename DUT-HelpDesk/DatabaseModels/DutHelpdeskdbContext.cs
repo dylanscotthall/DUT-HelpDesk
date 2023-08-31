@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using DUT_HelpDesk.DatabaseModels;
 
 namespace DUT_HelpDesk.DatabaseModels;
 
@@ -157,4 +158,6 @@ public partial class DutHelpdeskdbContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+    public DbSet<DUT_HelpDesk.DatabaseModels.LoginViewModel> LoginViewModel { get; set; } = default!;
 }
