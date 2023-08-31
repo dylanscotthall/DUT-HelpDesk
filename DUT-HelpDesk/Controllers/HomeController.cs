@@ -69,8 +69,8 @@ namespace DUT_HelpDesk.Controllers
 
                 Ticket ticket = new Ticket() 
                 { 
-                    //userid
-                    //technicianid
+                    //userid 
+                    //technicianid to be assigned later
                     Subject = model.Subject,
                     QueryBody = model.QueryBody,
                     Status = "Available",
@@ -79,8 +79,10 @@ namespace DUT_HelpDesk.Controllers
                     
                 };
 
-                //add ticket to db
-                //get ticet id for attachment
+                await db.Tickets.AddAsync(ticket);
+                await db.SaveChangesAsync();
+
+               
                 if(model.File != null)
                 {
                 
@@ -99,8 +101,8 @@ namespace DUT_HelpDesk.Controllers
                             ContentType = model.File.ContentType
                         };
                         
-                        db.Attachments.Add(uploadedFile);
-                        db.SaveChanges();
+                        await db.Attachments.AddAsync(uploadedFile);
+                        await db.SaveChangesAsync();
                     }
                     
                 }
@@ -115,11 +117,6 @@ namespace DUT_HelpDesk.Controllers
             return View(model);
 
 
-        }
-
-        public DateTime getCurrentDateTime()
-        {
-            return DateTime.Now; 
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
