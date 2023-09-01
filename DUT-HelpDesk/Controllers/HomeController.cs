@@ -62,7 +62,7 @@ namespace DUT_HelpDesk.Controllers
         public IActionResult TechnicianDashboard()
         {
             DatabaseModels.User user = db.Users.Where(x => x.FbId == HttpContext.Session.GetString("_UserID").ToString()).First();
-            Console.WriteLine(HttpContext.Session.GetString("_UserID").ToString());
+            //Console.WriteLine(HttpContext.Session.GetString("_UserID").ToString());
             DatabaseModels.Technician technician = db.Technicians.Where(x => x.UserId == user.UserId).First();
             ViewBag.user = user;
             ViewBag.technician = technician;
@@ -135,7 +135,7 @@ namespace DUT_HelpDesk.Controllers
             db.SaveChanges();
             ViewBag.technician = tech;
 
-            return View("TechnicianLeadDashboard", db.Tickets.ToList());
+            return View("TechnicianLeadDashboard", db.Tickets.Where(x => x.TechnicianId == null).ToList());
         }
 
         public IActionResult UnassignTicketToTechnician(int? id, int? techId)
@@ -149,7 +149,7 @@ namespace DUT_HelpDesk.Controllers
             db.SaveChanges();
             ViewBag.technician = tech;
 
-            return View("TechnicianLeadDashboard", db.Tickets.ToList());
+            return View("TechnicianLeadDashboard", db.Tickets.Where(x => x.TechnicianId == null).ToList());
         }
 
         [HttpPost]
