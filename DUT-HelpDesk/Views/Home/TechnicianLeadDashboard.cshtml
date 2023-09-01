@@ -1,0 +1,35 @@
+﻿@model List<DUT_HelpDesk.DatabaseModels.Ticket>
+@{
+    ViewData["Title"] = "Technician Lead";
+    string[] tickets = new string[3];
+}
+
+<div>
+    <h1>Ticket Queue</h1>
+    <a asp-area="" asp-controller="Home" asp-action="CreateTicket">Event Log</a>
+    <br />
+    <table class="table table-responsive table-hover">
+        <tr>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+        <br />
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Subject)</td>
+                <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
+                <td>@Html.DisplayFor(modelItem => item.Priority)</td>
+                <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                <td>@Html.ActionLink("Details", "TechnicianDashboardDetail", new { id=item.TicketId })</td>
+                <td>@Html.ActionLink("Accept", "AssignTicketToTechnician", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId })</td>
+            </tr>
+        }
+    </table>
+</div>
+
+
+
