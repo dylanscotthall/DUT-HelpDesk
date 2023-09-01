@@ -25,7 +25,7 @@
                 <td>@Html.DisplayFor(modelItem => item.Priority)</td>
                 <td>@Html.DisplayFor(modelItem => item.Status)</td>
                 <td>@Html.ActionLink("Details", "TechnicianDashboardDetail", new { id=item.TicketId })</td>
-                <td>@Html.ActionLink("Accept", "ViewTicket", new { id=item.TicketId })</td>
+                <td>@Html.ActionLink("Unaccept", "UnAssignTicketToTechnician", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId })</td>
             </tr>
         }
     </table>

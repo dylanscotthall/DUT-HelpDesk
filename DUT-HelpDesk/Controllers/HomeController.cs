@@ -1,6 +1,7 @@
 ﻿using DUT_HelpDesk.DatabaseModels;
 using Firebase.Auth;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Net;
 using System.Text;
@@ -94,7 +95,7 @@ namespace DUT_HelpDesk.Controllers
             DatabaseModels.Technician technician = db.Technicians.Where(x => x.UserId == user.UserId).FirstOrDefault();
             ViewBag.user = user;
             ViewBag.technician = technician;
-            IEnumerable<Ticket> tickets = db.Tickets.ToList();
+            IEnumerable<Ticket> tickets = db.Tickets.Where(x => x.TechnicianId == null).ToList();
             return View(tickets);
 
         }
@@ -123,6 +124,33 @@ namespace DUT_HelpDesk.Controllers
             return View();
         }
 
+        public IActionResult AssignTicketToTechnician(int? id, int? techId)
+        {
+            Technician tech = db.Technicians.Where(x => x.TechnicianId == techId).First();
+            Ticket ticket = db.Tickets.Where(x => x.TicketId == id).First();
+            ticket.TechnicianId = techId;
+            tech.Tickets.Add(db.Tickets.Where(x => x.TicketId == id).First());
+            db.Entry(tech).State = EntityState.Modified;
+            db.Entry(ticket).State = EntityState.Modified;
+            db.SaveChanges();
+            ViewBag.technician = tech;
+
+            return View("TechnicianLeadDashboard", db.Tickets.ToList());
+        }
+
+        public IActionResult UnassignTicketToTechnician(int? id, int? techId)
+        {
+            Technician tech = db.Technicians.Where(x => x.TechnicianId == techId).First();
+            Ticket ticket = db.Tickets.Where(x => x.TicketId == id).First();
+            ticket.TechnicianId = null;
+            tech.Tickets.Remove(db.Tickets.Where(x => x.TicketId == id).First());
+            db.Entry(tech).State = EntityState.Modified;
+            db.Entry(ticket).State = EntityState.Modified;
+            db.SaveChanges();
+            ViewBag.technician = tech;
+
+            return View("TechnicianLeadDashboard", db.Tickets.ToList());
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateTicket(TicketViewModel model)
