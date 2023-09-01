@@ -1,0 +1,39 @@
+﻿@model DUT_HelpDesk.DatabaseModels.Ticket
+
+@{
+    ViewBag.Title = "UserTicket";
+}
+
+<h2>Ticket Details</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            <p>@Html.DisplayNameFor(model => model.Subject):
+            @Html.DisplayTextFor(model => model.Subject)</p>
+        </dt>
+        <dt>
+            <p>
+                @Html.DisplayNameFor(model => model.Status):
+                @Html.DisplayTextFor(model => model.Status)
+            </p>
+        </dt>
+        <dt>
+            <p>
+                @Html.DisplayNameFor(model => model.DateCreated):
+                @Html.DisplayTextFor(model => model.DateCreated)
+            </p>
+        </dt>
+        <dt>
+            <p>
+                @Html.DisplayNameFor(model => model.Replies):
+                @Html.DisplayTextFor(model => model.Replies)
+            </p>
+        </dt>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.TicketId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

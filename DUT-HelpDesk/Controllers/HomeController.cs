@@ -33,7 +33,10 @@ namespace DUT_HelpDesk.Controllers
 
         public IActionResult UserTicket()
         {
-            return View(db.Tickets);
+            DatabaseModels.User user = db.Users.Where(x => x.FbId == HttpContext.Session.GetString("_UserID").ToString()).First();
+            ViewBag.user = user;
+            IEnumerable<Ticket> tickets = db.Tickets.Where(x => x.UserId == user.UserId).ToList();
+            return View(tickets);
         }
         public IActionResult ViewTicket(int? id)
         {
@@ -44,6 +47,72 @@ namespace DUT_HelpDesk.Controllers
 
             Ticket ticket = db.Tickets.Find(id);
             
+
+            if (ticket == null)
+            {
+                return StatusCode(400);
+            }
+            else
+            {
+                return View(ticket);
+            }
+        }
+
+        public IActionResult TechnicianDashboard()
+        {
+            DatabaseModels.User user = db.Users.Where(x => x.FbId == HttpContext.Session.GetString("_UserID").ToString()).First();
+            if(db.Technicians.Where(x => x.UserId == user.UserId).FirstOrDefault() != null)
+            {
+                DatabaseModels.Technician technician = db.Technicians.Where(x => x.UserId == user.UserId).First();
+                ViewBag.user = user;
+                ViewBag.technician = technician;
+                IEnumerable<Ticket> tickets = db.Tickets.Where(x => x.TechnicianId == technician.TechnicianId).ToList();
+                return View(tickets);
+            }
+            return StatusCode(400);
+        }
+        public IActionResult TechnicianDashboardDetail(int? id)
+        {
+            if (id == null)
+            {
+                return StatusCode(400);
+            }
+
+            Ticket ticket = db.Tickets.Find(id);
+
+
+            if (ticket == null)
+            {
+                return StatusCode(400);
+            }
+            else
+            {
+                return View(ticket);
+            }
+        }
+
+        public IActionResult TechnicianLeadDashboard()
+        {
+            DatabaseModels.User user = db.Users.Where(x => x.FbId == HttpContext.Session.GetString("_UserID").ToString()).First();
+            if (db.Technicians.Where(x => x.UserId == user.UserId).FirstOrDefault() != null)
+            {
+                DatabaseModels.Technician technician = db.Technicians.Where(x => x.UserId == user.UserId).FirstOrDefault();
+                ViewBag.user = user;
+                ViewBag.technician = technician;
+                IEnumerable<Ticket> tickets = db.Tickets.ToList();
+                return View(tickets);
+            }
+            return StatusCode(400);
+        }
+        public IActionResult TechnicianLeadDashboardDetail(int? id)
+        {
+            if (id == null)
+            {
+                return StatusCode(400);
+            }
+
+            Ticket ticket = db.Tickets.Find(id);
+
 
             if (ticket == null)
             {

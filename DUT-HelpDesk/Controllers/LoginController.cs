@@ -32,7 +32,9 @@ namespace DUT_HelpDesk.Controllers
                 if (token != null)
                 {
                     HttpContext.Session.SetString("_UserToken", token);
-                    
+                    HttpContext.Session.SetString("_UserID", fbAuthLink.User.LocalId);
+                    HttpContext.Session.SetString("_UserType", db.Users.Where(x => x.FbId == fbAuthLink.User.LocalId).First().Type);
+
                     return RedirectToAction("UserTicket","Home");
                 }
             }

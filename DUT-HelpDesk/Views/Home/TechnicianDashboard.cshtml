@@ -1,18 +1,18 @@
-﻿@model IEnumerable<DUT_HelpDesk.DatabaseModels.Ticket>
-
+﻿@model List<DUT_HelpDesk.DatabaseModels.Ticket>
 @{
     ViewData["Title"] = "UserTicket";
+    string[] tickets = new string[3];
 }
 
 <div>
-    <h1>My Tickets</h1>
-    <p>@ViewBag.user.Type</p>
-    <a asp-area="" asp-controller="Home" asp-action="CreateTicket">Create New</a>
+    <h1>Ticket Queue</h1>
+    <a asp-area="" asp-controller="Home" asp-action="CreateTicket">Event Log</a>
     <br />
     <table class="table table-responsive table-hover">
         <tr>
             <th>Description</th>
             <th>Date</th>
+            <th>Priority</th>
             <th>Status</th>
             <th></th>
         </tr>
@@ -22,8 +22,10 @@
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.Subject)</td>
                 <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
+                <td>@Html.DisplayFor(modelItem => item.Priority)</td>
                 <td>@Html.DisplayFor(modelItem => item.Status)</td>
-                <td>@Html.ActionLink("View", "ViewTicket", new { id=item.TicketId })</td>
+                <td>@Html.ActionLink("Details", "TechnicianDashboardDetail", new { id=item.TicketId })</td>
+                <td>@Html.ActionLink("Accept", "ViewTicket", new { id=item.TicketId })</td>
             </tr>
         }
     </table>
