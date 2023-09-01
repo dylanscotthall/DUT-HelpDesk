@@ -35,7 +35,14 @@ namespace DUT_HelpDesk.Controllers
                     HttpContext.Session.SetString("_UserID", fbAuthLink.User.LocalId);
                     HttpContext.Session.SetString("_UserType", db.Users.Where(x => x.FbId == fbAuthLink.User.LocalId).First().Type);
 
-                    return RedirectToAction("UserTicket","Home");
+                    if (db.Users.Where(x => x.FbId == fbAuthLink.User.LocalId).First().Type == "Technician")
+                    {
+                        return RedirectToAction("TechnicianLeadDashboard", "Home");
+                    }
+                    else
+                    {
+                        return RedirectToAction("UserTicket", "Home");
+                    }
                 }
             }
             catch(FirebaseAuthException ex)

@@ -26,10 +26,10 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="UserTicket">My Tickets</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="UserTicket">User Tickets</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">FAQ</a>
                             </li>
                         }
                         else if (Html.Raw(httpContextaccessor.HttpContext.Session.GetString("_UserType")).ToString() == "Technician")
@@ -38,13 +38,13 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="TechnicianLeadDashboard">Ticket Queue</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="TechnicianDashboard">Technician Dashboard</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="TechnicianDashboard">Assigned Tickets</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="TechnicianLeadDashboard">Technician Lead Dashboard</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="TechnicianDashboard">Insights</a>
                             </li>
                         }
                         else

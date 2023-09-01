@@ -46,7 +46,7 @@ namespace DUT_HelpDesk.Controllers
             }
 
             Ticket ticket = db.Tickets.Find(id);
-            
+
 
             if (ticket == null)
             {
@@ -61,15 +61,12 @@ namespace DUT_HelpDesk.Controllers
         public IActionResult TechnicianDashboard()
         {
             DatabaseModels.User user = db.Users.Where(x => x.FbId == HttpContext.Session.GetString("_UserID").ToString()).First();
-            if(db.Technicians.Where(x => x.UserId == user.UserId).FirstOrDefault() != null)
-            {
-                DatabaseModels.Technician technician = db.Technicians.Where(x => x.UserId == user.UserId).First();
-                ViewBag.user = user;
-                ViewBag.technician = technician;
-                IEnumerable<Ticket> tickets = db.Tickets.Where(x => x.TechnicianId == technician.TechnicianId).ToList();
-                return View(tickets);
-            }
-            return StatusCode(400);
+            Console.WriteLine(HttpContext.Session.GetString("_UserID").ToString());
+            DatabaseModels.Technician technician = db.Technicians.Where(x => x.UserId == user.UserId).First();
+            ViewBag.user = user;
+            ViewBag.technician = technician;
+            IEnumerable<Ticket> tickets = db.Tickets.Where(x => x.TechnicianId == technician.TechnicianId).ToList();
+            return View(tickets);
         }
         public IActionResult TechnicianDashboardDetail(int? id)
         {
@@ -94,15 +91,12 @@ namespace DUT_HelpDesk.Controllers
         public IActionResult TechnicianLeadDashboard()
         {
             DatabaseModels.User user = db.Users.Where(x => x.FbId == HttpContext.Session.GetString("_UserID").ToString()).First();
-            if (db.Technicians.Where(x => x.UserId == user.UserId).FirstOrDefault() != null)
-            {
-                DatabaseModels.Technician technician = db.Technicians.Where(x => x.UserId == user.UserId).FirstOrDefault();
-                ViewBag.user = user;
-                ViewBag.technician = technician;
-                IEnumerable<Ticket> tickets = db.Tickets.ToList();
-                return View(tickets);
-            }
-            return StatusCode(400);
+            DatabaseModels.Technician technician = db.Technicians.Where(x => x.UserId == user.UserId).FirstOrDefault();
+            ViewBag.user = user;
+            ViewBag.technician = technician;
+            IEnumerable<Ticket> tickets = db.Tickets.ToList();
+            return View(tickets);
+
         }
         public IActionResult TechnicianLeadDashboardDetail(int? id)
         {
@@ -129,16 +123,17 @@ namespace DUT_HelpDesk.Controllers
             return View();
         }
 
+
         [HttpPost]
         public async Task<IActionResult> CreateTicket(TicketViewModel model)
         {
-            
-            
-              
+
+
+
             if (ModelState.IsValid)
             {
                 //get current user
-                string token =  HttpContext.Session.GetString("_UserToken");
+                string token = HttpContext.Session.GetString("_UserToken");
                 var userFbId = await auth.GetUserAsync(token);
 
                 var currentUser = db.Users.Where(u => u.FbId.Equals(userFbId.LocalId)).FirstOrDefault();
@@ -152,16 +147,16 @@ namespace DUT_HelpDesk.Controllers
                     Status = "Available",
                     Priority = "Low",
                     DateCreated = DateTime.Now,
-                    
+
                 };
 
                 await db.Tickets.AddAsync(ticket);
                 await db.SaveChangesAsync();
 
-               
-                if(model.File != null)
+
+                if (model.File != null)
                 {
-                
+
                     using (var stream = new MemoryStream())
                     {
                         await model.File.CopyToAsync(stream);
@@ -176,20 +171,20 @@ namespace DUT_HelpDesk.Controllers
                             FileContent = stream.ToArray(),
                             ContentType = model.File.ContentType
                         };
-                        
+
                         await db.Attachments.AddAsync(uploadedFile);
                         await db.SaveChangesAsync();
                     }
-                    
+
                 }
 
-                    
-                
 
-                
+
+
+
             }
 
-            
+
             return View(model);
 
 
