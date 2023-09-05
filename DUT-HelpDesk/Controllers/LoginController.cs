@@ -33,9 +33,14 @@ namespace DUT_HelpDesk.Controllers
                 {
                     HttpContext.Session.SetString("_UserToken", token);
                     HttpContext.Session.SetString("_UserID", fbAuthLink.User.LocalId);
-                    HttpContext.Session.SetString("_UserType", db.Users.Where(x => x.FbId == fbAuthLink.User.LocalId).First().Type);
+                    UserMethods.user = UserMethods.GetUserByFBId(fbAuthLink.User.LocalId);
+                    if (UserMethods.isTechnician())
+                    {
+                        UserMethods.technician = UserMethods.GetTechnician();
+                    }
+                    HttpContext.Session.SetString("_UserType", UserMethods.user.Type);
 
-                    if (db.Users.Where(x => x.FbId == fbAuthLink.User.LocalId).First().Type == "Technician")
+                    if (UserMethods.user.Type == "Technician")
                     {
                         return RedirectToAction("TechnicianLeadDashboard", "Home");
                     }

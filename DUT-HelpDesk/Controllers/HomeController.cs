@@ -34,20 +34,13 @@ namespace DUT_HelpDesk.Controllers
 
         public IActionResult UserTicket()
         {
-            DatabaseModels.User user = db.Users.Where(x => x.FbId == HttpContext.Session.GetString("_UserID").ToString()).First();
-            ViewBag.user = user;
-            IEnumerable<Ticket> tickets = db.Tickets.Where(x => x.UserId == user.UserId).ToList();
+            ViewBag.user = UserMethods.user;
+            IEnumerable<Ticket> tickets = UserMethods.GetUserTickets();
             return View(tickets);
         }
-        public IActionResult ViewTicket(int? id)
+        public IActionResult ViewTicket(int id)
         {
-            if (id == null)
-            {
-                return StatusCode(400);
-            }
-
-            Ticket ticket = db.Tickets.Find(id);
-
+            Ticket ticket = UserMethods.GetTicket(id);
 
             if (ticket == null)
             {
@@ -61,22 +54,14 @@ namespace DUT_HelpDesk.Controllers
 
         public IActionResult TechnicianDashboard()
         {
-            DatabaseModels.User user = db.Users.Where(x => x.FbId == HttpContext.Session.GetString("_UserID").ToString()).First();
-            //Console.WriteLine(HttpContext.Session.GetString("_UserID").ToString());
-            DatabaseModels.Technician technician = db.Technicians.Where(x => x.UserId == user.UserId).First();
-            ViewBag.user = user;
-            ViewBag.technician = technician;
-            IEnumerable<Ticket> tickets = db.Tickets.Where(x => x.TechnicianId == technician.TechnicianId).ToList();
+            ViewBag.user = UserMethods.user;
+            ViewBag.technician = UserMethods.technician;
+            IEnumerable<Ticket> tickets = UserMethods.GetTechnicianTickets();
             return View(tickets);
         }
-        public IActionResult TechnicianDashboardDetail(int? id)
+        public IActionResult TechnicianDashboardDetail(int id)
         {
-            if (id == null)
-            {
-                return StatusCode(400);
-            }
-
-            Ticket ticket = db.Tickets.Find(id);
+            Ticket ticket = UserMethods.GetTicket(id);
 
 
             if (ticket == null)
@@ -91,23 +76,15 @@ namespace DUT_HelpDesk.Controllers
 
         public IActionResult TechnicianLeadDashboard()
         {
-            DatabaseModels.User user = db.Users.Where(x => x.FbId == HttpContext.Session.GetString("_UserID").ToString()).First();
-            DatabaseModels.Technician technician = db.Technicians.Where(x => x.UserId == user.UserId).FirstOrDefault();
-            ViewBag.user = user;
-            ViewBag.technician = technician;
-            IEnumerable<Ticket> tickets = db.Tickets.Where(x => x.TechnicianId == null).ToList();
+            ViewBag.user = UserMethods.user;
+            ViewBag.technician = UserMethods.technician;
+            IEnumerable<Ticket> tickets = UserMethods.GetAllTickets();
             return View(tickets);
 
         }
-        public IActionResult TechnicianLeadDashboardDetail(int? id)
+        public IActionResult TechnicianLeadDashboardDetail(int id)
         {
-            if (id == null)
-            {
-                return StatusCode(400);
-            }
-
-            Ticket ticket = db.Tickets.Find(id);
-
+            Ticket ticket = UserMethods.GetTicket(id);
 
             if (ticket == null)
             {
@@ -155,9 +132,6 @@ namespace DUT_HelpDesk.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTicket(TicketViewModel model)
         {
-
-
-
             if (ModelState.IsValid)
             {
                 //get current user
