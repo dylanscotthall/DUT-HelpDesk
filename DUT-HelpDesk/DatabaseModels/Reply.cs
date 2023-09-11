@@ -11,8 +11,6 @@ public partial class Reply
 
     public string? Message { get; set; }
 
-    public byte[]? Attachment { get; set; }
-
     public DateTime? Date { get; set; }
 
     public virtual ICollection<Attachment> Attachments { get; set; } = new List<Attachment>();
