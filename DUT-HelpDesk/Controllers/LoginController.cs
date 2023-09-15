@@ -32,12 +32,18 @@ namespace DUT_HelpDesk.Controllers
                 if (token != null)
                 {
                     HttpContext.Session.SetString("_UserToken", token);
+                    StateManager.token = token;
                     HttpContext.Session.SetString("_UserID", fbAuthLink.User.LocalId);
-                    HttpContext.Session.SetString("_UserType", db.Users.Where(x => x.FbId == fbAuthLink.User.LocalId).First().Type);
-
-                    if (db.Users.Where(x => x.FbId == fbAuthLink.User.LocalId).First().Type == "Technician")
+                    StateManager.user = StateManager.GetUserByFBId(fbAuthLink.User.LocalId);
+                    if (StateManager.isTechnician())
                     {
-                        return RedirectToAction("TechnicianLeadDashboard", "Home");
+                        StateManager.technician = StateManager.GetTechnician();
+                    }
+                    HttpContext.Session.SetString("_UserType", StateManager.user.Type);
+
+                    if (StateManager.user.Type == "Technician")
+                    {
+                        return RedirectToAction("TechnicianTicketQueue", "Home");
                     }
                     else
                     {
