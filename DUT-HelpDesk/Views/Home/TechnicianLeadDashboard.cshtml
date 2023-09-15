@@ -23,7 +23,6 @@
                 <td>@Html.DisplayFor(modelItem => item.Subject)</td>
                 <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
                 <td>@Html.DisplayFor(modelItem => item.Priority)</td>
-                <td>@Html.DisplayFor(modelItem => item.Status)</td>
                 <td>@Html.ActionLink("Details", "TechnicianDashboardDetail", new { id=item.TicketId })</td>
                 <td>@Html.ActionLink("Accept", "AssignTicketToTechnician", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId })</td>
             </tr>

@@ -1,4 +1,7 @@
-﻿namespace DUT_HelpDesk.DatabaseModels;
+﻿using System;
+using System.Collections.Generic;
+
+namespace DUT_HelpDesk.DatabaseModels;
 
 public partial class Attachment
 {
@@ -17,10 +20,4 @@ public partial class Attachment
     public virtual Reply? Reply { get; set; }
 
     public virtual Ticket? Ticket { get; set; }
-
-    override
-    public string ToString()
-    {
-        return $"{FileName} /n {FileContent} /n {ContentType}";
-    }
 }

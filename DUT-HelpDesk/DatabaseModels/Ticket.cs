@@ -19,8 +19,6 @@ public partial class Ticket
 
     public DateTime? DateCreated { get; set; }
 
-    public string? Status { get; set; }
-
     public DateTime? DateClosed { get; set; }
 
     public virtual ICollection<Attachment> Attachments { get; set; } = new List<Attachment>();
@@ -30,6 +28,10 @@ public partial class Ticket
     public virtual ICollection<Reply> Replies { get; set; } = new List<Reply>();
 
     public virtual Technician? Technician { get; set; }
+
+    public virtual ICollection<TicketStatus> TicketStatuses { get; set; } = new List<TicketStatus>();
+
+    public virtual ICollection<TicketTechnician> TicketTechnicians { get; set; } = new List<TicketTechnician>();
 
     public virtual User? User { get; set; }
 }

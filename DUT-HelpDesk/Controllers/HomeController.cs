@@ -34,13 +34,13 @@ namespace DUT_HelpDesk.Controllers
 
         public IActionResult UserTicket()
         {
-            ViewBag.user = UserMethods.user;
-            IEnumerable<Ticket> tickets = UserMethods.GetUserTickets();
+            ViewBag.user = StateManager.user;
+            IEnumerable<Ticket> tickets = StateManager.GetUserTickets();
             return View(tickets);
         }
         public IActionResult ViewTicket(int id)
         {
-            Ticket ticket = UserMethods.GetTicket(id);
+            Ticket ticket = StateManager.GetTicket(id);
 
             if (ticket == null)
             {
@@ -54,14 +54,14 @@ namespace DUT_HelpDesk.Controllers
 
         public IActionResult TechnicianDashboard()
         {
-            ViewBag.user = UserMethods.user;
-            ViewBag.technician = UserMethods.technician;
-            IEnumerable<Ticket> tickets = UserMethods.GetTechnicianTickets();
+            ViewBag.user = StateManager.user;
+            ViewBag.technician = StateManager.technician;
+            IEnumerable<Ticket> tickets = StateManager.GetTechnicianTickets();
             return View(tickets);
         }
         public IActionResult TechnicianDashboardDetail(int id)
         {
-            Ticket ticket = UserMethods.GetTicket(id);
+            Ticket ticket = StateManager.GetTicket(id);
 
 
             if (ticket == null)
@@ -76,15 +76,21 @@ namespace DUT_HelpDesk.Controllers
 
         public IActionResult TechnicianLeadDashboard()
         {
-            ViewBag.user = UserMethods.user;
-            ViewBag.technician = UserMethods.technician;
-            IEnumerable<Ticket> tickets = UserMethods.GetAllTickets();
+            ViewBag.user = StateManager.user;
+            ViewBag.technician = StateManager.technician;
+            IEnumerable<Ticket> tickets = StateManager.GetAllTickets();
             return View(tickets);
-
+        }
+        public IActionResult TechnicianTicketQueue()
+        {
+            ViewBag.user = StateManager.user;
+            ViewBag.technician = StateManager.technician;
+            IEnumerable<Ticket> tickets = StateManager.GetAllUnassignedTickets();
+            return View(tickets);
         }
         public IActionResult TechnicianLeadDashboardDetail(int id)
         {
-            Ticket ticket = UserMethods.GetTicket(id);
+            Ticket ticket = StateManager.GetTicket(id);
 
             if (ticket == null)
             {
@@ -103,30 +109,19 @@ namespace DUT_HelpDesk.Controllers
 
         public IActionResult AssignTicketToTechnician(int? id, int? techId)
         {
-            Technician tech = db.Technicians.Where(x => x.TechnicianId == techId).First();
-            Ticket ticket = db.Tickets.Where(x => x.TicketId == id).First();
-            ticket.TechnicianId = techId;
-            tech.Tickets.Add(db.Tickets.Where(x => x.TicketId == id).First());
-            db.Entry(tech).State = EntityState.Modified;
-            db.Entry(ticket).State = EntityState.Modified;
-            db.SaveChanges();
-            ViewBag.technician = tech;
-
-            return View("TechnicianLeadDashboard", db.Tickets.Where(x => x.TechnicianId == null).ToList());
+            StateManager.CreateTicketTechnician((int)id, (int)techId);
+            ViewBag.user = StateManager.user;
+            ViewBag.technician = StateManager.technician;
+            return View("TechnicianDashboard", StateManager.GetTechnicianTickets());
         }
 
         public IActionResult UnassignTicketToTechnician(int? id, int? techId)
         {
-            Technician tech = db.Technicians.Where(x => x.TechnicianId == techId).First();
-            Ticket ticket = db.Tickets.Where(x => x.TicketId == id).First();
-            ticket.TechnicianId = null;
-            tech.Tickets.Remove(db.Tickets.Where(x => x.TicketId == id).First());
-            db.Entry(tech).State = EntityState.Modified;
-            db.Entry(ticket).State = EntityState.Modified;
-            db.SaveChanges();
-            ViewBag.technician = tech;
+            StateManager.UnassignTicketTechnician((int)id, (int)techId);
+            ViewBag.technician = StateManager.technician;
+            List<Ticket> tickets = StateManager.GetAllUnassignedTickets();
 
-            return View("TechnicianLeadDashboard", db.Tickets.Where(x => x.TechnicianId == null).ToList());
+            return View("TechnicianTicketQueue", tickets);
         }
 
         [HttpPost]
@@ -134,62 +129,9 @@ namespace DUT_HelpDesk.Controllers
         {
             if (ModelState.IsValid)
             {
-                //get current user
-                string token = HttpContext.Session.GetString("_UserToken");
-                var userFbId = await auth.GetUserAsync(token);
-
-                var currentUser = db.Users.Where(u => u.FbId.Equals(userFbId.LocalId)).FirstOrDefault();
-                Ticket ticket = new Ticket()
-                {
-                    //userid 
-                    UserId = currentUser.UserId,
-                    //technicianid to be assigned later
-                    Subject = model.Subject,
-                    QueryBody = model.QueryBody,
-                    Status = "Available",
-                    Priority = "Low",
-                    DateCreated = DateTime.Now,
-
-                };
-
-                await db.Tickets.AddAsync(ticket);
-                await db.SaveChangesAsync();
-
-
-                if (model.File != null)
-                {
-
-                    using (var stream = new MemoryStream())
-                    {
-                        await model.File.CopyToAsync(stream);
-
-                        stream.Seek(0, SeekOrigin.Begin);
-
-                        Ticket[] currentTicket = db.Tickets.Where(t => t == ticket).ToArray();
-                        var uploadedFile = new Attachment()
-                        {
-                            TicketId = currentTicket[0].TicketId,
-                            FileName = model.File.Name,
-                            FileContent = stream.ToArray(),
-                            ContentType = model.File.ContentType
-                        };
-
-                        await db.Attachments.AddAsync(uploadedFile);
-                        await db.SaveChangesAsync();
-                    }
-
-                }
-
-
-
-
-
+                StateManager.CreateTicket(model, auth);
             }
-
-
-            return View(model);
-
-
+            return View("UserTicket");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
