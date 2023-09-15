@@ -123,6 +123,10 @@ namespace DUT_HelpDesk.Controllers
             db.Entry(tt).State = EntityState.Modified;
             db.SaveChanges();
         }
+        public static List<Reply> GetTicketReplies(int id)
+        {
+            return db.Replies.Where(x => x.TicketId == id).ToList();
+        }
         public static async void CreateTicket(TicketViewModel model, FirebaseAuthProvider auth)
         {
             //get current user

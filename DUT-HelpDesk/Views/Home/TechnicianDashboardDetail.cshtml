@@ -15,19 +15,29 @@
         </dt>
         <dt>
             <p>
-                @Html.DisplayNameFor(model => model.DateCreated):
+                Date Created: 
                 @Html.DisplayTextFor(model => model.DateCreated)
             </p>
         </dt>
         <dt>
             <p>
                 @Html.DisplayNameFor(model => model.Replies):
-                @Html.DisplayTextFor(model => model.Replies)
+                @if(ViewBag.replies.Count > 0)
+                {
+                    @foreach (Reply item in ViewBag.replies)
+                    {
+                    <p>@item.Date : @item.Message</p>
+                    }
+                }
+                else
+                {
+                    @Html.DisplayName("No Replies")
+                }
             </p>
         </dt>
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.TicketId }) |
-    @Html.ActionLink("Back to List", "Index")
+    @*@Html.ActionLink("Edit", "Edit", new { id = Model.TicketId }) |*@
+    @Html.ActionLink("Back to List", "TechnicianDashboard")
 </p>

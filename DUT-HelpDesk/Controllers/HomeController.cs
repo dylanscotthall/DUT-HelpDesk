@@ -62,7 +62,8 @@ namespace DUT_HelpDesk.Controllers
         public IActionResult TechnicianDashboardDetail(int id)
         {
             Ticket ticket = StateManager.GetTicket(id);
-
+            List<Reply> replies = StateManager.GetTicketReplies(id);
+            ViewBag.replies = replies;
 
             if (ticket == null)
             {
