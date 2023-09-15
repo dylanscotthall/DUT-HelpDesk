@@ -1,4 +1,4 @@
-﻿using DUT_HelpDesk.DatabaseModels;
+using DUT_HelpDesk.DatabaseModels;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Text.Json;
@@ -11,38 +11,48 @@ namespace DUT_HelpDesk.Controllers
 {
     public static class StateManager
     {
+        //state wide variables for easy access
         private static DatabaseModels.DutHelpdeskdbContext db = new DatabaseModels.DutHelpdeskdbContext();
         public static DatabaseModels.User user;
         public static Technician technician;
         public static string token;
+
+        //returns a list of all users
         public static List<DatabaseModels.User> GetUsers()
         {
             return db.Users.ToList();
         }
+        //returns a single user from the database
         public static DatabaseModels.User GetUser(int id)
         {
             return db.Users.Where(x => x.UserId == id).FirstOrDefault();
         }
+        //returns a single user from the database by firebase ID
         public static DatabaseModels.User GetUserByFBId(string id)
         {
             return db.Users.Where(x => x.FbId == id).FirstOrDefault();
         }
+        //adds a user to the database
         public static void AddUser(DatabaseModels.User user)
         {
             db.Users.Add(user);
         }
+        //deletes a user (to be implemented)
         public static void DeleteUser(int id)
         {
 
         }
+        //update a user in the database
         public static void UpdateUser(DatabaseModels.User user)
         {
             db.Users.Update(user);
         }
+        //returns a list of all tickets for a single user
         public static List<Ticket> GetUserTickets()
         {
             return db.Tickets.Where(x => x.UserId == user.UserId).ToList();
         }
+        //returns a list of tickets a technician is working on
         public static List<Ticket> GetTechnicianTickets()
         {
             List<TicketTechnician> tt = db.TicketTechnicians.Where(x => x.TechnicianId == technician.TechnicianId).ToList();
@@ -56,10 +66,12 @@ namespace DUT_HelpDesk.Controllers
             }
             return t;
         }
+        //returns all tickets in database (not for website)
         public static List<Ticket> GetAllTickets()
         {
             return db.Tickets.ToList();
         }
+        //returns a list of tickets that have not been assigned to a technician
         public static List<Ticket> GetAllUnassignedTickets()
         {
             List<TicketTechnician> tt = db.TicketTechnicians.ToList();
@@ -79,22 +91,27 @@ namespace DUT_HelpDesk.Controllers
             }
             return tickets;
         }
+        //gets a single ticket from the database 
         public static Ticket GetTicket(int id)
         {
             return db.Tickets.Where(x => x.TicketId == id).FirstOrDefault();
         }
+        //returns a bool to see if a user saved in state is a technician
         public static bool isTechnician()
         {
             return user.Type == "Student" ? false : true;
         }
+        //returns a technician if the user is already assigned as a technician
         public static Technician GetTechnician()
         {
             return db.Technicians.Where(x => x.UserId == user.UserId).FirstOrDefault();
         }
+        //returns a single technician by ID
         public static Technician GetTechnician(int id)
         {
             return db.Technicians.Where(x => x.UserId == id).FirstOrDefault();
         }
+        //create a ticket technician using technician ID and ticket ID
         public static void CreateTicketTechnician(int id, int techId)
         {
             TicketTechnician tt = db.TicketTechnicians.Where(x => x.TicketId == id && x.TechnicianId == techId).FirstOrDefault();
@@ -116,6 +133,7 @@ namespace DUT_HelpDesk.Controllers
             
             db.SaveChanges();
         }
+        //unassign a ticket from a technician
         public static void UnassignTicketTechnician(int id, int techId)
         {
             TicketTechnician tt = db.TicketTechnicians.Where(x => x.TicketId == id && x.TechnicianId == techId).FirstOrDefault();
@@ -123,10 +141,12 @@ namespace DUT_HelpDesk.Controllers
             db.Entry(tt).State = EntityState.Modified;
             db.SaveChanges();
         }
+        //returns a list of replies for a single ticket
         public static List<Reply> GetTicketReplies(int id)
         {
             return db.Replies.Where(x => x.TicketId == id).ToList();
         }
+        //creates a new ticket from a user
         public static async void CreateTicket(TicketViewModel model, FirebaseAuthProvider auth)
         {
             //get current user
