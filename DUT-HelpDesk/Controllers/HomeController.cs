@@ -86,7 +86,8 @@ namespace DUT_HelpDesk.Controllers
         {
             ViewBag.user = StateManager.user;
             ViewBag.technician = StateManager.technician;
-            IEnumerable<Ticket> tickets = StateManager.GetAllUnassignedTickets();
+            IEnumerable<Ticket> tickets = StateManager.GetAllTickets();
+            
             return View(tickets);
         }
         public IActionResult TechnicianLeadDashboardDetail(int id)

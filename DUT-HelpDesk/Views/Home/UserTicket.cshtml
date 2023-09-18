@@ -18,11 +18,14 @@
         <br />
         @foreach (var item in Model)
         {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.Subject)</td>
-                <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
-                <td>@Html.ActionLink("View", "ViewTicket", new { id=item.TicketId })</td>
-            </tr>
+            @if(item != null)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Subject)</td>
+                    <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
+                    <td>@Html.ActionLink("View", "ViewTicket", new { id=item.TicketId })</td>
+                </tr>
+            }
         }
     </table>
 </div>

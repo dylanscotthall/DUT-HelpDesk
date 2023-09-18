@@ -98,6 +98,14 @@ namespace DUT_HelpDesk.Controllers
         public static void CreateTicketTechnician(int id, int techId)
         {
             TicketTechnician tt = db.TicketTechnicians.Where(x => x.TicketId == id && x.TechnicianId == techId).FirstOrDefault();
+            Ticket t = db.Tickets.Where(x => x.TicketId == id).FirstOrDefault();
+            if (t.TechnicianId == null)
+            {
+                t.TechnicianId = 1;
+            }
+            else{
+                t.TechnicianId += 1;
+            }
             if(tt != null)
             {
                 tt.IsAssigned = true;
@@ -113,14 +121,18 @@ namespace DUT_HelpDesk.Controllers
                 };
                 db.TicketTechnicians.Add(newTT);
             }
-            
+            db.Entry(t).State = EntityState.Modified;
+
             db.SaveChanges();
         }
         public static void UnassignTicketTechnician(int id, int techId)
         {
             TicketTechnician tt = db.TicketTechnicians.Where(x => x.TicketId == id && x.TechnicianId == techId).FirstOrDefault();
+            Ticket t = db.Tickets.Where(x => x.TicketId == id).FirstOrDefault();
+            t.TechnicianId -= 1;
             tt.IsAssigned = false;
             db.Entry(tt).State = EntityState.Modified;
+            db.Entry(t).State = EntityState.Modified;
             db.SaveChanges();
         }
         public static List<Reply> GetTicketReplies(int id)

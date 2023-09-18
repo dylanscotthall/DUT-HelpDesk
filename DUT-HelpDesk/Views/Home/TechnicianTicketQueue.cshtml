@@ -13,6 +13,7 @@
             <th>Date</th>
             <th>Priority</th>
             <th>Status</th>
+            <th>Current Technicians</th>
             <th></th>
         </tr>
         <br />
@@ -24,6 +25,16 @@
                     <td>@Html.DisplayFor(modelItem => item.Subject)</td>
                     <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
                     <td>@Html.DisplayFor(modelItem => item.Priority)</td>
+                    
+                    <td>@Html.DisplayName("Status")</td>
+                    @if(item.TechnicianId == null)
+                    {
+                        <td>@Html.DisplayName("0")</td>
+                    }
+                    else
+                    {
+                        <td>@Html.DisplayFor(modelItem => item.TechnicianId)</td>
+                    }
                     <td>@Html.ActionLink("Details", "TechnicianDashboardDetail", new { id=item.TicketId })</td>
                     <td>@Html.ActionLink("Accept", "AssignTicketToTechnician", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId })</td>
                 </tr>
