@@ -25,7 +25,14 @@
                 @Html.DisplayTextFor(model => model.DateCreated)
             </p>
         </dt>
+       
     </dl>
+    @{
+        string variableToPass = Model.TicketId.ToString();
+    }
+
+    <a href="@Url.Action("ViewAttachment", "Home", new { variable = variableToPass })">View Attachments</a>
+
 </div>
 <p>
     @*@Html.ActionLink("Edit", "Edit", new { id = Model.TicketId }) |*@
