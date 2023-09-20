@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Firebase.Auth;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using NuGet.Packaging;
 
 namespace DUT_HelpDesk.Controllers
 {
@@ -69,7 +70,18 @@ namespace DUT_HelpDesk.Controllers
         //returns all tickets in database (not for website)
         public static List<Ticket> GetAllTickets()
         {
-            return db.Tickets.ToList();
+            List<Ticket> tickets = db.Tickets.ToList();
+            List<TicketTechnician> ticketTechnician = GetAllTicketTechnicians();
+            //foreach (Ticket ticket in tickets)
+            //{
+            //    ticket.TicketTechnicians.AddRange(ticketTechnician.Where(x => x.TicketId == ticket.TicketId));
+            //}
+            return tickets;
+        }
+        //returns all ticket technicians
+        public static List<TicketTechnician> GetAllTicketTechnicians()
+        {
+            return db.TicketTechnicians.ToList();
         }
         //returns a list of tickets that have not been assigned to a technician
         public static List<Ticket> GetAllUnassignedTickets()
@@ -116,12 +128,12 @@ namespace DUT_HelpDesk.Controllers
         {
             TicketTechnician tt = db.TicketTechnicians.Where(x => x.TicketId == id && x.TechnicianId == techId).FirstOrDefault();
             Ticket t = db.Tickets.Where(x => x.TicketId == id).FirstOrDefault();
-            if (t.TechnicianId == null)
+            if (t.TechnicianCount == null)
             {
-                t.TechnicianId = 1;
+                t.TechnicianCount = 1;
             }
             else{
-                t.TechnicianId += 1;
+                t.TechnicianCount += 1;
             }
             if(tt != null)
             {
@@ -147,7 +159,7 @@ namespace DUT_HelpDesk.Controllers
         {
             TicketTechnician tt = db.TicketTechnicians.Where(x => x.TicketId == id && x.TechnicianId == techId).FirstOrDefault();
             Ticket t = db.Tickets.Where(x => x.TicketId == id).FirstOrDefault();
-            t.TechnicianId -= 1;
+            t.TechnicianCount = null;
             tt.IsAssigned = false;
             db.Entry(tt).State = EntityState.Modified;
             db.Entry(t).State = EntityState.Modified;
@@ -159,9 +171,9 @@ namespace DUT_HelpDesk.Controllers
             return db.Replies.Where(x => x.TicketId == id).ToList();
         }
         //creates a new ticket from a user
-        public static async void CreateTicket(TicketViewModel model, FirebaseAuthProvider auth)
+        public static async Task CreateTicket(TicketViewModel model, FirebaseAuthProvider auth)
         {
-            //get current user
+            //get current user  
             string token = StateManager.token;
             var userFbId = await auth.GetUserAsync(token);
 

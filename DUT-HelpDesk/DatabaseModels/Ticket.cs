@@ -9,7 +9,7 @@ public partial class Ticket
 
     public int? UserId { get; set; }
 
-    public int? TechnicianId { get; set; }
+    public int? TechnicianCount { get; set; }
 
     public string? Subject { get; set; }
 
@@ -26,8 +26,6 @@ public partial class Ticket
     public virtual ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
 
     public virtual ICollection<Reply> Replies { get; set; } = new List<Reply>();
-
-    public virtual Technician? Technician { get; set; }
 
     public virtual ICollection<TicketStatus> TicketStatuses { get; set; } = new List<TicketStatus>();
 

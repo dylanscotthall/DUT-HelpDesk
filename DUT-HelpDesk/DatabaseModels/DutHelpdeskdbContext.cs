@@ -41,7 +41,7 @@ public partial class DutHelpdeskdbContext : DbContext
     {
         modelBuilder.Entity<Attachment>(entity =>
         {
-            entity.HasKey(e => e.AttachmentId).HasName("PK__Attachme__97E3B2DFDF5C18B9");
+            entity.HasKey(e => e.AttachmentId).HasName("PK__Attachme__97E3B2DFE4D7B507");
 
             entity.ToTable("Attachment");
 
@@ -55,16 +55,16 @@ public partial class DutHelpdeskdbContext : DbContext
 
             entity.HasOne(d => d.Reply).WithMany(p => p.Attachments)
                 .HasForeignKey(d => d.ReplyId)
-                .HasConstraintName("FK__Attachmen__Reply__17036CC0");
+                .HasConstraintName("FK__Attachmen__Reply__31B762FC");
 
             entity.HasOne(d => d.Ticket).WithMany(p => p.Attachments)
                 .HasForeignKey(d => d.TicketId)
-                .HasConstraintName("FK__Attachmen__Ticke__160F4887");
+                .HasConstraintName("FK__Attachmen__Ticke__30C33EC3");
         });
 
         modelBuilder.Entity<Feedback>(entity =>
         {
-            entity.HasKey(e => e.FeedbackId).HasName("PK__Feedback__CDC95E708BF422E3");
+            entity.HasKey(e => e.FeedbackId).HasName("PK__Feedback__CDC95E70B3C60DDF");
 
             entity.ToTable("Feedback");
 
@@ -77,12 +77,12 @@ public partial class DutHelpdeskdbContext : DbContext
 
             entity.HasOne(d => d.Ticket).WithMany(p => p.Feedbacks)
                 .HasForeignKey(d => d.TicketId)
-                .HasConstraintName("FK__Feedback__Ticket__1332DBDC");
+                .HasConstraintName("FK__Feedback__Ticket__2DE6D218");
         });
 
         modelBuilder.Entity<Reply>(entity =>
         {
-            entity.HasKey(e => e.ReplyId).HasName("PK__Reply__B660369C96436297");
+            entity.HasKey(e => e.ReplyId).HasName("PK__Reply__B660369CDBD4B444");
 
             entity.ToTable("Reply");
 
@@ -95,12 +95,12 @@ public partial class DutHelpdeskdbContext : DbContext
 
             entity.HasOne(d => d.Ticket).WithMany(p => p.Replies)
                 .HasForeignKey(d => d.TicketId)
-                .HasConstraintName("FK__Reply__Ticket_id__10566F31");
+                .HasConstraintName("FK__Reply__Ticket_id__2B0A656D");
         });
 
         modelBuilder.Entity<Status>(entity =>
         {
-            entity.HasKey(e => e.StatusId).HasName("PK__Status__5191052464E0DACE");
+            entity.HasKey(e => e.StatusId).HasName("PK__Status__519105244A762D17");
 
             entity.ToTable("Status");
 
@@ -112,7 +112,7 @@ public partial class DutHelpdeskdbContext : DbContext
 
         modelBuilder.Entity<Technician>(entity =>
         {
-            entity.HasKey(e => e.TechnicianId).HasName("PK__Technici__E70521DBA9F6FF85");
+            entity.HasKey(e => e.TechnicianId).HasName("PK__Technici__E70521DB934137A7");
 
             entity.ToTable("Technician");
 
@@ -124,12 +124,12 @@ public partial class DutHelpdeskdbContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Technicians)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Technicia__User___09A971A2");
+                .HasConstraintName("FK__Technicia__User___25518C17");
         });
 
         modelBuilder.Entity<Ticket>(entity =>
         {
-            entity.HasKey(e => e.TicketId).HasName("PK__Ticket__ED7364E1662C3DFE");
+            entity.HasKey(e => e.TicketId).HasName("PK__Ticket__ED7364E12901B503");
 
             entity.ToTable("Ticket");
 
@@ -145,21 +145,16 @@ public partial class DutHelpdeskdbContext : DbContext
             entity.Property(e => e.Subject)
                 .HasMaxLength(255)
                 .IsUnicode(false);
-            entity.Property(e => e.TechnicianId).HasColumnName("Technician_id");
             entity.Property(e => e.UserId).HasColumnName("User_id");
-
-            entity.HasOne(d => d.Technician).WithMany(p => p.Tickets)
-                .HasForeignKey(d => d.TechnicianId)
-                .HasConstraintName("FK__Ticket__Technici__0D7A0286");
 
             entity.HasOne(d => d.User).WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Ticket__User_id__0C85DE4D");
+                .HasConstraintName("FK__Ticket__User_id__282DF8C2");
         });
 
         modelBuilder.Entity<TicketStatus>(entity =>
         {
-            entity.HasKey(e => e.TicketStatusId).HasName("PK__TicketSt__72C70E96A8837C8C");
+            entity.HasKey(e => e.TicketStatusId).HasName("PK__TicketSt__72C70E9617691344");
 
             entity.ToTable("TicketStatus");
 
@@ -170,16 +165,16 @@ public partial class DutHelpdeskdbContext : DbContext
 
             entity.HasOne(d => d.Status).WithMany(p => p.TicketStatuses)
                 .HasForeignKey(d => d.StatusId)
-                .HasConstraintName("FK__TicketSta__Statu__1CBC4616");
+                .HasConstraintName("FK__TicketSta__Statu__37703C52");
 
             entity.HasOne(d => d.Ticket).WithMany(p => p.TicketStatuses)
                 .HasForeignKey(d => d.TicketId)
-                .HasConstraintName("FK__TicketSta__Ticke__1BC821DD");
+                .HasConstraintName("FK__TicketSta__Ticke__367C1819");
         });
 
         modelBuilder.Entity<TicketTechnician>(entity =>
         {
-            entity.HasKey(e => e.TicketTechnicianId).HasName("PK__TicketTe__FA15DDB859E6946E");
+            entity.HasKey(e => e.TicketTechnicianId).HasName("PK__TicketTe__FA15DDB8D512E154");
 
             entity.ToTable("TicketTechnician");
 
@@ -191,16 +186,16 @@ public partial class DutHelpdeskdbContext : DbContext
 
             entity.HasOne(d => d.Technician).WithMany(p => p.TicketTechnicians)
                 .HasForeignKey(d => d.TechnicianId)
-                .HasConstraintName("FK__TicketTec__Techn__208CD6FA");
+                .HasConstraintName("FK__TicketTec__Techn__3B40CD36");
 
             entity.HasOne(d => d.Ticket).WithMany(p => p.TicketTechnicians)
                 .HasForeignKey(d => d.TicketId)
-                .HasConstraintName("FK__TicketTec__Ticke__1F98B2C1");
+                .HasConstraintName("FK__TicketTec__Ticke__3A4CA8FD");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__206A9DF84B2B4043");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__206A9DF80DC9A586");
 
             entity.Property(e => e.UserId).HasColumnName("User_id");
             entity.Property(e => e.FbId)

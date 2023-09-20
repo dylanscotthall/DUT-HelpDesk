@@ -17,27 +17,36 @@
             <th></th>
         </tr>
         <br />
-        @if(Model != null)
+        @if (Model != null)
         {
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>@Html.DisplayFor(modelItem => item.Subject)</td>
-                    <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Priority)</td>
-                    
-                    <td>@Html.DisplayName("Status")</td>
-                    @if(item.TechnicianId == null)
-                    {
-                        <td>@Html.DisplayName("0")</td>
-                    }
-                    else
-                    {
-                        <td>@Html.DisplayFor(modelItem => item.TechnicianId)</td>
-                    }
-                    <td>@Html.ActionLink("Details", "TechnicianDashboardDetail", new { id=item.TicketId })</td>
-                    <td>@Html.ActionLink("Accept", "AssignTicketToTechnician", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId })</td>
-                </tr>
+                if (item != null)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Subject)</td>
+                        <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Priority)</td>
+                        <td>@Html.DisplayName("status")</td>
+                        @if (item.TechnicianCount == null)
+                        {
+                            <td>@Html.DisplayName("0")</td>
+                        }
+                        else
+                        {
+                            <td>@Html.DisplayFor(modelItem => item.TechnicianCount)</td>
+                        }
+                        <td>@Html.ActionLink("Details", "TechnicianDashboardDetail", new { id=item.TicketId })</td>
+                        @if (item.TicketTechnicians.Where(x => x.TechnicianId == ViewBag.technician.TechnicianId && x.IsAssigned == true).FirstOrDefault() != null)
+                        {
+                            <td>@Html.ActionLink("Unaccept", "UnassignTicketToTechnician", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId })</td>
+                        }
+                        else
+                        {
+                            <td>@Html.ActionLink("Accept", "AssignTicketToTechnician", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId })</td>
+                        }
+                    </tr>
+                }
             }
         }
     </table>

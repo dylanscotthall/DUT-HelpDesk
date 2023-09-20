@@ -121,7 +121,7 @@ namespace DUT_HelpDesk.Controllers
         {
             StateManager.UnassignTicketTechnician((int)id, (int)techId);
             ViewBag.technician = StateManager.technician;
-            List<Ticket> tickets = StateManager.GetAllUnassignedTickets();
+            List<Ticket> tickets = StateManager.GetAllTickets();
 
             return View("TechnicianTicketQueue", tickets);
         }
@@ -131,9 +131,10 @@ namespace DUT_HelpDesk.Controllers
         {
             if (ModelState.IsValid)
             {
-                StateManager.CreateTicket(model, auth);
+                await StateManager.CreateTicket(model, auth);
             }
-            return View("UserTicket");
+            IEnumerable<Ticket> tickets = StateManager.GetUserTickets();
+            return View("UserTicket", tickets);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
