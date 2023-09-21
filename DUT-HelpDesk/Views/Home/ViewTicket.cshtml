@@ -28,10 +28,17 @@
        
     </dl>
     @{
+        DUT_HelpDesk.DatabaseModels.DutHelpdeskdbContext db = new DUT_HelpDesk.DatabaseModels.DutHelpdeskdbContext();
         string id = Model.TicketId.ToString();
-    }
+        var uploadedFile = db.Attachments.FirstOrDefault(f => f.TicketId == int.Parse(id));
 
-    <a href="@Url.Action("ViewAttachment", "Home", new { id = id })">View Attachments</a>
+        if (uploadedFile != null)
+        {
+            <a href="@Url.Action("ViewAttachment", "Home", new { id = id })">View Attachments</a>
+        }
+     }
+
+    
 
 </div>
 
