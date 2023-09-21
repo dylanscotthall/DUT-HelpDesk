@@ -25,8 +25,18 @@
                 @Html.DisplayTextFor(model => model.DateCreated)
             </p>
         </dt>
+       
     </dl>
+    @{
+        string id = Model.TicketId.ToString();
+    }
+
+    <a href="@Url.Action("ViewAttachment", "Home", new { id = id })">View Attachments</a>
+
 </div>
+
+<br/>
+
 <p>
     @*@Html.ActionLink("Edit", "Edit", new { id = Model.TicketId }) |*@
     @Html.ActionLink("Back to My Tickets", "UserTicket")

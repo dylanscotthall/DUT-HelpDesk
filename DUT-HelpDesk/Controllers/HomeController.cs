@@ -142,5 +142,18 @@ namespace DUT_HelpDesk.Controllers
         {
             return View(new DatabaseModels.ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public async Task<IActionResult> ViewAttachment(string id)
+        {
+            
+            var uploadedFile = await db.Attachments.FirstOrDefaultAsync(f => f.TicketId == int.Parse(id));
+
+            if (uploadedFile == null)
+            {
+                return NotFound();
+            }
+
+            return File(uploadedFile.FileContent, uploadedFile.ContentType); // Adjust the content type as needed
+        }
     }
 }
