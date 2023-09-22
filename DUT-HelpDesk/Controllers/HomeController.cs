@@ -17,9 +17,12 @@ namespace DUT_HelpDesk.Controllers
 
         public HomeController(ILogger<HomeController> logger)
         {
+            IConfiguration config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build();
             _logger = logger;
             auth = new FirebaseAuthProvider(
-                          new FirebaseConfig("AIzaSyDbriiQXcud__j4B6rbGh3brehz9DnBrRM"));
+                          new FirebaseConfig(config["FirebaseKey"]));
         }
 
         public IActionResult Index()

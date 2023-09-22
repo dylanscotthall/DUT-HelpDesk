@@ -11,8 +11,11 @@ namespace DUT_HelpDesk.Controllers
 
         public LoginController()
         {
+            IConfiguration config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build();
             auth = new FirebaseAuthProvider(
-                           new FirebaseConfig("AIzaSyDbriiQXcud__j4B6rbGh3brehz9DnBrRM"));
+                           new FirebaseConfig(config["FirebaseKey"]));
         }
         
         public IActionResult Login()
