@@ -109,9 +109,9 @@ namespace DUT_HelpDesk.Controllers
             return db.Tickets.Where(x => x.TicketId == id).FirstOrDefault();
         }
         //returns a bool to see if a user saved in state is a technician
-        public static bool isTechnician()
+        public static string getUserType()
         {
-            return user.Type == "Student" ? false : true;
+            return user.Type;
         }
         //returns a technician if the user is already assigned as a technician
         public static Technician GetTechnician()

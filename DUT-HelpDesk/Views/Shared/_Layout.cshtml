@@ -15,11 +15,16 @@
             <div class="container-fluid">
                 @if (Html.Raw(httpContextaccessor.HttpContext.Session.GetString("_UserType")).ToString() == "Technician")
                 {
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">DUT_HelpDesk - Technician</a>
+                    @*Add FAQ*@
+                    <a class="navbar-brand" asp-area="" asp-controller="Technician" asp-action="TechnicianTicketQueue">DUT_HelpDesk - Technician</a>
                 }
-                else if (Html.Raw(httpContextaccessor.HttpContext.Session.GetString("_UserType")).ToString() == "Technician")
+                else if (Html.Raw(httpContextaccessor.HttpContext.Session.GetString("_UserType")).ToString() == "Student")
                 {
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">DUT_HelpDesk</a>
+                    <a class="navbar-brand" asp-area="" asp-controller="User" asp-action="Index">DUT_HelpDesk</a>
+                }
+                else if (Html.Raw(httpContextaccessor.HttpContext.Session.GetString("_UserType")).ToString() == "TechnicianLead")
+                {
+                    <a class="navbar-brand" asp-area="" asp-controller="TechnicianLead" asp-action="Index">DUT_HelpDesk - Technician Lead</a>
                 }
                 else
                 {
@@ -33,29 +38,50 @@
                     <ul class="navbar-nav flex-grow-1">
                         @if (Html.Raw(httpContextaccessor.HttpContext.Session.GetString("_UserType")).ToString() == "Student")
                         {
+                            @*<li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Home</a>
+                            </li>*@
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="UserTicket">My Tickets</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="UserTicket">My Tickets</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">FAQ</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">FAQ</a>
                             </li>
                         }
                         else if (Html.Raw(httpContextaccessor.HttpContext.Session.GetString("_UserType")).ToString() == "Technician")
                         {
+                            @*<li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Technician" asp-action="Index">Home</a>
+                            </li>*@
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Technician" asp-action="TechnicianTicketQueue">Ticket Queue</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="TechnicianTicketQueue">Ticket Queue</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Technician" asp-action="TechnicianDashboard">Assigned Tickets</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="TechnicianDashboard">Assigned Tickets</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Technician" asp-action="TechnicianDashboard">Insights</a>
+                            </li>
+                        }
+                        else if (Html.Raw(httpContextaccessor.HttpContext.Session.GetString("_UserType")).ToString() == "TechnicianLead")
+                        {
+                            @*<li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="TechnicianLead" asp-action="Index">Home</a>
+                            </li>*@
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="TechnicianLead" asp-action="TechnicianTicketQueue">Ticket Queue</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="TechnicianDashboard">Insights</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="TechnicianLead" asp-action="TechnicianDashboard">Assigned Tickets</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="TechnicianLead" asp-action="TechnicianDashboard">Technicians</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="TechnicianLead" asp-action="TechnicianDashboard">Insights</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="TechnicianLead" asp-action="TechnicianDashboard">Tools</a>
                             </li>
                         }
                         else
