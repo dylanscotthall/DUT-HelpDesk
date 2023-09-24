@@ -25,8 +25,25 @@
                 @Html.DisplayTextFor(model => model.DateCreated)
             </p>
         </dt>
+       
     </dl>
+    @{
+        DUT_HelpDesk.DatabaseModels.DutHelpdeskdbContext db = new DUT_HelpDesk.DatabaseModels.DutHelpdeskdbContext();
+        string id = Model.TicketId.ToString();
+        var uploadedFile = db.Attachments.FirstOrDefault(f => f.TicketId == int.Parse(id));
+
+        if (uploadedFile != null)
+        {
+            <a href="@Url.Action("ViewAttachment", "Home", new { id = id })">View Attachments</a>
+        }
+     }
+
+    
+
 </div>
+
+<br/>
+
 <p>
     @*@Html.ActionLink("Edit", "Edit", new { id = Model.TicketId }) |*@
     @Html.ActionLink("Back to My Tickets", "UserTicket")
