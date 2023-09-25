@@ -1,0 +1,76 @@
+﻿@model IEnumerable<DUT_HelpDesk.DatabaseModels.Ticket>
+
+@{
+    ViewData["Title"] = "UserTicket";
+}
+
+@section scripts{
+    <script>
+        function SetSort(dropdown, startDate, endDate) {
+
+            window.location.href = "/Home/UserTicket?sortBy=" + dropdown + "&startDate=" + startDate + "&endDate=" + endDate;
+
+        }
+    </script>
+    }
+
+<div>
+    <h1>My Tickets</h1>
+    <a asp-area="" asp-controller="Home" asp-action="CreateTicket">Create New</a>
+    <br />
+    <nav>
+        <span>
+            @Html.DropDownList("Sortby", new SelectListItem[] { new SelectListItem()
+            { Text = "Date", Value = "Date" }, new SelectListItem()
+            { Text = "Date Down", Value = "Status" }, new SelectListItem()
+            { Text = "Alpha", Value = "Alpha"}})
+        </span>
+        <span>
+            @if (ViewBag.startDate != null)
+            {
+                <input id="startDate" class="form-control" @*onchange="SetSort(this.value)"*@ type="date" value="@ViewBag.startDate" />
+            }
+            else
+            {
+                <input id="startDate" class="form-control col-sm-5" @*onchange="SetSort(this.value)"*@ type="date" />
+            }
+        </span>
+        <span>
+            @if (ViewBag.endDate != null)
+            {
+                <input id="endDate" class="form-control col-sm-5" @*onchange="SetSort(startDateId.value, endDateId.value)"*@ type="date" value="@ViewBag.endDate" />
+            }
+            else
+            {
+                <input id="endDate" class="form-control col-sm-5" @*onchange="SetSort(startDateId.value, endDateId.value)"*@ type="date" @*value="@DateTime.Today.ToString("yyyy-MM-dd")"*@ />
+            }
+        </span>
+        <span>
+            <input id="filter" class="form-control col-sm-5" type="button" value="Filter" onclick="SetSort(Sortby.value, startDate.value, endDate.value)" />
+        </span>
+    </nav>
+
+    <table class="table table-responsive table-hover">
+        <tr>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+        <br />
+        @foreach (var item in Model)
+        {
+            @if (item != null)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Subject)</td>
+                    <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
+                    <td>@Html.ActionLink("View", "ViewTicket", new { id=item.TicketId })</td>
+                </tr>
+            }
+        }
+    </table>
+</div>
+
+
+
