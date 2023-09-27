@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Firebase.Auth;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using NuGet.Packaging;
+using NuGet.Packaging.Signing;
 
 namespace DUT_HelpDesk.Controllers
 {
@@ -70,8 +71,8 @@ namespace DUT_HelpDesk.Controllers
         //returns all tickets in database (not for website)
         public static List<Ticket> GetAllTickets()
         {
-            List<Ticket> tickets = db.Tickets.ToList();
-            List<TicketTechnician> ticketTechnician = GetAllTicketTechnicians();
+            List<Ticket> tickets = db.Tickets.Include(i => i.TicketStatuses).ThenInclude(i => i.Status).Include(i => i.TicketTechnicians).ToList();
+            //List<TicketTechnician> ticketTechnician = GetAllTicketTechnicians();
             //foreach (Ticket ticket in tickets)
             //{
             //    ticket.TicketTechnicians.AddRange(ticketTechnician.Where(x => x.TicketId == ticket.TicketId));
@@ -186,13 +187,18 @@ namespace DUT_HelpDesk.Controllers
                 Subject = model.Subject,
                 QueryBody = model.QueryBody,
                 Priority = "Low",
-                DateCreated = DateTime.Now,
-
+                DateCreated = DateTime.Now
             };
 
+            Status status = new Status { Name = "Available" };
+            List<TicketStatus> ticketStatuses = new List<TicketStatus>();
+            TicketStatus ticketStatus = new TicketStatus() { TicketId = ticket.TicketId, StatusId = status.StatusId, TimeStamp = DateTime.Now, Status = status, Ticket = ticket };
+            ticketStatuses.Add(ticketStatus);
+            ticket.TicketStatuses = ticketStatuses;
+            await db.Statuses.AddAsync(status);
+            await db.TicketStatuses.AddAsync(ticketStatus);
             await db.Tickets.AddAsync(ticket);
             await db.SaveChangesAsync();
-
 
             if (model.File != null)
             {

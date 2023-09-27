@@ -6,9 +6,9 @@
 
 @section scripts{
     <script>
-        function SetSort(dropdown, startDate, endDate) {
+        function SetSort(dropdown, startDate, endDate, status) {
 
-            window.location.href = "/Technician/TechnicianTicketQueue?sortBy=" + dropdown + "&startDate=" + startDate + "&endDate=" + endDate;
+            window.location.href = "/Technician/TechnicianTicketQueue?sortBy=" + dropdown + "&startDate=" + startDate + "&endDate=" + endDate + "&status=" + status;
 
         }
     </script>
@@ -17,37 +17,32 @@
 <div>
     <h1>Ticket Queue</h1>
     <br />
-    <nav>
-        <span>
-            @Html.DropDownList("Sortby", new SelectListItem[] { new SelectListItem()
-            { Text = "Date", Value = "Date" }, new SelectListItem()
-            { Text = "Date Down", Value = "Status" }, new SelectListItem()
-            { Text = "Alpha", Value = "Alpha"}})
-        </span>
-        <span>
-            @if (ViewBag.startDate != null)
-            {
-                <input id="startDate" class="form-control" @*onchange="SetSort(this.value)"*@ type="date" value="@ViewBag.startDate" />
-            }
-            else
-            {
-                <input id="startDate" class="form-control col-sm-5" @*onchange="SetSort(this.value)"*@ type="date" />
-            }
-        </span>
-        <span>
-            @if (ViewBag.endDate != null)
-            {
-                <input id="endDate" class="form-control col-sm-5" @*onchange="SetSort(startDateId.value, endDateId.value)"*@ type="date" value="@ViewBag.endDate" />
-            }
-            else
-            {
-                <input id="endDate" class="form-control col-sm-5" @*onchange="SetSort(startDateId.value, endDateId.value)"*@ type="date" @*value="@DateTime.Today.ToString("yyyy-MM-dd")"*@ />
-            }
-        </span>
-        <span>
-            <input id="filter" class="form-control col-sm-5" type="button" value="Filter" onclick="SetSort(Sortby.value, startDate.value, endDate.value)" />
-        </span>
-    </nav>
+    @Html.DropDownList("Sortby", new SelectListItem[] { new SelectListItem()
+    { Text = "Date", Value = "Date" }, new SelectListItem()
+    { Text = "Date Down", Value = "Status" }, new SelectListItem()
+    { Text = "Alpha", Value = "Alpha"}}, new {style="width:15%;display:inline;height:37px;border-color:lightgrey;border-radius:3px"})
+    @if (ViewBag.startDate != null)
+    {
+        <input style="width:15%;display:inline;" id="startDate" class="form-control" @*onchange="SetSort(this.value)"*@ type="date" value="@ViewBag.startDate" />
+    }
+    else
+    {
+        <input style="width:15%;display:inline;" id="startDate" class="form-control" @*onchange="SetSort(this.value)"*@ type="date" />
+    }
+    @if (ViewBag.endDate != null)
+    {
+        <input style="width:15%;display:inline;" id="endDate" class="form-control col-sm-5" @*onchange="SetSort(startDateId.value, endDateId.value)"*@ type="date" value="@ViewBag.endDate" />
+    }
+    else
+    {
+        <input style="width:15%;display:inline;" id="endDate" class="form-control col-sm-5" @*onchange="SetSort(startDateId.value, endDateId.value)"*@ type="date" @*value="@DateTime.Today.ToString("yyyy-MM-dd")"*@ />
+    }
+    @Html.DropDownList("Status", new SelectListItem[] { new SelectListItem()
+    { Text = "Available", Value = "Available" }, new SelectListItem()
+    { Text = "Closed", Value = "Closed" }, new SelectListItem()
+    { Text = "Active", Value = "Active" }}, new {style="width:15%;display:inline;height:37px;border-color:lightgrey;border-radius:3px"})
+    <input style="width:15%;display:inline;" id="filter" class="form-control col-sm-5" type="button" value="Filter" onclick="SetSort(Sortby.value, startDate.value, endDate.value, Status.value)" />
+    <br />
     <table class="table table-responsive table-hover">
         <tr>
             <th>Description</th>
@@ -68,7 +63,7 @@
                         <td>@Html.DisplayFor(modelItem => item.Subject)</td>
                         <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
                         <td>@Html.DisplayFor(modelItem => item.Priority)</td>
-                        <td>@Html.DisplayName("status")</td>
+                        <td>@Html.DisplayFor(modelItem => item.TicketStatuses.OrderByDescending(x => x.TimeStamp).FirstOrDefault().Status.Name)</td>
                         @if (item.TechnicianCount == null)
                         {
                             <td>@Html.DisplayName("0")</td>
