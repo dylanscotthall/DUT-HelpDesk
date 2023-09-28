@@ -127,21 +127,18 @@ namespace DUT_HelpDesk.Controllers
         //create a ticket technician using technician ID and ticket ID
         public static void CreateTicketTechnician(int id, int techId)
         {
-            TicketTechnician tt = db.TicketTechnicians.Where(x => x.TicketId == id && x.TechnicianId == techId).FirstOrDefault();
-            Ticket t = db.Tickets.Where(x => x.TicketId == id).FirstOrDefault();
-            if (t.TechnicianCount == null)
+            TicketTechnician? tt = db.TicketTechnicians.Where(x => x.TicketId == id && x.TechnicianId == techId).FirstOrDefault();
+            Ticket? t = db.Tickets.Where(x => x.TicketId == id).FirstOrDefault();
+
+            //Checking if an existing tt entry exists for the technician and ticket
+            if (tt != null)
             {
-                t.TechnicianCount = 1;
-            }
-            else{
-                t.TechnicianCount += 1;
-            }
-            if(tt != null)
-            {
+                //If the entry already exists, modify it.
                 tt.IsAssigned = true;
                 db.Entry(tt).State = EntityState.Modified;
             }
             else{
+                //If the entry does not already exist create a new one.
                 TicketTechnician newTT = new TicketTechnician()
                 {
                     TicketId = id,
@@ -151,9 +148,15 @@ namespace DUT_HelpDesk.Controllers
                 };
                 db.TicketTechnicians.Add(newTT);
             }
+            db.SaveChanges(); //save changes to TicketTechnician Table
+
+            //finds all ticketTechnician records where isAssigned = true, this gets an accurate technician count for a ticket.
+            List<TicketTechnician> ticketIsAssigned = db.TicketTechnicians.Where(x => x.TicketId == id && x.IsAssigned == true).ToList();
+            int technicianCount = ticketIsAssigned.Count;
+            t.TechnicianCount = technicianCount;
             db.Entry(t).State = EntityState.Modified;
 
-            db.SaveChanges();
+            db.SaveChanges(); //save changes to Ticket Table
         }
         //unassign a ticket from a technician
         public static void UnassignTicketTechnician(int id, int techId)
