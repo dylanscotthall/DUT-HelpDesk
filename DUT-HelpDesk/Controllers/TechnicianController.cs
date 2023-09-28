@@ -28,7 +28,7 @@ namespace DUT_HelpDesk.Controllers
             }
         }
 
-        public IActionResult TechnicianTicketQueue(string? sortBy, string? startDate, string? endDate)
+        public IActionResult TechnicianTicketQueue(string? sortBy, string? startDate, string? endDate, string? status)
         {
             ViewBag.user = StateManager.user;
             ViewBag.technician = StateManager.technician;
@@ -53,7 +53,10 @@ namespace DUT_HelpDesk.Controllers
             {
                 tickets = tickets.Where(x => x.DateCreated >= DateTime.Parse(startDate) && x.DateCreated <= DateTime.Parse(endDate).AddDays(1)).ToList();
             }
-
+            if (status != null)
+            {
+                tickets = tickets.Where(x => x.TicketStatuses.OrderByDescending(s => s.TimeStamp).FirstOrDefault().Status.Name == status);
+            }
             return View(tickets.ToList());
         }
         public IActionResult AssignTicketToTechnician(int? id, int? techId)

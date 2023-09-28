@@ -8,7 +8,7 @@
     <script>
         function SetSort(dropdown, startDate, endDate) {
 
-            window.location.href = "/Home/UserTicket?sortBy=" + dropdown + "&startDate=" + startDate + "&endDate=" + endDate;
+            window.location.href = "/User/UserTicket?sortBy=" + dropdown + "&startDate=" + startDate + "&endDate=" + endDate;
 
         }
     </script>
@@ -16,40 +16,30 @@
 
 <div>
     <h1>My Tickets</h1>
-    <a asp-area="" asp-controller="Home" asp-action="CreateTicket">Create New</a>
+    <a asp-area="" asp-controller="User" asp-action="CreateTicket">Create New</a>
     <br />
-    <nav>
-        <span>
-            @Html.DropDownList("Sortby", new SelectListItem[] { new SelectListItem()
-            { Text = "Date", Value = "Date" }, new SelectListItem()
-            { Text = "Date Down", Value = "Status" }, new SelectListItem()
-            { Text = "Alpha", Value = "Alpha"}})
-        </span>
-        <span>
-            @if (ViewBag.startDate != null)
-            {
-                <input id="startDate" class="form-control" @*onchange="SetSort(this.value)"*@ type="date" value="@ViewBag.startDate" />
-            }
-            else
-            {
-                <input id="startDate" class="form-control col-sm-5" @*onchange="SetSort(this.value)"*@ type="date" />
-            }
-        </span>
-        <span>
-            @if (ViewBag.endDate != null)
-            {
-                <input id="endDate" class="form-control col-sm-5" @*onchange="SetSort(startDateId.value, endDateId.value)"*@ type="date" value="@ViewBag.endDate" />
-            }
-            else
-            {
-                <input id="endDate" class="form-control col-sm-5" @*onchange="SetSort(startDateId.value, endDateId.value)"*@ type="date" @*value="@DateTime.Today.ToString("yyyy-MM-dd")"*@ />
-            }
-        </span>
-        <span>
-            <input id="filter" class="form-control col-sm-5" type="button" value="Filter" onclick="SetSort(Sortby.value, startDate.value, endDate.value)" />
-        </span>
-    </nav>
-
+    @Html.DropDownList("Sortby", new SelectListItem[] { new SelectListItem()
+    { Text = "Date", Value = "Date" }, new SelectListItem()
+    { Text = "Date Down", Value = "Status" }, new SelectListItem()
+    { Text = "Alpha", Value = "Alpha"}}, new {style="width:20%;display:inline;height:37px;border-color:lightgrey;border-radius:3px"})
+    @if (ViewBag.startDate != null)
+    {
+        <input style="width:20%;display:inline;" id="startDate" class="form-control" @*onchange="SetSort(this.value)"*@ type="date" value="@ViewBag.startDate" />
+    }
+    else
+    {
+        <input style="width:20%;display:inline;" id="startDate" class="form-control" @*onchange="SetSort(this.value)"*@ type="date" />
+    }
+    @if (ViewBag.endDate != null)
+    {
+        <input style="width:20%;display:inline;" id="endDate" class="form-control col-sm-5" @*onchange="SetSort(startDateId.value, endDateId.value)"*@ type="date" value="@ViewBag.endDate" />
+    }
+    else
+    {
+        <input style="width:20%;display:inline;" id="endDate" class="form-control col-sm-5" @*onchange="SetSort(startDateId.value, endDateId.value)"*@ type="date" @*value="@DateTime.Today.ToString("yyyy-MM-dd")"*@ />
+    }
+    <input style="width:20%;display:inline;" id="filter" class="form-control col-sm-5" type="button" value="Filter" onclick="SetSort(Sortby.value, startDate.value, endDate.value)" />
+    <br/>
     <table class="table table-responsive table-hover">
         <tr>
             <th>Description</th>
@@ -65,7 +55,7 @@
                 <tr>
                     <td>@Html.DisplayFor(modelItem => item.Subject)</td>
                     <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
-                    <td>@Html.ActionLink("View", "ViewTicket", new { id=item.TicketId })</td>
+                    <td>@Html.DisplayFor(modelItem => item.TicketStatuses.OrderByDescending(x => x.TimeStamp).FirstOrDefault().Status.Name))</td>
                 </tr>
             }
         }
