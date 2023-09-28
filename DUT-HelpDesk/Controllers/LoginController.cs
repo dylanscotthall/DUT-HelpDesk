@@ -48,8 +48,7 @@ namespace DUT_HelpDesk.Controllers
                             return RedirectToAction("TechnicianTicketQueue", "Technician");
                         case "TechnicianLead":
                             StateManager.technician = StateManager.GetTechnician();
-                            return RedirectToAction("Index", "TechnicianLead");
-
+                            return RedirectToAction("TechnicianLeadDashboard", "TechnicianLead");
                     }
                 }
             }
