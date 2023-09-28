@@ -127,8 +127,9 @@ namespace DUT_HelpDesk.Controllers
         //create a ticket technician using technician ID and ticket ID
         public static void CreateTicketTechnician(int id, int techId)
         {
-            TicketTechnician tt = db.TicketTechnicians.Where(x => x.TicketId == id && x.TechnicianId == techId).FirstOrDefault();
-            Ticket t = db.Tickets.Where(x => x.TicketId == id).FirstOrDefault();
+            TicketTechnician? tt = db.TicketTechnicians.Where(x => x.TicketId == id && x.TechnicianId == techId).FirstOrDefault();
+            Ticket? t = db.Tickets.Where(x => x.TicketId == id).FirstOrDefault();
+
             if (t.TechnicianCount == null)
             {
                 t.TechnicianCount = 1;
@@ -136,6 +137,7 @@ namespace DUT_HelpDesk.Controllers
             else{
                 t.TechnicianCount += 1;
             }
+
             if(tt != null)
             {
                 tt.IsAssigned = true;
