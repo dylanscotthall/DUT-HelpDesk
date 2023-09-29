@@ -39,7 +39,7 @@ namespace DUT_HelpDesk.Controllers
                 {
                     tickets = tickets.OrderBy(t => t.DateCreated);
                 }
-                else if (sortBy == "Status")
+                else if (sortBy == "Date Down")
                 {
                     tickets = tickets.OrderByDescending(t => t.DateCreated);
                 }

@@ -70,14 +70,14 @@ namespace DUT_HelpDesk.Controllers
             return t;
         }
         //returns all tickets in database (not for website)
+        public static List<Technician> GetAllTechnicians()
+        {
+            List<Technician> technicians = db.Technicians.ToList();
+            return technicians;
+        }
         public static List<Ticket> GetAllTickets()
         {
             List<Ticket> tickets = db.Tickets.Include(i => i.TicketStatuses).ThenInclude(i => i.Status).Include(i => i.TicketTechnicians).ToList();
-            //List<TicketTechnician> ticketTechnician = GetAllTicketTechnicians();
-            //foreach (Ticket ticket in tickets)
-            //{
-            //    ticket.TicketTechnicians.AddRange(ticketTechnician.Where(x => x.TicketId == ticket.TicketId));
-            //}
             return tickets;
         }
         //returns all ticket technicians
@@ -194,8 +194,10 @@ namespace DUT_HelpDesk.Controllers
                 TicketStatus ticketStatuses = db.TicketStatuses.Where(x => x.TicketId == id).OrderByDescending(o => o.TimeStamp).FirstOrDefault();
                 db.TicketStatuses.Remove(ticketStatuses);
             }
+            List<TicketTechnician> ticketIsAssigned = db.TicketTechnicians.Where(x => x.TicketId == id && x.IsAssigned == true).ToList();
+            int technicianCount = ticketIsAssigned.Count-1;
+            t.TechnicianCount = technicianCount;
 
-            t.TechnicianCount = null;
             tt.IsAssigned = false;
             db.Entry(tt).State = EntityState.Modified;
             db.Entry(t).State = EntityState.Modified;

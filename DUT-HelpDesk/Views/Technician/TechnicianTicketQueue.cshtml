@@ -1,6 +1,6 @@
 ﻿@model List<DUT_HelpDesk.DatabaseModels.Ticket>
 @{
-    ViewData["Title"] = "Technician Lead";
+    ViewData["Title"] = "Technician Ticket Queue";
     string[] tickets = new string[3];
 }
 
@@ -19,7 +19,7 @@
     <br />
     @Html.DropDownList("Sortby", new SelectListItem[] { new SelectListItem()
     { Text = "Date", Value = "Date" }, new SelectListItem()
-    { Text = "Date Down", Value = "Status" }, new SelectListItem()
+    { Text = "Date Down", Value = "Date Down" }, new SelectListItem()
     { Text = "Alpha", Value = "Alpha"}}, new {style="width:15%;display:inline;height:37px;border-color:lightgrey;border-radius:3px"})
     @if (ViewBag.startDate != null)
     {
