@@ -5,7 +5,28 @@ namespace DUT_HelpDesk.Controllers
 {
     public class TechnicianLeadController : Controller
     {
-        public IActionResult TechnicianLeadDashboard(string? sortBy, string? startDate, string? endDate, string? status)
+        public IActionResult TechnicianLeadDashboard()
+        {
+            ViewBag.user = StateManager.user;
+            ViewBag.technician = StateManager.technician;
+            IEnumerable<Ticket> tickets = StateManager.GetTechnicianTickets();
+            return View(tickets);
+        }
+
+        public IActionResult TechnicianLeadDashboardDetail(int id)
+        {
+            Ticket ticket = StateManager.GetTicket(id);
+
+            if (ticket == null)
+            {
+                return StatusCode(400);
+            }
+            else
+            {
+                return View(ticket);
+            }
+        }
+        public IActionResult TechnicianLeadTicketQueue(string? sortBy, string? startDate, string? endDate, string? status)
         {
             ViewBag.user = StateManager.user;
             ViewBag.technician = StateManager.technician;
@@ -36,27 +57,32 @@ namespace DUT_HelpDesk.Controllers
             }
             return View(tickets.ToList());
         }
-
-        public IActionResult TechnicianLeadDashboardDetail(int id)
+        public IActionResult TechniciansListDashboard(string? sortBy, string? startDate, string? endDate)
         {
-            Ticket ticket = StateManager.GetTicket(id);
-
-            if (ticket == null)
+            ViewBag.user = StateManager.user;
+            ViewBag.technician = StateManager.technician;
+            IEnumerable<Technician> technicians = StateManager.GetAllTechnicians();
+            if (sortBy != null)
             {
-                return StatusCode(400);
+                if (sortBy == "Date")
+                {
+                    technicians = technicians.OrderBy(t => t.DateJoined);
+                }
+                else if (sortBy == "Date Down")
+                {
+                    technicians = technicians.OrderByDescending(t => t.DateJoined);
+                }
+                //else if (sortBy == "Alpha")
+                //{
+                //    technicians = technicians.OrderBy(t => t.User.ToLower());
+                //}
             }
-            else
+            ViewBag.startDate = startDate; ViewBag.endDate = endDate;
+            if (startDate != null && endDate != null)
             {
-                return View(ticket);
+                technicians = technicians.Where(x => x.DateJoined >= DateTime.Parse(startDate) && x.DateJoined <= DateTime.Parse(endDate).AddDays(1)).ToList();
             }
-        }
-        public IActionResult AssignedTicketsDashboard()
-        {
-            return View();
-        }
-        public IActionResult TechniciansListDashboard()
-        {
-            return View();
+            return View(technicians.ToList());
         }
         public IActionResult InsightsDashboard()
         {

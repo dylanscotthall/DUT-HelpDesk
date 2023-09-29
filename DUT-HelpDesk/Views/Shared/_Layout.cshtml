@@ -24,7 +24,7 @@
                 }
                 else if (Html.Raw(httpContextaccessor.HttpContext.Session.GetString("_UserType")).ToString() == "TechnicianLead")
                 {
-                    <a class="navbar-brand" asp-area="" asp-controller="TechnicianLead" asp-action="TechnicianLeadDashboard">DUT_HelpDesk - Technician Lead</a>
+                    <a class="navbar-brand" asp-area="" asp-controller="TechnicianLead" asp-action="TechnicianLeadTicketQueue">DUT_HelpDesk - Technician Lead</a>
                 }
                 else
                 {
@@ -69,10 +69,10 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="TechnicianLead" asp-action="Index">Home</a>
                             </li>*@
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="TechnicianLead" asp-action="TechnicianLeadDashboard">Ticket Queue</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="TechnicianLead" asp-action="TechnicianLeadTicketQueue">Ticket Queue</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="TechnicianLead" asp-action="AssignedTicketsDashboard">Assigned Tickets</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="TechnicianLead" asp-action="TechnicianLeadDashboard">Assigned Tickets</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="TechnicianLead" asp-action="TechniciansListDashboard">Technicians</a>

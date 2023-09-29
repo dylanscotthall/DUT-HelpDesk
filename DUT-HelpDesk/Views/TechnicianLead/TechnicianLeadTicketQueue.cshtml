@@ -1,6 +1,6 @@
-﻿@model List<DUT_HelpDesk.DatabaseModels.Technician>
+﻿@model List<DUT_HelpDesk.DatabaseModels.Ticket>
 @{
-    ViewData["Title"] = "Technicians";
+    ViewData["Title"] = "Technician Ticket Queue";
     string[] tickets = new string[3];
 }
 
@@ -8,17 +8,18 @@
     <script>
         function SetSort(dropdown, startDate, endDate, status) {
 
-            window.location.href = "/Technician/TechnicianLeadTicketQueue?sortBy=" + dropdown + "&startDate=" + startDate + "&endDate=" + endDate;
+            window.location.href = "/Technician/TechnicianLeadTicketQueue?sortBy=" + dropdown + "&startDate=" + startDate + "&endDate=" + endDate + "&status=" + status;
+
         }
     </script>
     }
 
 <div>
-    <h1>Technicians</h1>
+    <h1>Ticket Queue</h1>
     <br />
     @Html.DropDownList("Sortby", new SelectListItem[] { new SelectListItem()
     { Text = "Date", Value = "Date" }, new SelectListItem()
-    { Text = "Date Down", Value = "Date Down" }, new SelectListItem()
+    { Text = "Date Down", Value = "Status" }, new SelectListItem()
     { Text = "Alpha", Value = "Alpha"}}, new {style="width:15%;display:inline;height:37px;border-color:lightgrey;border-radius:3px"})
     @if (ViewBag.startDate != null)
     {
@@ -36,18 +37,19 @@
     {
         <input style="width:15%;display:inline;" id="endDate" class="form-control col-sm-5" @*onchange="SetSort(startDateId.value, endDateId.value)"*@ type="date" @*value="@DateTime.Today.ToString("yyyy-MM-dd")"*@ />
     }
-    @*@Html.DropDownList("Status", new SelectListItem[] { new SelectListItem()
+    @Html.DropDownList("Status", new SelectListItem[] { new SelectListItem()
     { Text = "Available", Value = "Available" }, new SelectListItem()
     { Text = "Closed", Value = "Closed" }, new SelectListItem()
-    { Text = "Active", Value = "Active" }}, new {style="width:15%;display:inline;height:37px;border-color:lightgrey;border-radius:3px"})*@
-    <input style="width:15%;display:inline;" id="filter" class="form-control col-sm-5" type="button" value="Filter" onclick="SetSort(Sortby.value, startDate.value, endDate.value)" />
+    { Text = "Active", Value = "Active" }}, new {style="width:15%;display:inline;height:37px;border-color:lightgrey;border-radius:3px"})
+    <input style="width:15%;display:inline;" id="filter" class="form-control col-sm-5" type="button" value="Filter" onclick="SetSort(Sortby.value, startDate.value, endDate.value, Status.value)" />
     <br />
     <table class="table table-responsive table-hover">
         <tr>
-            <th>Email</th>
-            <th>Date Joined</th>
-            <th>Tickets Closed</th>
-            <th></th>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Current Technicians</th>
             <th></th>
         </tr>
         <br />
@@ -58,8 +60,8 @@
                 if (item != null)
                 {
                     <tr>
-                        <td>@Html.DisplayFor(modelItem => item.TechnicianId)</td>
-                        @*<td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Subject)</td>
+                        <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
                         <td>@Html.DisplayFor(modelItem => item.Priority)</td>
                         <td>@Html.DisplayFor(modelItem => item.TicketStatuses.OrderByDescending(x => x.TimeStamp).FirstOrDefault().Status.Name)</td>
                         @if (item.TechnicianCount == null)
@@ -78,7 +80,7 @@
                         else
                         {
                             <td>@Html.ActionLink("Accept", "AssignTicketToTechnician", "Technician", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId }, null)</td>
-                        }*@
+                        }
                     </tr>
                 }
             }
