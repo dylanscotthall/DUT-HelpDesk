@@ -8,6 +8,7 @@ using Firebase.Auth;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using NuGet.Packaging;
 using NuGet.Packaging.Signing;
+using System.Net.Sockets;
 
 namespace DUT_HelpDesk.Controllers
 {
@@ -128,8 +129,18 @@ namespace DUT_HelpDesk.Controllers
         public static void CreateTicketTechnician(int id, int techId)
         {
             TicketTechnician? tt = db.TicketTechnicians.Where(x => x.TicketId == id && x.TechnicianId == techId).FirstOrDefault();
-            Ticket? t = db.Tickets.Where(x => x.TicketId == id).FirstOrDefault();
+            Ticket? t = db.Tickets.Include(i => i.TicketStatuses).ThenInclude(i => i.Status).Where(x => x.TicketId == id).FirstOrDefault();
 
+            //add active to ticketstatus for ticket
+            if(db.TicketStatuses.Where(x => x.TicketId == id).OrderByDescending(o => o.TimeStamp).FirstOrDefault().StatusId != 2)
+            {
+                Status status = db.Statuses.Where(x => x.StatusId == 2).FirstOrDefault();
+                TicketStatus ticketStatus = new TicketStatus() { TicketId = t.TicketId, StatusId = status.StatusId, TimeStamp = DateTime.Now, Status = status, Ticket = t };
+                t.TicketStatuses.Add(ticketStatus);
+                db.Entry(t).State = EntityState.Modified;
+            }
+            
+            
             //Checking if an existing tt entry exists for the technician and ticket
             if (tt != null)
             {
@@ -163,6 +174,27 @@ namespace DUT_HelpDesk.Controllers
         {
             TicketTechnician tt = db.TicketTechnicians.Where(x => x.TicketId == id && x.TechnicianId == techId).FirstOrDefault();
             Ticket t = db.Tickets.Where(x => x.TicketId == id).FirstOrDefault();
+
+            //check whether ticket will be active or available after unassign
+            List<TicketTechnician> ticketTechnicians = db.TicketTechnicians.Where(x => x.TicketId == id).ToList();
+            bool stillActive = false;
+            foreach (TicketTechnician ticketTech in ticketTechnicians)
+            {
+                if(ticketTech != tt)
+                {
+                    if (ticketTech.IsAssigned == true)
+                    {
+                        stillActive = true;
+                        break;
+                    }
+                }
+            }
+            if (!stillActive)
+            {
+                TicketStatus ticketStatuses = db.TicketStatuses.Where(x => x.TicketId == id).OrderByDescending(o => o.TimeStamp).FirstOrDefault();
+                db.TicketStatuses.Remove(ticketStatuses);
+            }
+
             t.TechnicianCount = null;
             tt.IsAssigned = false;
             db.Entry(tt).State = EntityState.Modified;
@@ -193,12 +225,11 @@ namespace DUT_HelpDesk.Controllers
                 DateCreated = DateTime.Now
             };
 
-            Status status = new Status { Name = "Available" };
+            Status status = db.Statuses.Where(x => x.StatusId == 1).FirstOrDefault();
             List<TicketStatus> ticketStatuses = new List<TicketStatus>();
             TicketStatus ticketStatus = new TicketStatus() { TicketId = ticket.TicketId, StatusId = status.StatusId, TimeStamp = DateTime.Now, Status = status, Ticket = ticket };
             ticketStatuses.Add(ticketStatus);
             ticket.TicketStatuses = ticketStatuses;
-            await db.Statuses.AddAsync(status);
             await db.TicketStatuses.AddAsync(ticketStatus);
             await db.Tickets.AddAsync(ticket);
             await db.SaveChangesAsync();
