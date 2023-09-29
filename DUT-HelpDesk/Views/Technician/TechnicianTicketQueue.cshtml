@@ -38,6 +38,7 @@
         <input style="width:15%;display:inline;" id="endDate" class="form-control col-sm-5" @*onchange="SetSort(startDateId.value, endDateId.value)"*@ type="date" @*value="@DateTime.Today.ToString("yyyy-MM-dd")"*@ />
     }
     @Html.DropDownList("Status", new SelectListItem[] { new SelectListItem()
+    { Text = "Any Status", Value = "" }, new SelectListItem()
     { Text = "Available", Value = "Available" }, new SelectListItem()
     { Text = "Closed", Value = "Closed" }, new SelectListItem()
     { Text = "Active", Value = "Active" }}, new {style="width:15%;display:inline;height:37px;border-color:lightgrey;border-radius:3px"})
