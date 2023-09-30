@@ -1,5 +1,6 @@
 ﻿using DUT_HelpDesk.DatabaseModels;
 using Microsoft.AspNetCore.Mvc;
+using Rotativa.AspNetCore;
 
 namespace DUT_HelpDesk.Controllers
 {
@@ -57,7 +58,9 @@ namespace DUT_HelpDesk.Controllers
             {
                 tickets = tickets.Where(x => x.TicketStatuses.OrderByDescending(s => s.TimeStamp).FirstOrDefault().Status.Name == status);
             }
-            return View(tickets.ToList());
+            //Saved to StateManager for report generation in TechnicianTicketQueueReport
+            StateManager.filteredTickets = tickets.ToList(); 
+            return View(StateManager.filteredTickets);
         }
         public IActionResult AssignTicketToTechnician(int? id, int? techId)
         {
@@ -81,6 +84,13 @@ namespace DUT_HelpDesk.Controllers
             StateManager.UnassignTicketTechnician((int)id, (int)techId);
             ViewBag.technician = StateManager.technician;
             return View("TechnicianTicketQueue", StateManager.GetAllTickets());
+        }
+
+        public IActionResult TechnicianTicketQueueReport()
+        {
+            ViewBag.technician = StateManager.technician;
+            var pdf = new ViewAsPdf(StateManager.filteredTickets);
+            return pdf;
         }
     }
 }
