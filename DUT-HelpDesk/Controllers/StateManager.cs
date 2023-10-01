@@ -1,24 +1,17 @@
 using DUT_HelpDesk.DatabaseModels;
-using Microsoft.EntityFrameworkCore;
-using System.Net;
-using System.Text.Json;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Firebase.Auth;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using NuGet.Packaging;
-using NuGet.Packaging.Signing;
-using System.Net.Sockets;
+using Microsoft.EntityFrameworkCore;
 
 namespace DUT_HelpDesk.Controllers
 {
     public static class StateManager
     {
         //state wide variables for easy access
-        private static DatabaseModels.DutHelpdeskdbContext db = new DatabaseModels.DutHelpdeskdbContext();
+        private static DutHelpdeskdbContext db = new DutHelpdeskdbContext();
         public static DatabaseModels.User user;
         public static Technician technician;
         public static string token;
+        public static List<Ticket> filteredTickets; //used to save the user's filtered ticket list for report generation
 
         //returns a list of all users
         public static List<DatabaseModels.User> GetUsers()
