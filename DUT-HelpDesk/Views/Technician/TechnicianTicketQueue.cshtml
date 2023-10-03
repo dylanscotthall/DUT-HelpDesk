@@ -63,7 +63,7 @@
                         <td>@Html.DisplayFor(modelItem => item.Subject)</td>
                         <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
                         <td>@Html.DisplayFor(modelItem => item.Priority)</td>
-                        <td>@Html.DisplayFor(modelItem => item.TicketStatuses.OrderByDescending(x => x.TimeStamp).FirstOrDefault().Status.Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.TicketStatuses.LastOrDefault().Status.Name)</td>
                         @if (item.TechnicianCount == null)
                         {
                             <td>@Html.DisplayName("0")</td>

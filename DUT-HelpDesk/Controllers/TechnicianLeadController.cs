@@ -62,6 +62,12 @@ namespace DUT_HelpDesk.Controllers
             ViewBag.user = StateManager.user;
             ViewBag.technician = StateManager.technician;
             IEnumerable<Technician> technicians = StateManager.GetAllTechnicians();
+            //checking for count of completed tickets, waiting on ticket completion
+            //foreach (Technician item in technicians)
+            //{
+            //    var s = item.TicketTechnicians.Where(x => x.Ticket.TicketStatuses.OrderByDescending(o => o.TimeStamp).FirstOrDefault().Status.StatusId == 3).ToList().Count;
+            //    int t = 5;
+            //}
             if (sortBy != null)
             {
                 if (sortBy == "Date")

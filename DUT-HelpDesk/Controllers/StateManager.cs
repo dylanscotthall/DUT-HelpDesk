@@ -72,7 +72,7 @@ namespace DUT_HelpDesk.Controllers
         //returns all tickets in database (not for website)
         public static List<Technician> GetAllTechnicians()
         {
-            List<Technician> technicians = db.Technicians.ToList();
+            List<Technician> technicians = db.Technicians.Include(x => x.TicketTechnicians).ToList();
             return technicians;
         }
         public static List<Ticket> GetAllTickets()
@@ -135,7 +135,7 @@ namespace DUT_HelpDesk.Controllers
             if(db.TicketStatuses.Where(x => x.TicketId == id).OrderByDescending(o => o.TimeStamp).FirstOrDefault().StatusId != 2)
             {
                 Status status = db.Statuses.Where(x => x.StatusId == 2).FirstOrDefault();
-                TicketStatus ticketStatus = new TicketStatus() { TicketId = t.TicketId, StatusId = status.StatusId, TimeStamp = DateTime.Now, Status = status, Ticket = t };
+                TicketStatus ticketStatus = new TicketStatus() { TicketId = t.TicketId, StatusId = status.StatusId, TimeStamp = DateTime.UtcNow, Status = status, Ticket = t };
                 t.TicketStatuses.Add(ticketStatus);
                 db.Entry(t).State = EntityState.Modified;
             }
@@ -155,7 +155,7 @@ namespace DUT_HelpDesk.Controllers
                     TicketId = id,
                     TechnicianId = techId,
                     IsAssigned = true,
-                    TimeStamp = DateTime.Now
+                    TimeStamp = DateTime.UtcNow
                 };
                 db.TicketTechnicians.Add(newTT);
             }
@@ -191,8 +191,7 @@ namespace DUT_HelpDesk.Controllers
             }
             if (!stillActive)
             {
-                TicketStatus ticketStatuses = db.TicketStatuses.Where(x => x.TicketId == id).OrderByDescending(o => o.TimeStamp).FirstOrDefault();
-                db.TicketStatuses.Remove(ticketStatuses);
+                db.TicketStatuses.Add(new TicketStatus() { TicketId = t.TicketId, StatusId = 1, TimeStamp = DateTime.UtcNow, Status = db.Statuses.Where(x => x.StatusId == 1).FirstOrDefault(), Ticket = t });
             }
             List<TicketTechnician> ticketIsAssigned = db.TicketTechnicians.Where(x => x.TicketId == id && x.IsAssigned == true).ToList();
             int technicianCount = ticketIsAssigned.Count-1;
@@ -224,12 +223,12 @@ namespace DUT_HelpDesk.Controllers
                 Subject = model.Subject,
                 QueryBody = model.QueryBody,
                 Priority = "Low",
-                DateCreated = DateTime.Now
+                DateCreated = DateTime.UtcNow
             };
 
             Status status = db.Statuses.Where(x => x.StatusId == 1).FirstOrDefault();
             List<TicketStatus> ticketStatuses = new List<TicketStatus>();
-            TicketStatus ticketStatus = new TicketStatus() { TicketId = ticket.TicketId, StatusId = status.StatusId, TimeStamp = DateTime.Now, Status = status, Ticket = ticket };
+            TicketStatus ticketStatus = new TicketStatus() { TicketId = ticket.TicketId, StatusId = status.StatusId, TimeStamp = DateTime.UtcNow, Status = status, Ticket = ticket };
             ticketStatuses.Add(ticketStatus);
             ticket.TicketStatuses = ticketStatuses;
             await db.TicketStatuses.AddAsync(ticketStatus);

@@ -57,6 +57,11 @@ namespace DUT_HelpDesk.Controllers
             {
                 tickets = tickets.Where(x => x.TicketStatuses.OrderByDescending(s => s.TimeStamp).FirstOrDefault().Status.Name == status);
             }
+            foreach (var item in tickets)
+            {
+                var f = item.TicketStatuses.OrderByDescending(x => x.TimeStamp).FirstOrDefault();
+                int t = 5;
+            }
             return View(tickets.ToList());
         }
         public IActionResult AssignTicketToTechnician(int? id, int? techId)
