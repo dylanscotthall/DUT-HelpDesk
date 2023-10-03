@@ -24,8 +24,8 @@
                     <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
                     <td>@Html.DisplayFor(modelItem => item.Priority)</td>
 
-                    <td>@Html.ActionLink("Details", "TechnicianDashboardDetail", "Technician", new { id=item.TicketId }, null)</td>
-                    <td>@Html.ActionLink("Unaccept", "UnAssignTicketToTechnician", "Technician", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId }, null)</td>
+                    <td>@Html.ActionLink("Details", "TechnicianDashboardDetail", "TechnicianLead", new { id=item.TicketId }, null)</td>
+                    <td>@Html.ActionLink("Unaccept", "UnAssignTicketToTechnician", "TechnicianLead", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId }, null)</td>
 
                 </tr>
             }
