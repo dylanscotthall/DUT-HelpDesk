@@ -59,26 +59,10 @@
                 {
                     <tr>
                         <td>@Html.DisplayFor(modelItem => item.TechnicianId)</td>
-                        @*<td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Priority)</td>
-                        <td>@Html.DisplayFor(modelItem => item.TicketStatuses.OrderByDescending(x => x.TimeStamp).FirstOrDefault().Status.Name)</td>
-                        @if (item.TechnicianCount == null)
-                        {
-                            <td>@Html.DisplayName("0")</td>
-                        }
-                        else
-                        {
-                            <td>@Html.DisplayFor(modelItem => item.TechnicianCount)</td>
-                        }
-                        <td>@Html.ActionLink("Details", "TechnicianDashboardDetail", "Technician", new { id=item.TicketId }, null)</td>
-                        @if (item.TicketTechnicians.Where(x => x.TechnicianId == ViewBag.technician.TechnicianId && x.IsAssigned == true).FirstOrDefault() != null)
-                        {
-                            <td>@Html.ActionLink("Unaccept", "UnassignTicketToTechnicianFromTicketQueue", "Technician", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId }, null)</td>
-                        }
-                        else
-                        {
-                            <td>@Html.ActionLink("Accept", "AssignTicketToTechnician", "Technician", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId }, null)</td>
-                        }*@
+                        <td>@Html.DisplayFor(modelItem => item.DateJoined)</td>
+                        <td>@Html.DisplayFor(modelItem => item.TicketTechnicians.Where(x => x.Ticket.TicketStatuses.OrderByDescending(o => o.TimeStamp).FirstOrDefault().Status.StatusId == 3).ToList().Count)</td>
+                        <td>@Html.ActionLink("Information", "Information", "TechnicianLead", new {  }, null)</td>
+                        <td>@Html.ActionLink("Information", "GenerateReport", "TechnicianLead", new {  }, null)</td>
                     </tr>
                 }
             }
