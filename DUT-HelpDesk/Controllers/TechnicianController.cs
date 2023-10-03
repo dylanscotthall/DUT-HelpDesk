@@ -92,5 +92,12 @@ namespace DUT_HelpDesk.Controllers
             var pdf = new ViewAsPdf(StateManager.filteredTickets);
             return pdf;
         }
+
+        public IActionResult MyReplies()
+        {
+
+            Ticket ticket = StateManager.GetTicket(23);
+            return View(ticket);
+        }
     }
 }
