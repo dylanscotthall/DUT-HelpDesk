@@ -93,11 +93,22 @@ namespace DUT_HelpDesk.Controllers
             return pdf;
         }
 
-        public IActionResult MyReplies()
+        public IActionResult MyReplies(int id)
         {
-
-            Ticket ticket = StateManager.GetTicket(23);
-            return View(ticket);
+            ReplyTicketViewModel model = new ReplyTicketViewModel();
+            Ticket ticket = StateManager.GetTicket(id);
+            model.ticket = ticket;
+            return View(model);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> MyReplies(ReplyTicketViewModel vm)
+        {
+            
+                await StateManager.MyReplies(vm);
+            
+            
+            return RedirectToAction("TechnicianDashboard");
+        } 
     }
 }
