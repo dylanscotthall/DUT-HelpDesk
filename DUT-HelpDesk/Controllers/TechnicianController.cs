@@ -1,4 +1,4 @@
-﻿using DUT_HelpDesk.DatabaseModels;
+using DUT_HelpDesk.DatabaseModels;
 using Microsoft.AspNetCore.Mvc;
 using Rotativa.AspNetCore;
 
@@ -86,6 +86,24 @@ namespace DUT_HelpDesk.Controllers
             return View("TechnicianTicketQueue", StateManager.GetAllTickets());
         }
 
+        public IActionResult FaqDashboard()
+        {
+            ViewBag.user = StateManager.user;
+            ViewBag.technician = StateManager.technician;
+            IEnumerable<Faq> tickets = StateManager.GetAllFaqs();
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> FaqDashboard(Faq faq)
+        {
+            ViewBag.user = StateManager.user;
+            ViewBag.technician = StateManager.technician;
+            faq.TechnicianId = StateManager.technician.TechnicianId;
+         StateManager.CreateFaq(faq);
+            IEnumerable<Ticket> tickets = StateManager.GetTechnicianTickets();
+            return View("TechnicianDashboard",tickets);
+
+
         public IActionResult TechnicianTicketQueueReport()
         {
             ViewBag.technician = StateManager.technician;
@@ -98,6 +116,7 @@ namespace DUT_HelpDesk.Controllers
 
             Ticket ticket = StateManager.GetTicket(23);
             return View(ticket);
+
         }
     }
 }
