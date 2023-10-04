@@ -1,0 +1,45 @@
+﻿@model List<DUT_HelpDesk.DatabaseModels.Ticket>
+@{
+    ViewData["Title"] = "Technician Ticket Queue";
+    string[] tickets = new string[3];
+}
+
+<div>
+    <h1>Ticket Queue Report</h1>
+    <br/>
+    <table class="table table-responsive table-hover">
+        <tr>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Current Technicians</th>
+        </tr>
+        @if (Model != null)
+        {
+            @foreach (var item in Model)
+            {
+                if (item != null)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Subject)</td>
+                        <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Priority)</td>
+                        <td>@Html.DisplayFor(modelItem => item.TicketStatuses.OrderByDescending(x => x.TimeStamp).FirstOrDefault().Status.Name)</td>
+                        @if (item.TechnicianCount == null)
+                        {
+                            <td>@Html.DisplayName("0")</td>
+                        }
+                        else
+                        {
+                            <td>@Html.DisplayFor(modelItem => item.TechnicianCount)</td>
+                        }
+                    </tr>
+                }
+            }
+        }
+    </table>
+</div>
+
+
+

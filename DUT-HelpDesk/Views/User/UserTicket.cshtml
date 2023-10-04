@@ -56,6 +56,7 @@
                     <td>@Html.DisplayFor(modelItem => item.Subject)</td>
                     <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
                     <td>@Html.DisplayFor(modelItem => item.TicketStatuses.OrderByDescending(x => x.TimeStamp).FirstOrDefault().Status.Name)</td>
+                    <td>@Html.ActionLink("Details", "ViewTicket", "User", new { id=item.TicketId }, null)</td>
                 </tr>
             }
         }

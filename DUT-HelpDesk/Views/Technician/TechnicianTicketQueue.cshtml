@@ -14,6 +14,7 @@
     </script>
     }
 
+
 <div>
     <h1>Ticket Queue</h1>
     <br />
@@ -38,6 +39,7 @@
         <input style="width:15%;display:inline;" id="endDate" class="form-control col-sm-5" @*onchange="SetSort(startDateId.value, endDateId.value)"*@ type="date" @*value="@DateTime.Today.ToString("yyyy-MM-dd")"*@ />
     }
     @Html.DropDownList("Status", new SelectListItem[] { new SelectListItem()
+    { Text = "Any Status", Value = "" }, new SelectListItem()
     { Text = "Available", Value = "Available" }, new SelectListItem()
     { Text = "Closed", Value = "Closed" }, new SelectListItem()
     { Text = "Active", Value = "Active" }}, new {style="width:15%;display:inline;height:37px;border-color:lightgrey;border-radius:3px"})
@@ -63,7 +65,7 @@
                         <td>@Html.DisplayFor(modelItem => item.Subject)</td>
                         <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
                         <td>@Html.DisplayFor(modelItem => item.Priority)</td>
-                        <td>@Html.DisplayFor(modelItem => item.TicketStatuses.OrderByDescending(x => x.TimeStamp).FirstOrDefault().Status.Name)</td>
+                        <td>@Html.DisplayFor(modelItem => item.TicketStatuses.LastOrDefault().Status.Name)</td>
                         @if (item.TechnicianCount == null)
                         {
                             <td>@Html.DisplayName("0")</td>
@@ -86,6 +88,9 @@
             }
         }
     </table>
+    <div>
+        <a asp-controller="Technician" asp-action="TechnicianTicketQueueReport">Export to PDF</a>
+    </div>
 </div>
 
 

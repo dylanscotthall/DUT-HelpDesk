@@ -38,6 +38,7 @@
         <input style="width:15%;display:inline;" id="endDate" class="form-control col-sm-5" @*onchange="SetSort(startDateId.value, endDateId.value)"*@ type="date" @*value="@DateTime.Today.ToString("yyyy-MM-dd")"*@ />
     }
     @Html.DropDownList("Status", new SelectListItem[] { new SelectListItem()
+    { Text = "Any Status", Value = "" }, new SelectListItem()
     { Text = "Available", Value = "Available" }, new SelectListItem()
     { Text = "Closed", Value = "Closed" }, new SelectListItem()
     { Text = "Active", Value = "Active" }}, new {style="width:15%;display:inline;height:37px;border-color:lightgrey;border-radius:3px"})
@@ -72,14 +73,14 @@
                         {
                             <td>@Html.DisplayFor(modelItem => item.TechnicianCount)</td>
                         }
-                        <td>@Html.ActionLink("Details", "TechnicianDashboardDetail", "Technician", new { id=item.TicketId }, null)</td>
+                        <td>@Html.ActionLink("Details", "TechnicianDashboardDetail", "TechnicianLead", new { id=item.TicketId }, null)</td>
                         @if (item.TicketTechnicians.Where(x => x.TechnicianId == ViewBag.technician.TechnicianId && x.IsAssigned == true).FirstOrDefault() != null)
                         {
-                            <td>@Html.ActionLink("Unaccept", "UnassignTicketToTechnicianFromTicketQueue", "Technician", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId }, null)</td>
+                            <td>@Html.ActionLink("Unaccept", "UnassignTicketToTechnicianFromTicketQueue", "TechnicianLead", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId }, null)</td>
                         }
                         else
                         {
-                            <td>@Html.ActionLink("Accept", "AssignTicketToTechnician", "Technician", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId }, null)</td>
+                            <td>@Html.ActionLink("Accept", "AssignTicketToTechnician", "TechnicianLead", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId }, null)</td>
                         }
                     </tr>
                 }
