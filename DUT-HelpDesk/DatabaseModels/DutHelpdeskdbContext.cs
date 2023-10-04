@@ -17,6 +17,8 @@ public partial class DutHelpdeskdbContext : DbContext
 
     public virtual DbSet<Attachment> Attachments { get; set; }
 
+    public virtual DbSet<Faq> Faqs { get; set; }
+
     public virtual DbSet<Feedback> Feedbacks { get; set; }
 
     public virtual DbSet<Reply> Replies { get; set; }
@@ -32,12 +34,10 @@ public partial class DutHelpdeskdbContext : DbContext
     public virtual DbSet<TicketTechnician> TicketTechnicians { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
-    IConfiguration config = new ConfigurationBuilder()
-           .AddJsonFile("appsettings.json")
-           .Build();
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer(config["AzureConnStr"]);
+        => optionsBuilder.UseSqlServer("Server=tcp:bitdevs.database.windows.net,1433;Initial Catalog=DUT_Helpdeskdb;Persist Security Info=False;User ID=BitDevs;Password=Codebit7;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -62,6 +62,23 @@ public partial class DutHelpdeskdbContext : DbContext
             entity.HasOne(d => d.Ticket).WithMany(p => p.Attachments)
                 .HasForeignKey(d => d.TicketId)
                 .HasConstraintName("FK__Attachmen__Ticke__30C33EC3");
+        });
+
+        modelBuilder.Entity<Faq>(entity =>
+        {
+            entity.HasKey(e => e.FaqId).HasName("PK__FAQs__F33B90EAE5C73290");
+
+            entity.ToTable("FAQs");
+
+            entity.Property(e => e.FaqId).HasColumnName("Faq_id");
+            entity.Property(e => e.Answer).IsUnicode(false);
+            entity.Property(e => e.Question).IsUnicode(false);
+            entity.Property(e => e.TechnicianId).HasColumnName("Technician_id");
+
+            entity.HasOne(d => d.Technician).WithMany(p => p.Faqs)
+                .HasForeignKey(d => d.TechnicianId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__FAQs__Technician__40F9A68C");
         });
 
         modelBuilder.Entity<Feedback>(entity =>
@@ -102,7 +119,7 @@ public partial class DutHelpdeskdbContext : DbContext
 
         modelBuilder.Entity<Status>(entity =>
         {
-            entity.HasKey(e => e.StatusId).HasName("PK__Status__519105244A762D17");
+            entity.HasKey(e => e.StatusId).HasName("PK__Status__519105241C31A925");
 
             entity.ToTable("Status");
 
@@ -156,7 +173,7 @@ public partial class DutHelpdeskdbContext : DbContext
 
         modelBuilder.Entity<TicketStatus>(entity =>
         {
-            entity.HasKey(e => e.TicketStatusId).HasName("PK__TicketSt__72C70E9617691344");
+            entity.HasKey(e => e.TicketStatusId).HasName("PK__TicketSt__72C70E9645D28AD1");
 
             entity.ToTable("TicketStatus");
 
@@ -167,11 +184,11 @@ public partial class DutHelpdeskdbContext : DbContext
 
             entity.HasOne(d => d.Status).WithMany(p => p.TicketStatuses)
                 .HasForeignKey(d => d.StatusId)
-                .HasConstraintName("FK__TicketSta__Statu__37703C52");
+                .HasConstraintName("FK__TicketSta__Statu__5224328E");
 
             entity.HasOne(d => d.Ticket).WithMany(p => p.TicketStatuses)
                 .HasForeignKey(d => d.TicketId)
-                .HasConstraintName("FK__TicketSta__Ticke__367C1819");
+                .HasConstraintName("FK__TicketSta__Ticke__51300E55");
         });
 
         modelBuilder.Entity<TicketTechnician>(entity =>
