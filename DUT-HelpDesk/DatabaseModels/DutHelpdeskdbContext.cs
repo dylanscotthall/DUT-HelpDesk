@@ -43,7 +43,7 @@ public partial class DutHelpdeskdbContext : DbContext
     {
         modelBuilder.Entity<Attachment>(entity =>
         {
-            entity.HasKey(e => e.AttachmentId).HasName("PK__Attachme__97E3B2DFE4D7B507");
+            entity.HasKey(e => e.AttachmentId).HasName("PK__Attachme__97E3B2DFB040DA7E");
 
             entity.ToTable("Attachment");
 
@@ -57,11 +57,11 @@ public partial class DutHelpdeskdbContext : DbContext
 
             entity.HasOne(d => d.Reply).WithMany(p => p.Attachments)
                 .HasForeignKey(d => d.ReplyId)
-                .HasConstraintName("FK__Attachmen__Reply__31B762FC");
+                .HasConstraintName("FK__Attachmen__Reply__6166761E");
 
             entity.HasOne(d => d.Ticket).WithMany(p => p.Attachments)
                 .HasForeignKey(d => d.TicketId)
-                .HasConstraintName("FK__Attachmen__Ticke__30C33EC3");
+                .HasConstraintName("FK__Attachmen__Ticke__607251E5");
         });
 
         modelBuilder.Entity<Faq>(entity =>
@@ -101,7 +101,7 @@ public partial class DutHelpdeskdbContext : DbContext
 
         modelBuilder.Entity<Reply>(entity =>
         {
-            entity.HasKey(e => e.ReplyId).HasName("PK__Reply__B660369CDBD4B444");
+            entity.HasKey(e => e.ReplyId).HasName("PK__Reply__B660369C4771C938");
 
             entity.ToTable("Reply");
 
@@ -111,10 +111,15 @@ public partial class DutHelpdeskdbContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false);
             entity.Property(e => e.TicketId).HasColumnName("Ticket_id");
+            entity.Property(e => e.UserId).HasColumnName("User_id");
 
             entity.HasOne(d => d.Ticket).WithMany(p => p.Replies)
                 .HasForeignKey(d => d.TicketId)
-                .HasConstraintName("FK__Reply__Ticket_id__2B0A656D");
+                .HasConstraintName("FK__Reply__Ticket_id__5CA1C101");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Replies)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK__Reply__User_id__5D95E53A");
         });
 
         modelBuilder.Entity<Status>(entity =>
