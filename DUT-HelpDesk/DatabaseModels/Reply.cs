@@ -9,6 +9,8 @@ public partial class Reply
 
     public int? TicketId { get; set; }
 
+    public int? UserId { get; set; }
+
     public string? Message { get; set; }
 
     public DateTime? Date { get; set; }
@@ -16,4 +18,6 @@ public partial class Reply
     public virtual ICollection<Attachment> Attachments { get; set; } = new List<Attachment>();
 
     public virtual Ticket? Ticket { get; set; }
+
+    public virtual User? User { get; set; }
 }

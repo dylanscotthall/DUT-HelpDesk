@@ -1,4 +1,4 @@
-﻿using DUT_HelpDesk.DatabaseModels;
+using DUT_HelpDesk.DatabaseModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Rotativa.AspNetCore;
@@ -88,14 +88,35 @@ namespace DUT_HelpDesk.Controllers
             ViewBag.technician = StateManager.technician;
             return View("TechnicianTicketQueue", StateManager.GetAllTickets());
         }
+        public IActionResult TechCreateFAQ()
+        {
+            ViewBag.user = StateManager.user;
+            ViewBag.technician = StateManager.technician;
+            IEnumerable<Faq> tickets = StateManager.GetAllFaqs();
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> TechCreateFAQ(Faq faq)
+        {
+            ViewBag.user = StateManager.user;
+            ViewBag.technician = StateManager.technician;
+            faq.TechnicianId = StateManager.technician.TechnicianId;
+
+         StateManager.CreateFaq(faq);
+   
+            return RedirectToAction("FaqDashboard");
+       
+        }
 
         public IActionResult TechnicianTicketQueueReport()
         {
             ViewBag.technician = StateManager.technician;
             var pdf = new ViewAsPdf(StateManager.filteredTickets);
             return pdf;
+
         }
 
+<<<<<<< HEAD
         [HttpPost]
         public async Task<IActionResult> MyReplies(ReplyTicketViewModel vm)
         {
@@ -118,6 +139,13 @@ namespace DUT_HelpDesk.Controllers
             }
 
             return File(uploadedFile.FileContent, uploadedFile.ContentType); // Adjust the content type as needed
+=======
+        public IActionResult FaqDashboard()
+        {
+            List<Faq> faqs = StateManager.GetAllFaqs();
+            return View(faqs);
+>>>>>>> dc9ceabba04d10185e7880d9bd6e973b68ffd2d1
         }
+
     }
 }

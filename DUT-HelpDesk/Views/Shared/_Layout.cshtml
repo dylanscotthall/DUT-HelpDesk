@@ -41,15 +41,20 @@
                             @*<li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Home</a>
                             </li>*@
+                           
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="UserTicket">My Tickets</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">FAQ</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="FaqDashboard">FAQs</a>
                             </li>
+                           
                         }
                         else if (Html.Raw(httpContextaccessor.HttpContext.Session.GetString("_UserType")).ToString() == "Technician")
                         {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Technician" asp-action="FaqDashboard">FAQ</a>
+                            </li>
                             @*<li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Technician" asp-action="Index">Home</a>
                             </li>*@

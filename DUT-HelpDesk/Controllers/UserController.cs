@@ -26,6 +26,12 @@ namespace DUT_HelpDesk.Controllers
                           new FirebaseConfig("AIzaSyDbriiQXcud__j4B6rbGh3brehz9DnBrRM"));
         }
 
+        public IActionResult FaqDashboard()
+        {
+            List<Faq>faqs = StateManager.GetAllFaqs();
+            return View(faqs);
+        }
+
         public IActionResult Index()
         {
             return View();
