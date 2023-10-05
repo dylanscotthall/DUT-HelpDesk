@@ -14,6 +14,7 @@ namespace DUT_HelpDesk.Controllers
         public static Technician technician;
         public static string token;
         public static List<Ticket> filteredTickets; //used to save the user's filtered ticket list for report generation
+        public static string email;
 
         //returns a list of all users
         public static List<DatabaseModels.User> GetUsers()
@@ -276,7 +277,7 @@ namespace DUT_HelpDesk.Controllers
                 TicketId = model.id,
                 Message = model.Message,
                 Date = DateTime.Now,
-                UserId = user.UserId
+                
                 
             };
             
