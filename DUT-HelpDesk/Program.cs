@@ -1,3 +1,5 @@
+using Rotativa.AspNetCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -15,6 +17,9 @@ builder.Services.AddSession(options =>
 });
 
 var app = builder.Build();
+
+IWebHostEnvironment env = app.Environment;
+RotativaConfiguration.Setup((Microsoft.AspNetCore.Hosting.IHostingEnvironment)env);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
