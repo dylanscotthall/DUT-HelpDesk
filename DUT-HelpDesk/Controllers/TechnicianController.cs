@@ -99,10 +99,10 @@ namespace DUT_HelpDesk.Controllers
             ViewBag.user = StateManager.user;
             ViewBag.technician = StateManager.technician;
             faq.TechnicianId = StateManager.technician.TechnicianId;
-         StateManager.CreateFaq(faq);
+            StateManager.CreateFaq(faq);
             IEnumerable<Ticket> tickets = StateManager.GetTechnicianTickets();
-            return View("TechnicianDashboard",tickets);
-
+            return View("TechnicianDashboard", tickets);
+        }
 
         public IActionResult TechnicianTicketQueueReport()
         {
