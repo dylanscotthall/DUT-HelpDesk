@@ -98,9 +98,19 @@ namespace DUT_HelpDesk.Controllers
             ViewBag.user = StateManager.user;
             ViewBag.technician = StateManager.technician;
             faq.TechnicianId = StateManager.technician.TechnicianId;
+
          StateManager.CreateFaq(faq);
    
             return RedirectToAction("FaqDashboard");
+       
+        }
+
+        public IActionResult TechnicianTicketQueueReport()
+        {
+            ViewBag.technician = StateManager.technician;
+            var pdf = new ViewAsPdf(StateManager.filteredTickets);
+            return pdf;
+
         }
 
         public IActionResult FaqDashboard()
