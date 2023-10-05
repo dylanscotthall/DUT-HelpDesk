@@ -1,19 +1,29 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-@model DUT_HelpDesk.DatabaseModels.Faq
+﻿@model List<DUT_HelpDesk.DatabaseModels.Faq>
+    @{
+        ViewData["Title"] = "FAQ";
+    }
 
-@using (Html.BeginForm("FaqDashboard", "Technician", FormMethod.Post))
-{
-    <div class="form-group">
-        @Html.LabelFor(model => model.Question)
-        @Html.TextBoxFor(model => model.Question, new { @class = "form-control" })
+    <div>
+        <h1>FAQ</h1>
+        <br />
+        <table class="table table-responsive table-hover">
+            <tr>
+                <th>Question</th>
+                <th>Anwser</th>
+            </tr>
+            <br />
+            @foreach (var item in Model)
+            {
+                @if (item != null)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Question)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Answer)</td>
+
+
+                    </tr>
+                }
+            }
+        </table>
     </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.Answer)
-        @Html.TextAreaFor(model => model.Answer, new { @class = "form-control" })
-    </div>
-    <button type="submit" class="btn btn-primary">Create FAQ</button>
-}
+    <a asp-controller="Technician" asp-action="TechCreateFAQ">Create FAQ</a>

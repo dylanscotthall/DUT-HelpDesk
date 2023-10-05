@@ -85,8 +85,7 @@ namespace DUT_HelpDesk.Controllers
             ViewBag.technician = StateManager.technician;
             return View("TechnicianTicketQueue", StateManager.GetAllTickets());
         }
-
-        public IActionResult FaqDashboard()
+        public IActionResult TechCreateFAQ()
         {
             ViewBag.user = StateManager.user;
             ViewBag.technician = StateManager.technician;
@@ -94,14 +93,16 @@ namespace DUT_HelpDesk.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> FaqDashboard(Faq faq)
+        public async Task<IActionResult> TechCreateFAQ(Faq faq)
         {
             ViewBag.user = StateManager.user;
             ViewBag.technician = StateManager.technician;
             faq.TechnicianId = StateManager.technician.TechnicianId;
-            StateManager.CreateFaq(faq);
-            IEnumerable<Ticket> tickets = StateManager.GetTechnicianTickets();
-            return View("TechnicianDashboard", tickets);
+
+         StateManager.CreateFaq(faq);
+   
+            return RedirectToAction("FaqDashboard");
+       
         }
 
         public IActionResult TechnicianTicketQueueReport()
@@ -109,14 +110,14 @@ namespace DUT_HelpDesk.Controllers
             ViewBag.technician = StateManager.technician;
             var pdf = new ViewAsPdf(StateManager.filteredTickets);
             return pdf;
+
         }
 
-        public IActionResult MyReplies()
+        public IActionResult FaqDashboard()
         {
-
-            Ticket ticket = StateManager.GetTicket(23);
-            return View(ticket);
-
+            List<Faq> faqs = StateManager.GetAllFaqs();
+            return View(faqs);
         }
+
     }
 }
