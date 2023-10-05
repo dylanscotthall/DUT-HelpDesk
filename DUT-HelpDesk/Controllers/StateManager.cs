@@ -263,7 +263,7 @@ namespace DUT_HelpDesk.Controllers
                 TicketId = model.id,
                 Message = model.Message,
                 Date = DateTime.Now,
-
+                
             };
             
             await db.Replies.AddAsync(reply);

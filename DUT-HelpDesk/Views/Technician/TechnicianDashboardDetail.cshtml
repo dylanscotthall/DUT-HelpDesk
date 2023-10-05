@@ -51,7 +51,7 @@
                     padding: 8px;
                 }
             </style>
-            <table>
+            <table @*lass="table table-responsive table-hover"*@>
                 <thead>
                     <tr>
                         <th>Time</th>
@@ -87,7 +87,7 @@
             <div class="form-group">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <label asp-for="Message">Reply:</label>
-                <textarea asp-for="Message" class="form-control"></textarea>
+                <textarea asp-for="Message" class="form-control" maxlength="255"></textarea>
             </div>
             <input asp-for="id" type="hidden" value="@Model.ticket.TicketId" />
             <br />
