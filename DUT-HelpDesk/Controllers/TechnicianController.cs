@@ -1,5 +1,6 @@
 ﻿using DUT_HelpDesk.DatabaseModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Rotativa.AspNetCore;
 
 namespace DUT_HelpDesk.Controllers
@@ -18,14 +19,16 @@ namespace DUT_HelpDesk.Controllers
             Ticket ticket = StateManager.GetTicket(id);
             List<Reply> replies = StateManager.GetTicketReplies(id);
             ViewBag.replies = replies;
-
+            
             if (ticket == null)
             {
                 return StatusCode(400);
             }
             else
             {
-                return View(ticket);
+                ReplyTicketViewModel model = new ReplyTicketViewModel();
+                model.ticket = ticket;
+                return View(model);
             }
         }
 
@@ -93,14 +96,6 @@ namespace DUT_HelpDesk.Controllers
             return pdf;
         }
 
-        public IActionResult MyReplies(int id)
-        {
-            ReplyTicketViewModel model = new ReplyTicketViewModel();
-            Ticket ticket = StateManager.GetTicket(id);
-            model.ticket = ticket;
-            return View(model);
-        }
-
         [HttpPost]
         public async Task<IActionResult> MyReplies(ReplyTicketViewModel vm)
         {
@@ -108,7 +103,21 @@ namespace DUT_HelpDesk.Controllers
                 await StateManager.MyReplies(vm);
             
             
-            return RedirectToAction("TechnicianDashboard");
-        } 
+            return RedirectToAction("TechnicianDashboardDetail", new { id = vm.id });
+        }
+
+        public async Task<IActionResult> ViewAttachment(int id)
+        {
+            DatabaseModels.DutHelpdeskdbContext db =new DutHelpdeskdbContext();
+
+            var uploadedFile = await db.Attachments.FirstOrDefaultAsync(f => f.TicketId == id);
+
+            if (uploadedFile == null)
+            {
+                return NotFound();
+            }
+
+            return File(uploadedFile.FileContent, uploadedFile.ContentType); // Adjust the content type as needed
+        }
     }
 }
