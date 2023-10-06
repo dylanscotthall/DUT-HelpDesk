@@ -39,6 +39,8 @@ namespace DUT_HelpDesk.Controllers
                     HttpContext.Session.SetString("_UserID", fbAuthLink.User.LocalId);
                     StateManager.user = StateManager.GetUserByFBId(fbAuthLink.User.LocalId);
                     HttpContext.Session.SetString("_UserType", StateManager.user.Type);
+                    StateManager.email = fbAuthLink.User.Email;
+                    
                     switch (StateManager.getUserType())
                     {
                         case "Student":

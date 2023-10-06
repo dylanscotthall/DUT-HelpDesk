@@ -1,5 +1,6 @@
 using DUT_HelpDesk.DatabaseModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Rotativa.AspNetCore;
 
 namespace DUT_HelpDesk.Controllers
@@ -18,14 +19,16 @@ namespace DUT_HelpDesk.Controllers
             Ticket ticket = StateManager.GetTicket(id);
             List<Reply> replies = StateManager.GetTicketReplies(id);
             ViewBag.replies = replies;
-
+            
             if (ticket == null)
             {
                 return StatusCode(400);
             }
             else
             {
-                return View(ticket);
+                ReplyTicketViewModel model = new ReplyTicketViewModel();
+                model.ticket = ticket;
+                return View(model);
             }
         }
 
@@ -113,10 +116,35 @@ namespace DUT_HelpDesk.Controllers
 
         }
 
+<<<<<<< HEAD
+        [HttpPost]
+        public async Task<IActionResult> MyReplies(ReplyTicketViewModel vm)
+        {
+            
+                await StateManager.MyReplies(vm);
+            
+            
+            return RedirectToAction("TechnicianDashboardDetail", new { id = vm.id });
+        }
+
+        public async Task<IActionResult> ViewAttachment(int id)
+        {
+            DatabaseModels.DutHelpdeskdbContext db =new DutHelpdeskdbContext();
+
+            var uploadedFile = await db.Attachments.FirstOrDefaultAsync(f => f.TicketId == id);
+
+            if (uploadedFile == null)
+            {
+                return NotFound();
+            }
+
+            return File(uploadedFile.FileContent, uploadedFile.ContentType); // Adjust the content type as needed
+=======
         public IActionResult FaqDashboard()
         {
             List<Faq> faqs = StateManager.GetAllFaqs();
             return View(faqs);
+>>>>>>> dc9ceabba04d10185e7880d9bd6e973b68ffd2d1
         }
 
     }

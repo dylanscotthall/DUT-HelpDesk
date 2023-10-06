@@ -1,6 +1,8 @@
 using DUT_HelpDesk.DatabaseModels;
 using Firebase.Auth;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Sockets;
 
 namespace DUT_HelpDesk.Controllers
 {
@@ -12,6 +14,7 @@ namespace DUT_HelpDesk.Controllers
         public static Technician technician;
         public static string token;
         public static List<Ticket> filteredTickets; //used to save the user's filtered ticket list for report generation
+        public static string email;
 
         //returns a list of all users
         public static List<DatabaseModels.User> GetUsers()
@@ -265,5 +268,48 @@ namespace DUT_HelpDesk.Controllers
 
             }
         }
+
+        public static async Task MyReplies(ReplyTicketViewModel model)
+        {
+
+            Reply reply = new Reply()
+            {
+                TicketId = model.id,
+                Message = model.Message,
+                Date = DateTime.Now,
+                
+                
+            };
+            
+            await db.Replies.AddAsync(reply);
+            await db.SaveChangesAsync();
+
+            if (model.file != null)
+            {
+
+                using (var stream = new MemoryStream())
+                {
+                    await model.file.CopyToAsync(stream);
+
+                    stream.Seek(0, SeekOrigin.Begin);
+
+                    Reply[] currentReply = db.Replies.Where(r => r == reply).ToArray();
+                    var uploadedFile = new Attachment()
+                    {
+                        ReplyId = currentReply[0].ReplyId,
+                        FileName = model.file.Name,
+                        FileContent = stream.ToArray(),
+                        ContentType = model.file.ContentType
+                    };
+
+                    await db.Attachments.AddAsync(uploadedFile);
+                    await db.SaveChangesAsync();
+                }
+
+            }
+
+        }
+
+
     }
 }
