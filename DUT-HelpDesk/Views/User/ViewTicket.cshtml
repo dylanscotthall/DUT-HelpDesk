@@ -70,8 +70,19 @@
                             {
                                 <tr>
                                     <td>@item.Date</td>
-                                    <td>user email</td>
-                                    <td>@item.Message</td>
+                                @{
+                                    List<User> users = ViewBag.users;
+                                    for(int i = 0; i < users.Count; i++)
+                                    {
+                                        if (item.UserId == users[i].UserId)
+                                        {
+                                            <td>@users[i].Email</td>
+                                        }
+                                    }
+                                }
+                                <td>@item.Message</td>
+                                    
+                                    
                                     
                                 </tr>
                             }

@@ -222,6 +222,9 @@ public partial class DutHelpdeskdbContext : DbContext
             entity.HasKey(e => e.UserId).HasName("PK__Users__206A9DF80DC9A586");
 
             entity.Property(e => e.UserId).HasColumnName("User_id");
+            entity.Property(e => e.Email)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.FbId)
                 .IsUnicode(false)
                 .HasColumnName("Fb_id");
