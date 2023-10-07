@@ -116,7 +116,7 @@ namespace DUT_HelpDesk.Controllers
 
         }
 
-<<<<<<< HEAD
+
         [HttpPost]
         public async Task<IActionResult> MyReplies(ReplyTicketViewModel vm)
         {
@@ -129,7 +129,7 @@ namespace DUT_HelpDesk.Controllers
 
         public async Task<IActionResult> ViewAttachment(int id)
         {
-            DatabaseModels.DutHelpdeskdbContext db =new DutHelpdeskdbContext();
+            DatabaseModels.DutHelpdeskdbContext db = new DutHelpdeskdbContext();
 
             var uploadedFile = await db.Attachments.FirstOrDefaultAsync(f => f.TicketId == id);
 
@@ -139,12 +139,14 @@ namespace DUT_HelpDesk.Controllers
             }
 
             return File(uploadedFile.FileContent, uploadedFile.ContentType); // Adjust the content type as needed
-=======
+        }
+
+
         public IActionResult FaqDashboard()
         {
             List<Faq> faqs = StateManager.GetAllFaqs();
             return View(faqs);
->>>>>>> dc9ceabba04d10185e7880d9bd6e973b68ffd2d1
+
         }
 
     }
