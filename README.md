@@ -1,19 +1,33 @@
 # DUT-HelpDesk
 
-## Team BitBots
-|Members|
-|---|
-|Jishen Harilal|
-|Evan Teague|
-|Dylan Hall|
-|Ricardo Sánchez|
-|Fawwaz Osman|
-|Deylin Nair|
-|Keval Rohith|
-|Ayrton Mulqueeny|
----
-## DUT-HELPDESK | TICKET STATUS RUNDOWN
+## 🤖 Team BitBots
+|<sub>Jishen Harilal|<sub>Evan Teague|<sub>Dylan Hall|<sub>Ricardo Sánchez|<sub>Fawwaz Osman|<sub>Deylin Nair|<sub>Keval Rohith|<sub>Ayrton Mulqueeny|
+|---|-|-|-|-|-|-|-|
 
+---
+### ✅ POE Rubric Responsibility
+#### 🧑‍💻 Can be assigned to individual:
+|Section|Assigned Member|
+|-------|-----|
+|Business Communication        ||
+|Systems Analysis and Design   ||
+|Architecture                  ||
+|Application security          ||
+|Operations                    ||
+|Secure application development||
+|DevOps                        ||
+
+#### 🏢 Group Effort
+|Section|
+|-------|
+|Digital Law and Ethics         |
+|Basic Programming Skills       |
+|Intermediate Programming Skills|
+|Advanced Programming Skills    |
+
+---
+### DUT-HELPDESK | TICKET STATUS RUNDOWN
+> This section in the Readme is temporary.  
 > Statuses need to be added to the statuses table.
 
 ### Statuses:
