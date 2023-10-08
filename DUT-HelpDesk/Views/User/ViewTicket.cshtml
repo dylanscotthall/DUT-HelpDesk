@@ -81,10 +81,19 @@
                                     }
                                 }
                                 <td>@item.Message</td>
-                                    
-                                    
-                                    
-                                </tr>
+                                @{
+
+
+                                    var uploadedAtt = db.Attachments.FirstOrDefault(f => f.ReplyId == item.ReplyId);
+
+                                    if (uploadedAtt != null)
+                                    {
+                                        <td><a href="@Url.Action("ViewReplyAttachment", "User", new { id = item.ReplyId })">View Attachment</a></td>
+                                    }
+                                }
+
+
+                            </tr>
                             }
                         }       
                     else
