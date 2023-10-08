@@ -72,7 +72,8 @@ namespace DUT_HelpDesk.Controllers
             Ticket ticket = StateManager.GetTicket(id);
             List<Reply> replies = StateManager.GetTicketReplies(id);
             ViewBag.replies = replies;
-
+            List<DatabaseModels.User> users = StateManager.GetUsers();
+            ViewBag.users = users;
             if (ticket == null)
             {
                 return StatusCode(400);
@@ -94,7 +95,19 @@ namespace DUT_HelpDesk.Controllers
 
             return RedirectToAction("ViewTicket", new { id = vm.id });
         }
+        public async Task<IActionResult> ViewReplyAttachment(int id)
+        {
 
+
+            var uploadedFile = await db.Attachments.FirstOrDefaultAsync(f => f.ReplyId == id);
+
+            if (uploadedFile == null)
+            {
+                return NotFound();
+            }
+
+            return File(uploadedFile.FileContent, uploadedFile.ContentType); // Adjust the content type as needed
+        }
         public async Task<IActionResult> ViewAttachment(int id)
         {
 

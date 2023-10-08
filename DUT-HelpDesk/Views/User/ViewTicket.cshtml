@@ -70,10 +70,30 @@
                             {
                                 <tr>
                                     <td>@item.Date</td>
-                                    <td>user email</td>
-                                    <td>@item.Message</td>
-                                    
-                                </tr>
+                                @{
+                                    List<User> users = ViewBag.users;
+                                    for(int i = 0; i < users.Count; i++)
+                                    {
+                                        if (item.UserId == users[i].UserId)
+                                        {
+                                            <td>@users[i].Email</td>
+                                        }
+                                    }
+                                }
+                                <td>@item.Message</td>
+                                @{
+
+
+                                    var uploadedAtt = db.Attachments.FirstOrDefault(f => f.ReplyId == item.ReplyId);
+
+                                    if (uploadedAtt != null)
+                                    {
+                                        <td><a href="@Url.Action("ViewReplyAttachment", "User", new { id = item.ReplyId })">View Attachment</a></td>
+                                    }
+                                }
+
+
+                            </tr>
                             }
                         }       
                     else

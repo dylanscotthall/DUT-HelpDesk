@@ -11,6 +11,8 @@ public partial class User
 
     public string? Type { get; set; }
 
+    public string? Email { get; set; }
+
     public virtual ICollection<Reply> Replies { get; set; } = new List<Reply>();
 
     public virtual ICollection<Technician> Technicians { get; set; } = new List<Technician>();
