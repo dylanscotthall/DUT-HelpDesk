@@ -57,6 +57,22 @@ namespace DUT_HelpDesk.Controllers
             }
             return View(tickets.ToList());
         }
+
+        public IActionResult AssignTicketToTechnician(int? id, int? techId)
+        {
+            StateManager.CreateTicketTechnician((int)id, (int)techId);
+            ViewBag.user = StateManager.user;
+            ViewBag.technician = StateManager.technician;
+            return View("TechnicianLeadTicketQueue", StateManager.GetAllTickets());
+        }
+
+        //When a ticket is unassigned from the technician's assigned tickets page, the technician is returned an updated view of the assigned tickets page.
+        public IActionResult UnassignTicketToTechnician(int? id, int? techId)
+        {
+            StateManager.UnassignTicketTechnician((int)id, (int)techId);
+            ViewBag.technician = StateManager.technician;
+            return View("TechnicianLeadTicketQueue", StateManager.GetAllTickets());
+        }
         public IActionResult TechniciansListDashboard(string? sortBy, string? startDate, string? endDate)
         {
             ViewBag.user = StateManager.user;
