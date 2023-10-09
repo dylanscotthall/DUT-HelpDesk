@@ -1,5 +1,6 @@
 ﻿using DUT_HelpDesk.DatabaseModels;
 using Firebase.Auth;
+using Humanizer.Localisation.TimeToClockNotation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -23,6 +24,12 @@ namespace DUT_HelpDesk.Controllers
             _logger = logger;
             auth = new FirebaseAuthProvider(
                           new FirebaseConfig("AIzaSyDbriiQXcud__j4B6rbGh3brehz9DnBrRM"));
+        }
+
+        public IActionResult FaqDashboard()
+        {
+            List<Faq>faqs = StateManager.GetAllFaqs();
+            return View(faqs);
         }
 
         public IActionResult Index()
@@ -63,15 +70,56 @@ namespace DUT_HelpDesk.Controllers
         public IActionResult ViewTicket(int id)
         {
             Ticket ticket = StateManager.GetTicket(id);
-
+            List<Reply> replies = StateManager.GetTicketReplies(id);
+            ViewBag.replies = replies;
+            List<DatabaseModels.User> users = StateManager.GetUsers();
+            ViewBag.users = users;
             if (ticket == null)
             {
                 return StatusCode(400);
             }
             else
             {
-                return View(ticket);
+                ReplyTicketViewModel model = new ReplyTicketViewModel();
+                model.ticket = ticket;
+                return View(model);
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MyReplies(ReplyTicketViewModel vm)
+        {
+
+            await StateManager.MyReplies(vm);
+
+
+            return RedirectToAction("ViewTicket", new { id = vm.id });
+        }
+        public async Task<IActionResult> ViewReplyAttachment(int id)
+        {
+
+
+            var uploadedFile = await db.Attachments.FirstOrDefaultAsync(f => f.ReplyId == id);
+
+            if (uploadedFile == null)
+            {
+                return NotFound();
+            }
+
+            return File(uploadedFile.FileContent, uploadedFile.ContentType); // Adjust the content type as needed
+        }
+        public async Task<IActionResult> ViewAttachment(int id)
+        {
+
+
+            var uploadedFile = await db.Attachments.FirstOrDefaultAsync(f => f.TicketId == id);
+
+            if (uploadedFile == null)
+            {
+                return NotFound();
+            }
+
+            return File(uploadedFile.FileContent, uploadedFile.ContentType); // Adjust the content type as needed
         }
 
         public IActionResult CreateTicket()

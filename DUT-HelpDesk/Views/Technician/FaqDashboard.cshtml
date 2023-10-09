@@ -1,0 +1,29 @@
+﻿@model List<DUT_HelpDesk.DatabaseModels.Faq>
+    @{
+        ViewData["Title"] = "FAQ";
+    }
+
+    <div>
+        <h1>FAQ</h1>
+        <br />
+        <table class="table table-responsive table-hover">
+            <tr>
+                <th>Question</th>
+                <th>Anwser</th>
+            </tr>
+            <br />
+            @foreach (var item in Model)
+            {
+                @if (item != null)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Question)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Answer)</td>
+
+
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+    <a asp-controller="Technician" asp-action="TechCreateFAQ">Create FAQ</a>

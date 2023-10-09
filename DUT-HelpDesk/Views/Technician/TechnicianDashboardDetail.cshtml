@@ -1,4 +1,4 @@
-﻿@model DUT_HelpDesk.DatabaseModels.Ticket
+﻿@model DUT_HelpDesk.DatabaseModels.ReplyTicketViewModel
 
 @{
     ViewBag.Title = "Technician";
@@ -10,33 +10,118 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            <p>@Html.DisplayNameFor(model => model.Subject):
-            @Html.DisplayTextFor(model => model.Subject)</p>
+            <p>@Html.DisplayNameFor(model => model.ticket.Subject):
+            @Html.DisplayTextFor(model => model.ticket.Subject)</p>
         </dt>
         <dt>
             <p>
-                Date Created: 
-                @Html.DisplayTextFor(model => model.DateCreated)
+                @Html.DisplayNameFor(model => model.ticket.QueryBody):
+                @Html.DisplayTextFor(model => model.ticket.QueryBody)
             </p>
         </dt>
         <dt>
             <p>
-                @Html.DisplayNameFor(model => model.Replies):
-                @if(ViewBag.replies.Count > 0)
+                Date Created:
+                @Html.DisplayTextFor(model => model.ticket.DateCreated)
+            </p>
+        </dt>
+        <dt>
+            @{
+                DUT_HelpDesk.DatabaseModels.DutHelpdeskdbContext db = new DUT_HelpDesk.DatabaseModels.DutHelpdeskdbContext();
+                string id = Model.ticket.TicketId.ToString();
+                var uploadedFile = db.Attachments.FirstOrDefault(f => f.TicketId == int.Parse(id));
+
+                if (uploadedFile != null)
                 {
-                    @foreach (Reply item in ViewBag.replies)
+                    <a href="@Url.Action("ViewAttachment", "Technician", new { id = id })">View Attachments</a>
+                }
+            }
+        </dt>
+        <dt>
+            <hr />
+            <h4>Replies</h4>
+            <style>
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+
+                th, td {
+                    border: 1px solid #000;
+                    padding: 8px;
+                }
+            </style>
+            <table @*lass="table table-responsive table-hover"*@>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>From</th>
+                        <th>Message</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @if (ViewBag.replies.Count > 0)
                     {
-                    <p>@item.Date : @item.Message</p>
+                        @foreach (Reply item in ViewBag.replies)
+                        {
+                            <tr>
+                                <td>@item.Date</td>
+                                @{
+                                    List<User> users = ViewBag.users;
+                                    for (int i = 0; i < users.Count; i++)
+                                    {
+                                        if (item.UserId == users[i].UserId)
+                                        {
+                                            <td>@users[i].Email</td>
+                                        }
+                                    }
+                                }
+                                <td>@item.Message</td>
+                                @{
+                                    
+                                    
+                                    var uploadedAtt = db.Attachments.FirstOrDefault(f => f.ReplyId == item.ReplyId);
+
+                                    if (uploadedAtt != null)
+                                    {
+                                        <td><a href="@Url.Action("ViewReplyAttachment", "Technician", new { id = item.ReplyId })">View Attachment</a></td>
+                                    }
+                                }
+
+
+                            </tr>
+                        }
                     }
-                }
-                else
-                {
-                    @Html.DisplayName("No Replies")
-                }
-            </p>
+                    else
+                    {
+                        @Html.DisplayName("No Replies")
+                    }
+                </tbody>
+            </table>
+            <hr />
         </dt>
+        <h4>Enter Your Reply</h4>
+        <form method="post" asp-action="MyReplies" enctype="multipart/form-data">
+
+            <div class="form-group">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <label asp-for="Message">Reply:</label>
+                <textarea asp-for="Message" class="form-control" maxlength="255"></textarea>
+            </div>
+            <input asp-for="id" type="hidden" value="@Model.ticket.TicketId" />
+            <br />
+            <div>
+                <label asp-for="file" class="control-label">Attachment</label>
+                <input asp-for="file" class="form-control" />
+            </div>
+            <br />
+            <button type="submit" class="btn btn-primary">Submit Reply</button>
+        </form>
     </dl>
 </div>
+
 <p>
     @*@Html.ActionLink("Edit", "Edit", new { id = Model.TicketId }) |*@
     @Html.ActionLink("Back to List", "TechnicianDashboard", "Technician")

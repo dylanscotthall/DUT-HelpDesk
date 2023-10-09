@@ -11,6 +11,8 @@ public partial class Technician
 
     public DateTime? DateJoined { get; set; }
 
+    public virtual ICollection<Faq> Faqs { get; set; } = new List<Faq>();
+
     public virtual ICollection<TicketTechnician> TicketTechnicians { get; set; } = new List<TicketTechnician>();
 
     public virtual User? User { get; set; }

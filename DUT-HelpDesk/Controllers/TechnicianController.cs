@@ -1,5 +1,6 @@
-﻿using DUT_HelpDesk.DatabaseModels;
+using DUT_HelpDesk.DatabaseModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Rotativa.AspNetCore;
 
 namespace DUT_HelpDesk.Controllers
@@ -18,14 +19,17 @@ namespace DUT_HelpDesk.Controllers
             Ticket ticket = StateManager.GetTicket(id);
             List<Reply> replies = StateManager.GetTicketReplies(id);
             ViewBag.replies = replies;
-
+            List<DatabaseModels.User> users = StateManager.GetUsers();
+            ViewBag.users = users;
             if (ticket == null)
             {
                 return StatusCode(400);
             }
             else
             {
-                return View(ticket);
+                ReplyTicketViewModel model = new ReplyTicketViewModel();
+                model.ticket = ticket;
+                return View(model);
             }
         }
 
@@ -77,19 +81,78 @@ namespace DUT_HelpDesk.Controllers
             ViewBag.technician = StateManager.technician;
             return View("TechnicianDashboard", StateManager.GetAllTickets());
         }
+        public IActionResult TechCreateFAQ()
+        {
+            ViewBag.user = StateManager.user;
+            ViewBag.technician = StateManager.technician;
+            IEnumerable<Faq> tickets = StateManager.GetAllFaqs();
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> TechCreateFAQ(Faq faq)
+        {
+            ViewBag.user = StateManager.user;
+            ViewBag.technician = StateManager.technician;
+            faq.TechnicianId = StateManager.technician.TechnicianId;
+
+         StateManager.CreateFaq(faq);
+   
+            return RedirectToAction("FaqDashboard");
+       
+        }
 
         public IActionResult TechnicianTicketQueueReport()
         {
             ViewBag.technician = StateManager.technician;
             var pdf = new ViewAsPdf(StateManager.filteredTickets);
             return pdf;
+
         }
 
-        public IActionResult MyReplies()
+
+        [HttpPost]
+        public async Task<IActionResult> MyReplies(ReplyTicketViewModel vm)
+        {
+            
+                await StateManager.MyReplies(vm);
+            
+            
+            return RedirectToAction("TechnicianDashboardDetail", new { id = vm.id });
+        }
+        public async Task<IActionResult> ViewReplyAttachment(int id)
         {
 
-            Ticket ticket = StateManager.GetTicket(23);
-            return View(ticket);
+            DatabaseModels.DutHelpdeskdbContext db = new DutHelpdeskdbContext();
+            var uploadedFile = await db.Attachments.FirstOrDefaultAsync(f => f.ReplyId == id);
+
+            if (uploadedFile == null)
+            {
+                return NotFound();
+            }
+
+            return File(uploadedFile.FileContent, uploadedFile.ContentType); // Adjust the content type as needed
         }
+        public async Task<IActionResult> ViewAttachment(int id)
+        {
+            DatabaseModels.DutHelpdeskdbContext db = new DutHelpdeskdbContext();
+
+            var uploadedFile = await db.Attachments.FirstOrDefaultAsync(f => f.TicketId == id);
+
+            if (uploadedFile == null)
+            {
+                return NotFound();
+            }
+
+            return File(uploadedFile.FileContent, uploadedFile.ContentType); // Adjust the content type as needed
+        }
+
+
+        public IActionResult FaqDashboard()
+        {
+            List<Faq> faqs = StateManager.GetAllFaqs();
+            return View(faqs);
+
+        }
+
     }
 }
