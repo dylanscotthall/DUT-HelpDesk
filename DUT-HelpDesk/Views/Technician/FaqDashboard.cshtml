@@ -6,10 +6,11 @@
     <div>
         <h1>FAQ</h1>
         <br />
+    <a asp-controller="Technician" asp-action="TechCreateFAQ">Create FAQ</a>
         <table class="table table-responsive table-hover">
             <tr>
                 <th>Question</th>
-                <th>Anwser</th>
+                <th>Answer</th>
             </tr>
             <br />
             @foreach (var item in Model)
@@ -26,4 +27,3 @@
             }
         </table>
     </div>
-    <a asp-controller="Technician" asp-action="TechCreateFAQ">Create FAQ</a>
