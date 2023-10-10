@@ -7,6 +7,7 @@
         <h1>FAQ</h1>
         <br />
     <a asp-controller="Technician" asp-action="TechCreateFAQ">Create FAQ</a>
+    <br />
         <table class="table table-responsive table-hover">
             <tr>
                 <th>Question</th>
@@ -20,8 +21,6 @@
                     <tr>
                         <td>@Html.DisplayFor(modelItem => item.Question)</td>
                         <td>@Html.DisplayFor(modelItem => item.Answer)</td>
-
-
                     </tr>
                 }
             }
