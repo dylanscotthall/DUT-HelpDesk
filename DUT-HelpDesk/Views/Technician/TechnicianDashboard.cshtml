@@ -26,8 +26,6 @@
 
                     <td>@Html.ActionLink("Details", "TechnicianDashboardDetail", "Technician", new { id=item.TicketId }, null)</td>
                     <td>@Html.ActionLink("Unaccept", "UnAssignTicketToTechnician", "Technician", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId }, null)</td>
-                    
-                    
                 </tr>
             }
         }

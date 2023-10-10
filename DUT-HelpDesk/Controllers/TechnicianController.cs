@@ -154,5 +154,24 @@ namespace DUT_HelpDesk.Controllers
 
         }
 
+        public ActionResult TechViewTicket(int id)
+        {
+            Ticket ticket = StateManager.GetTicket(id);
+            List<Reply> replies = StateManager.GetTicketReplies(id);
+            ViewBag.replies = replies;
+            List<DatabaseModels.User> users = StateManager.GetUsers();
+            ViewBag.users = users;
+            if (ticket == null)
+            {
+                return StatusCode(400);
+            }
+            else
+            {
+                ReplyTicketViewModel model = new ReplyTicketViewModel();
+                model.ticket = ticket;
+                return View(model);
+            }
+        }
+
     }
 }

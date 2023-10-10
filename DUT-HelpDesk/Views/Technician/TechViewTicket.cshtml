@@ -1,0 +1,114 @@
+﻿@model DUT_HelpDesk.DatabaseModels.ReplyTicketViewModel
+
+@{
+    ViewBag.Title = "Technician";
+}
+
+<h2>Ticket Details</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            <p>
+                @Html.DisplayNameFor(model => model.ticket.Subject):
+                @Html.DisplayTextFor(model => model.ticket.Subject)
+            </p>
+        </dt>
+        <dt>
+            <p>
+                @Html.DisplayNameFor(model => model.ticket.QueryBody):
+                @Html.DisplayTextFor(model => model.ticket.QueryBody)
+            </p>
+        </dt>
+        <dt>
+            <p>
+                Date Created:
+                @Html.DisplayTextFor(model => model.ticket.DateCreated)
+            </p>
+        </dt>
+        <dt>
+            @{
+                DUT_HelpDesk.DatabaseModels.DutHelpdeskdbContext db = new DUT_HelpDesk.DatabaseModels.DutHelpdeskdbContext();
+                string id = Model.ticket.TicketId.ToString();
+                var uploadedFile = db.Attachments.FirstOrDefault(f => f.TicketId == int.Parse(id));
+
+                if (uploadedFile != null)
+                {
+                    <a href="@Url.Action("ViewAttachment", "Technician", new { id = id })">View Attachments</a>
+                }
+            }
+        </dt>
+        <dt>
+            <hr />
+            <h4>Replies</h4>
+            <style>
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+
+                th, td {
+                    border: 1px solid #000;
+                    padding: 8px;
+                }
+            </style>
+            <table @*lass="table table-responsive table-hover"*@>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>From</th>
+                        <th>Message</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @if (ViewBag.replies.Count > 0)
+                    {
+                        @foreach (Reply item in ViewBag.replies)
+                        {
+                            <tr>
+                                <td>@item.Date</td>
+                                @{
+                                    List<User> users = ViewBag.users;
+                                    for (int i = 0; i < users.Count; i++)
+                                    {
+                                        if (item.UserId == users[i].UserId)
+                                        {
+                                            <td>@users[i].Email</td>
+                                        }
+                                    }
+                                }
+                                <td>@item.Message</td>
+                                @{
+
+
+                                    var uploadedAtt = db.Attachments.FirstOrDefault(f => f.ReplyId == item.ReplyId);
+
+                                    if (uploadedAtt != null)
+                                    {
+                                        <td><a href="@Url.Action("ViewReplyAttachment", "Technician", new { id = item.ReplyId })">View Attachment</a></td>
+                                    }
+                                }
+
+
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        @Html.DisplayName("No Replies")
+                    }
+                </tbody>
+            </table>
+            <hr />
+        </dt>
+        
+    </dl>
+</div>
+
+<p>
+    @*@Html.ActionLink("Edit", "Edit", new { id = Model.TicketId }) |*@
+    @Html.ActionLink("Back to List", "TechnicianDashboard", "Technician")
+</p>
