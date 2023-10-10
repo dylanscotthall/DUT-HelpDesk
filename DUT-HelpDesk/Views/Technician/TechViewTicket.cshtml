@@ -5,7 +5,10 @@
 }
 
 <h2>Ticket Details</h2>
-
+<br/>
+<p>
+    @Html.ActionLink("Back to Ticket Queue", "TechnicianTicketQueue", "Technician")
+</p>
 <div>
     <hr />
     <dl class="dl-horizontal">
@@ -107,8 +110,3 @@
         
     </dl>
 </div>
-
-<p>
-    @*@Html.ActionLink("Edit", "Edit", new { id = Model.TicketId }) |*@
-    @Html.ActionLink("Back to List", "TechnicianDashboard", "Technician")
-</p>

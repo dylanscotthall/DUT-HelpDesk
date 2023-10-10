@@ -77,6 +77,7 @@ namespace DUT_HelpDesk.Controllers
         {
             ViewBag.user = StateManager.user;
             ViewBag.technician = StateManager.technician;
+            ViewBag.UsersList = StateManager.GetUsers();
             IEnumerable<Technician> technicians = StateManager.GetAllTechnicians();
             //checking for count of completed tickets, waiting on ticket completion
             //foreach (Technician item in technicians)
