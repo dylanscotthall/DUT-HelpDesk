@@ -16,10 +16,11 @@ namespace DUT_HelpDesk.Controllers
         }
         public IActionResult TechnicianDashboardDetail(int id)
         {
+            ViewBag.userType = StateManager.getUserType();
             Ticket ticket = StateManager.GetTicket(id);
             List<Reply> replies = StateManager.GetTicketReplies(id);
             ViewBag.replies = replies;
-            List<DatabaseModels.User> users = StateManager.GetUsers();
+            List<User> users = StateManager.GetUsers();
             ViewBag.users = users;
             if (ticket == null)
             {
@@ -178,6 +179,14 @@ namespace DUT_HelpDesk.Controllers
                 model.ticket = ticket;
                 return View(model);
             }
+        }
+
+        public IActionResult CloseTicket()
+        {
+            ViewBag.technician = StateManager.technician;
+            var pdf = new ViewAsPdf("TechnicianTicketQueueReport", StateManager.filteredTickets);
+            return pdf;
+
         }
 
     }

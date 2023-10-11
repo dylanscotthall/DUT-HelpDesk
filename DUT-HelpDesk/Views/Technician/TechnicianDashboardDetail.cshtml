@@ -3,12 +3,13 @@
 @{
     ViewBag.Title = "Technician";
 }
-
-<h2>Ticket Details</h2>
 <p>
-    @Html.ActionLink("Back to Assigned Tickets", "TechnicianDashboard", "Technician")
+    @Html.ActionLink("Back", "TechnicianDashboard", "Technician")
 </p>
+<h2>Ticket Details</h2>
 <div>
+
+    @*------------------------------------------------Ticket Details Section------------------------------------------------*@
     <div>
         <table class="table table-responsive table-hover">
             <tr>
@@ -20,7 +21,7 @@
             <tr>
                 <td>@string.Format("{0:dd, MMM yyyy - HH:mm}", Model.ticket.DateCreated)</td>
                 <td>@Html.DisplayTextFor(model => model.ticket.Subject)</td>
-                <td>@Html.DisplayTextFor(model => model.ticket.QueryBody)</td>            
+                <td>@Html.DisplayTextFor(model => model.ticket.QueryBody)</td>
                 <td>
                     @{
                         DUT_HelpDesk.DatabaseModels.DutHelpdeskdbContext db = new DUT_HelpDesk.DatabaseModels.DutHelpdeskdbContext();
@@ -29,78 +30,140 @@
 
                         if (uploadedFile != null)
                         {
-                            <a href="@Url.Action("ViewAttachment", "Technician", new { id = id })">Attachment  </a>
+                            <a href="@Url.Action("ViewAttachment", "Technician", new { id = id })">Attachment</a>
                         }
                     }
                 </td>
             </tr>
         </table>
     </div>
-            
-    <hr/>
-    <br/>
-            <h4>Replies</h4>
-            <table class="table table-responsive table-hover">
-                    <tr>
-            <th style="width: 15%;">Time</th>
-            <th style="width: 20%;">From</th>
-            <th style="width: 50%;">Message</th>
-            <th style="width: 10%;"></th>
-                    </tr>
-                    @if (ViewBag.replies.Count > 0)
-                    {
-                        @foreach (Reply item in ViewBag.replies)
-                        {
-                            <tr>
-                    <td>@string.Format("{0:dd, MMM yyyy - HH:mm}", item.Date)</td>
-                                @{
-                                    List<User> users = ViewBag.users;
-                                    for (int i = 0; i < users.Count; i++)
-                                    {
-                                        if (item.UserId == users[i].UserId)
-                                        {
-                                            <td>@users[i].Email</td>
-                                        }
-                                    }
-                                }
-                                <td>@item.Message</td>
-                                @{                                                                      
-                                    var uploadedAtt = db.Attachments.FirstOrDefault(f => f.ReplyId == item.ReplyId);
-                                    if (uploadedAtt != null)
-                                    {
-                                        <td><a href="@Url.Action("ViewReplyAttachment", "Technician", new { id = item.ReplyId })">Attachment</a></td>
-                                    }else{
-                                        <td></td>
-                                    }
-                                }
-                            </tr>
-                        }
-                    }
-                    else
-                    {
-                        <td></td>
-                        <td></td>
-                        <td>There are no replies for this ticket. Add a reply below.</td>
-                        <td></td>
-                    }
-            </table>
-            <hr/>
-            <br />
-        <h4>New Reply</h4>
-        <form method="post" asp-action="MyReplies" enctype="multipart/form-data">
 
-            <div class="form-group">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <label asp-for="Message">Reply:</label>
-                <textarea asp-for="Message" class="form-control" maxlength="255"></textarea>
-            </div>
-            <input asp-for="id" type="hidden" value="@Model.ticket.TicketId" />
+    @*------------------------------------------------Ticket Replies Section------------------------------------------------*@
+    <div>
+        <br />
+        <hr>
+        <h4>Replies</h4>
+        <table class="table table-responsive table-hover">
+            <tr>
+                <th style="width: 15%;">Time</th>
+                <th style="width: 20%;">From</th>
+                <th style="width: 50%;">Message</th>
+                <th style="width: 10%;"></th>
+            </tr>
+            @if (ViewBag.replies.Count > 0)
+            {
+                @foreach (Reply item in ViewBag.replies)
+                {
+                    <tr>
+                        <td>@string.Format("{0:dd, MMM yyyy - HH:mm}", item.Date)</td>
+                        @{
+                            List<User> users = ViewBag.users;
+                            for (int i = 0; i < users.Count; i++)
+                            {
+                                if (item.UserId == users[i].UserId)
+                                {
+                                    <td>@users[i].Email</td>
+                                }
+                            }
+                        }
+                        <td>@item.Message</td>
+                        @{
+                            var uploadedAtt = db.Attachments.FirstOrDefault(f => f.ReplyId == item.ReplyId);
+                            if (uploadedAtt != null)
+                            {
+                                <td><a href="@Url.Action("ViewReplyAttachment", "Technician", new { id = item.ReplyId })">Attachment</a></td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                        }
+                    </tr>
+                }
+            }
+            else
+            {
+                <td></td>
+                <td></td>
+                <td>There are no replies for this ticket. Add a reply below.</td>
+                <td></td>
+            }
+        </table>
+        <br />
+        <div />
+
+        @*------------------------------------------------New Ticket Reply Section------------------------------------------------*@
+        <div>
+            <hr>
+            <h4>New Reply</h4>
+            <form method="post" asp-action="MyReplies" enctype="multipart/form-data">
+                <div class="form-group">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <label asp-for="Message">Reply:</label>
+                    <textarea asp-for="Message" class="form-control" maxlength="255"></textarea>
+                </div>
+                <input asp-for="id" type="hidden" value="@Model.ticket.TicketId" />
+                <br />
+                <div>
+                    <label asp-for="file" class="control-label">Attachment</label>
+                    <input asp-for="file" class="form-control" />
+                </div>
+                <br />
+                <button type="submit" class="btn btn-primary">Submit Reply</button>
+            </form>
             <br />
-            <div>
-                <label asp-for="file" class="control-label">Attachment</label>
-                <input asp-for="file" class="form-control" />
-            </div>
-            <br />
-            <button type="submit" class="btn btn-primary">Submit Reply</button>
+
+
+            @*------------------------------------------------Lead Technician Options Section------------------------------------------------*@
+            @{
+                if (ViewBag.userType == "TechnicianLead")
+                {
+                    <br />
+                    <hr>
+                    <h4>Lead Technician Options</h4>
+                    <div style="max-width: 300px; background-color: #F1F1F1; padding: 10px; border-radius: 10px">
+                        <form id="assignTechnicianForm" method="post" asp-action="AssignTechnician">
+                            <h5>Assign ticket to a technician</h5>
+                            <div class="form-group">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <label asp-for="assignID">Technician ID:</label>
+                                <input asp-for="assignID" class="form-control" maxlength="5" />
+                                <button style="margin-top: 10px" type="submit" class="btn btn-primary">Assign to Ticket</button>
+                            </div>
+                        </form>
+                    </div>
+                }
+                else
+                {
+                    <br />
+                }
+            }
+        </div>
+
+        @*------------------------------------------------General Ticket Options Section------------------------------------------------*@
+        <hr>
+        <h4>General Ticket Options</h4>
+
+        <div style="max-width: 300px; background-color: #F1F1F1; padding: 10px; border-radius: 10px">
+            <form id="forwardTicketDetailsForm" method="post" asp-action="ForwardTicketDetails">
+                <h5>Forward ticket details</h5>
+                <div class="form-group">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <label asp-for="forwardEmail">Email:</label>
+                    <input asp-for="forwardEmail" class="form-control" maxlength="100" />
+                    <button style="margin-top: 10px" type="submit" class="btn btn-primary">Forward</button>
+                </div>
+            </form>
+        </div>
+        <br />
+        <form id="closeTicketForm" method="post" asp-action="CloseTicket">
+            <button type="button" class="btn btn-danger" onclick="confirmCloseTicket()">Close This Ticket</button>
         </form>
-</div>
+        <script>
+            function confirmCloseTicket() {
+                if (confirm("Are you sure you want to close the ticket? This cannot be undone.")) {
+                    document.getElementById("closeTicketForm").submit(); // Submit the form
+                }
+            }
+        </script>
+    </div>

@@ -7,30 +7,22 @@
 <h2>Ticket Details</h2>
 <br/>
 <p>
-    @Html.ActionLink("Back to Ticket Queue", "TechnicianTicketQueue", "Technician")
+    @Html.ActionLink("Back", "TechnicianTicketQueue", "Technician")
 </p>
 <div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            <p>
-                @Html.DisplayNameFor(model => model.ticket.Subject):
-                @Html.DisplayTextFor(model => model.ticket.Subject)
-            </p>
-        </dt>
-        <dt>
-            <p>
-                @Html.DisplayNameFor(model => model.ticket.QueryBody):
-                @Html.DisplayTextFor(model => model.ticket.QueryBody)
-            </p>
-        </dt>
-        <dt>
-            <p>
-                Date Created:
-                @Html.DisplayTextFor(model => model.ticket.DateCreated)
-            </p>
-        </dt>
-        <dt>
+    <div>
+        <table class="table table-responsive table-hover">
+            <tr>
+                <th style="width: 15%;">Date Created</th>
+                <th style="width: 20%;">Subject</th>
+                <th style="width: 50%;">Description</th>
+                <th style="width: 10%;"></th>
+            </tr>
+            <tr>
+                <td>@string.Format("{0:dd, MMM yyyy - HH:mm}", Model.ticket.DateCreated)</td>
+                <td>@Html.DisplayTextFor(model => model.ticket.Subject)</td>
+                <td>@Html.DisplayTextFor(model => model.ticket.QueryBody)</td>
+                <td>
             @{
                 DUT_HelpDesk.DatabaseModels.DutHelpdeskdbContext db = new DUT_HelpDesk.DatabaseModels.DutHelpdeskdbContext();
                 string id = Model.ticket.TicketId.ToString();
@@ -38,75 +30,61 @@
 
                 if (uploadedFile != null)
                 {
-                    <a href="@Url.Action("ViewAttachment", "Technician", new { id = id })">View Attachments</a>
+                    <a href="@Url.Action("ViewAttachment", "Technician", new { id = id })">Attachment</a>
                 }
             }
-        </dt>
-        <dt>
-            <hr />
-            <h4>Replies</h4>
-            <style>
-                table {
-                    border-collapse: collapse;
-                    width: 100%;
-                }
-
-                th, td {
-                    border: 1px solid #000;
-                    padding: 8px;
-                }
-            </style>
-            <table @*lass="table table-responsive table-hover"*@>
-                <thead>
-                    <tr>
-                        <th>Time</th>
-                        <th>From</th>
-                        <th>Message</th>
-
-                    </tr>
-                </thead>
-                <tbody>
-
-                    @if (ViewBag.replies.Count > 0)
-                    {
-                        @foreach (Reply item in ViewBag.replies)
+                </td>
+            </tr>
+        </table>
+    </div>
+    <hr />
+    <br />
+    <h4>Replies</h4>
+    <table class="table table-responsive table-hover">
+        <tr>
+            <th style="width: 15%;">Time</th>
+            <th style="width: 20%;">From</th>
+            <th style="width: 50%;">Message</th>
+            <th style="width: 10%;"></th>
+        </tr>
+        @if (ViewBag.replies.Count > 0)
+        {
+            @foreach (Reply item in ViewBag.replies)
+            {
+                <tr>
+                    <td>@string.Format("{0:dd, MMM yyyy - HH:mm}", item.Date)</td>
+                    @{
+                        List<User> users = ViewBag.users;
+                        for (int i = 0; i < users.Count; i++)
                         {
-                            <tr>
-                                <td>@item.Date</td>
-                                @{
-                                    List<User> users = ViewBag.users;
-                                    for (int i = 0; i < users.Count; i++)
-                                    {
-                                        if (item.UserId == users[i].UserId)
-                                        {
-                                            <td>@users[i].Email</td>
-                                        }
-                                    }
-                                }
-                                <td>@item.Message</td>
-                                @{
-
-
-                                    var uploadedAtt = db.Attachments.FirstOrDefault(f => f.ReplyId == item.ReplyId);
-
-                                    if (uploadedAtt != null)
-                                    {
-                                        <td><a href="@Url.Action("ViewReplyAttachment", "Technician", new { id = item.ReplyId })">View Attachment</a></td>
-                                    }
-                                }
-
-
-                            </tr>
+                            if (item.UserId == users[i].UserId)
+                            {
+                                <td>@users[i].Email</td>
+                            }
                         }
                     }
-                    else
-                    {
-                        @Html.DisplayName("No Replies")
+                    <td>@item.Message</td>
+                    @{
+                        var uploadedAtt = db.Attachments.FirstOrDefault(f => f.ReplyId == item.ReplyId);
+                        if (uploadedAtt != null)
+                        {
+                            <td><a href="@Url.Action("ViewReplyAttachment", "Technician", new { id = item.ReplyId })">Attachment</a></td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
                     }
-                </tbody>
-            </table>
-            <hr />
-        </dt>
-        
-    </dl>
+                </tr>
+            }
+        }
+        else
+        {
+            <td></td>
+            <td></td>
+            <td>There are no replies for this ticket. You can reply via the 'Assigned Tickets' page.</td>
+            <td></td>
+        }
+    </table>
+    <hr />
 </div>

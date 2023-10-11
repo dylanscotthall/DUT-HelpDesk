@@ -9,6 +9,7 @@
     <a asp-controller="TechnicianLead" asp-action="TechnicianLeadTicketQueue">Register New</a>
     <table class="table table-responsive table-hover">
         <tr>
+            <th>ID</th>
             <th>Email</th>
             <th>Date Joined</th>
             <th>Tickets Closed</th>
@@ -22,6 +23,7 @@
                 if (technician != null)
                 {
                     <tr>
+                        <td>@Html.DisplayFor(modelItem => technician.TechnicianId)</td>
                         <td>@((ViewBag.UsersList as List<User>)?.FirstOrDefault(u => u.UserId == technician.UserId)?.Email)</td>
                         <td>@Html.DisplayFor(modelItem => technician.DateJoined)</td>
                         <td>@Html.DisplayFor(modelItem => technician.TicketTechnicians.Where(x => x.Ticket.TicketStatuses.OrderByDescending(o => o.TimeStamp).FirstOrDefault().Status.StatusId == 3).ToList().Count)</td>
