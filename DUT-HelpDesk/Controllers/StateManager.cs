@@ -51,19 +51,17 @@ namespace DUT_HelpDesk.Controllers
         {
             return db.Tickets.Where(x => x.UserId == user.UserId).ToList();
         }
-
+        //returns a list of all FAQs
         public static List<Faq> GetAllFaqs()
         {
             return db.Faqs.ToList();
         }
-
+        //creates a new FAQ in the database
         public static void CreateFaq(Faq faq)
         { 
         db.Faqs.Add(faq);
             db.SaveChanges();
         }
-
-
         //returns a list of tickets a technician is working on
         public static List<Ticket> GetTechnicianTickets()
         {
