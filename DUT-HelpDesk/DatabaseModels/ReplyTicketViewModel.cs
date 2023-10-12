@@ -16,6 +16,9 @@
         //The ID of the technician to assign the ticket to.
         public int? assignID { get; set; }
 
+        //Stores whether the ticket is closed or not.
+        public bool? isClosed { get; set; }
+
         public int id { get; set; }
     }
 }
