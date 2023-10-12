@@ -47,8 +47,9 @@
     <br />
     <table class="table table-responsive table-hover">
         <tr>
+            <th>Id</th>
             <th>Description</th>
-            <th>Date</th>
+            <th>Date Created</th>
             <th>Priority</th>
             <th>Status</th>
             <th>Current Technicians</th>
@@ -62,8 +63,9 @@
                 if (item != null)
                 {
                     <tr>
+                        <td>@Html.DisplayFor(modelItem => item.TicketId)</td>
                         <td>@Html.DisplayFor(modelItem => item.Subject)</td>
-                        <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
+                        <td>@string.Format("{0:dd, MMM yyyy - HH:mm}", item.DateCreated)</td>
                         <td>@Html.DisplayFor(modelItem => item.Priority)</td>
                         <td>@Html.DisplayFor(modelItem => item.TicketStatuses.LastOrDefault().Status.Name)</td>
                         @if (item.TechnicianCount == null)
@@ -75,13 +77,22 @@
                             <td>@Html.DisplayFor(modelItem => item.TechnicianCount)</td>
                         }
                         <td>@Html.ActionLink("Details", "TechViewTicket", "Technician", new { id=item.TicketId }, null)</td>
-                        @if (item.TicketTechnicians.Where(x => x.TechnicianId == ViewBag.technician.TechnicianId && x.IsAssigned == true).FirstOrDefault() != null)
-                        {
-                            <td>@Html.ActionLink("Unaccept", "UnassignTicketToTechnicianFromTicketQueue", "Technician", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId }, null)</td>
-                        }
-                        else
-                        {
-                            <td>@Html.ActionLink("Accept", "AssignTicketToTechnician", "Technician", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId }, null)</td>
+                        @{
+                            if(!(item.TicketStatuses.LastOrDefault().Status.StatusId == 3))
+                            {
+                                if (item.TicketTechnicians.Where(x => x.TechnicianId == ViewBag.technician.TechnicianId && x.IsAssigned == true).FirstOrDefault() != null)
+                                {
+                                    <td>@Html.ActionLink("Unaccept", "UnassignTicketToTechnicianFromTicketQueue", "Technician", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId }, null)</td>
+                                }
+                                else
+                                {
+                                    <td>@Html.ActionLink("Accept", "AssignTicketToTechnician", "Technician", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId }, null)</td>
+                                }
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
                         }
                     </tr>
                 }

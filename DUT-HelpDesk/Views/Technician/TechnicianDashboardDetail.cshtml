@@ -3,12 +3,19 @@
 @{
     ViewBag.Title = "Technician";
 }
-<p>
-    @Html.ActionLink("Back", "TechnicianDashboard", "Technician")
-</p>
+
 <h2>Ticket Details</h2>
 <div>
-
+    <p>
+        @Html.ActionLink("Back", "TechnicianDashboard", "Technician")
+    </p>
+    @{
+        bool closed = Model.isClosed ?? false;
+        if (closed)
+        {
+            <span style="color: red; text-align: center">This ticket has been closed and is in "view only" mode.</span>
+        }
+    }
     @*------------------------------------------------Ticket Details Section------------------------------------------------*@
     <div>
         <table class="table table-responsive table-hover">
@@ -92,7 +99,12 @@
         <br />
         <div />
 
-        @*------------------------------------------------New Ticket Reply Section------------------------------------------------*@
+        @{
+            if (!closed)
+            {
+                
+
+        @*------------------------------------------------New Reply Section------------------------------------------------*@
         <div>
             <hr>
             <h4>New Reply</h4>
@@ -157,6 +169,7 @@
         </div>
         <br />
         <form id="closeTicketForm" method="post" asp-action="CloseTicket">
+            <input type="hidden" name="ticketId" value="@Model.ticket.TicketId" />
             <button type="button" class="btn btn-danger" onclick="confirmCloseTicket()">Close This Ticket</button>
         </form>
         <script>
@@ -166,4 +179,6 @@
                 }
             }
         </script>
+            }
+        }
     </div>

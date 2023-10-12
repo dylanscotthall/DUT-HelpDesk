@@ -29,6 +29,7 @@ namespace DUT_HelpDesk.Controllers
             else
             {
                 ReplyTicketViewModel model = new ReplyTicketViewModel();
+                model.isClosed = StateManager.TicketIsClosed(id);
                 model.ticket = ticket;
                 return View(model);
             }
@@ -181,12 +182,13 @@ namespace DUT_HelpDesk.Controllers
             }
         }
 
-        public IActionResult CloseTicket()
+        public async Task<IActionResult> CloseTicket()
         {
-            ViewBag.technician = StateManager.technician;
-            var pdf = new ViewAsPdf("TechnicianTicketQueueReport", StateManager.filteredTickets);
-            return pdf;
-
+            var vticketId = Request.Form["ticketId"];
+            int ticketId = Convert.ToInt32(vticketId);
+            await StateManager.CloseTicket(ticketId);
+            int count = StateManager.GetTechnicianClosedTicketCount(StateManager.technician.TechnicianId);
+            return RedirectToAction("TechnicianDashboardDetail", new {id = ticketId});
         }
 
     }
