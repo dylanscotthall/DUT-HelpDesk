@@ -1,8 +1,8 @@
 <div align="center">
   <h1>DUT-HelpDesk <sup><sub><sub>by Team BitBots</h1>
-  <img src="https://github.com/dylanscotthall/DUT-HelpDesk/assets/101722883/ca967f0a-c002-432d-9ed8-7f8154aeec67" width="150" height="100" alt="Team BitBots">
-  <img src="https://github.com/dylanscotthall/DUT-HelpDesk/assets/101722883/b639670d-551d-4a02-b097-0dfb5e467097" width="160" height="100" alt="IIE Varsity College">
-  <img src="https://github.com/dylanscotthall/DUT-HelpDesk/assets/101722883/42a00768-f308-463a-8c9a-170272142911" width="150" height="100" alt="Durban University of Technology">
+  <img src="https://github.com/dylanscotthall/DUT-HelpDesk/assets/101722883/ca967f0a-c002-432d-9ed8-7f8154aeec67" width="225" height="150" alt="Team BitBots">
+  <img src="https://github.com/dylanscotthall/DUT-HelpDesk/assets/101722883/b639670d-551d-4a02-b097-0dfb5e467097" width="240" height="150" alt="IIE Varsity College">
+  <img src="https://github.com/dylanscotthall/DUT-HelpDesk/assets/101722883/42a00768-f308-463a-8c9a-170272142911" width="225" height="150" alt="Durban University of Technology">
 </div>
 
 ### 🤖 Team BitBots
