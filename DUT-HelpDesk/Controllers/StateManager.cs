@@ -375,6 +375,7 @@ namespace DUT_HelpDesk.Controllers
             
         }
 
+        //closes a ticket given the ticketID
         public static async Task CloseTicket(int ticketID)
         {
             Ticket? ticket = db.Tickets.Find(ticketID);
