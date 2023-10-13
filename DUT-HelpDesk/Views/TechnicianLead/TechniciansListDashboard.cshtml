@@ -1,4 +1,5 @@
-﻿@model List<DUT_HelpDesk.DatabaseModels.Technician>
+﻿@using DUT_HelpDesk.Controllers
+@model List<DUT_HelpDesk.DatabaseModels.Technician>
 @{
     ViewData["Title"] = "Technicians";
 }
@@ -15,18 +16,18 @@
             <th>Tickets Closed</th>
             <th></th>
         </tr>
-        <br />
         @if (Model != null)
         {
             @foreach (var technician in Model)
             {
                 if (technician != null)
                 {
+                    int numClosed = StateManager.GetTechnicianClosedTicketCount(technician.TechnicianId);
                     <tr>
                         <td>@Html.DisplayFor(modelItem => technician.TechnicianId)</td>
                         <td>@((ViewBag.UsersList as List<User>)?.FirstOrDefault(u => u.UserId == technician.UserId)?.Email)</td>
-                        <td>@Html.DisplayFor(modelItem => technician.DateJoined)</td>
-                        <td>@Html.DisplayFor(modelItem => technician.TicketTechnicians.Where(x => x.Ticket.TicketStatuses.OrderByDescending(o => o.TimeStamp).FirstOrDefault().Status.StatusId == 3).ToList().Count)</td>
+                        <td>@string.Format("{0:dd, MMM yyyy}", technician.DateJoined)</td>
+                        <td>@numClosed</td>
                         <td>@Html.ActionLink("Information", "Information", "TechnicianLead", new {  }, null)</td>
                     </tr>
                 }
