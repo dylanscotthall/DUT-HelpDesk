@@ -25,7 +25,7 @@ namespace DUT_HelpDesk.Controllers
         }
 
         //returns a single user from the database
-        public static DatabaseModels.User GetUser(int id)
+        public static DatabaseModels.User GetUser(int? id)
         {
             return db.Users.Where(x => x.UserId == id).FirstOrDefault();
         }
