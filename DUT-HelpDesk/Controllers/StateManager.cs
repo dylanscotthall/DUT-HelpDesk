@@ -258,7 +258,7 @@ namespace DUT_HelpDesk.Controllers
                 //technicianid to be assigned later
                 Subject = model.Subject,
                 QueryBody = model.QueryBody,
-                Priority = "Low",
+                Priority = model.Priority.ToString(),
                 DateCreated = DateTime.UtcNow
             };
 

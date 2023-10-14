@@ -16,19 +16,19 @@
                 @if (Html.Raw(httpContextaccessor.HttpContext.Session.GetString("_UserType")).ToString() == "Technician")
                 {
                     @*Add FAQ*@
-                    <a class="navbar-brand" asp-area="" asp-controller="Technician" asp-action="TechnicianTicketQueue">DUT_HelpDesk - Technician</a>
+                    <a class="navbar-brand" asp-area="" asp-controller="Technician" asp-action="TechnicianTicketQueue">DUT HelpDesk <sub>Technician</sub></a>
                 }
                 else if (Html.Raw(httpContextaccessor.HttpContext.Session.GetString("_UserType")).ToString() == "Student")
                 {
-                    <a class="navbar-brand" asp-area="" asp-controller="User" asp-action="Index">DUT_HelpDesk</a>
+                    <a class="navbar-brand" asp-area="" asp-controller="User" asp-action="Index">DUT HelpDesk</a>
                 }
                 else if (Html.Raw(httpContextaccessor.HttpContext.Session.GetString("_UserType")).ToString() == "TechnicianLead")
                 {
-                    <a class="navbar-brand" asp-area="" asp-controller="TechnicianLead" asp-action="TechnicianLeadTicketQueue">DUT_HelpDesk - Technician Lead</a>
+                    <a class="navbar-brand" asp-area="" asp-controller="TechnicianLead" asp-action="TechnicianLeadTicketQueue">DUT HelpDesk <sub>Lead Technician</sub></a>
                 }
                 else
                 {
-                    <a class="navbar-brand" @*asp-area="" asp-controller="Home" asp-action="Index"*@>DUT_HelpDesk</a>
+                    <a class="navbar-brand" @*asp-area="" asp-controller="Home" asp-action="Index"*@>DUT HelpDesk</a>
                 }
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
