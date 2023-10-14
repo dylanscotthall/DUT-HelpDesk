@@ -1,10 +1,7 @@
 using DUT_HelpDesk.DatabaseModels;
 using Firebase.Auth;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Net.Sockets;
+
 
 namespace DUT_HelpDesk.Controllers
 {
@@ -12,11 +9,11 @@ namespace DUT_HelpDesk.Controllers
     {
         //state wide variables for easy access
         private static DutHelpdeskdbContext db = new DutHelpdeskdbContext();
-        public static DatabaseModels.User user;
-        public static Technician technician;
-        public static string token;
-        public static List<Ticket> filteredTickets; //used to save the user's filtered ticket list for report generation
-        public static string email;
+        public static DatabaseModels.User? user;
+        public static Technician? technician;
+        public static string? token;
+        public static List<Ticket>? filteredTickets; //used to save the user's filtered ticket list for report generation
+        public static string? email;
 
         //returns a list of all users
         public static List<DatabaseModels.User> GetUsers()
@@ -130,9 +127,16 @@ namespace DUT_HelpDesk.Controllers
         }
 
         //gets a single ticket from the database 
-        public static Ticket GetTicket(int id)
+        public static Ticket GetTicket(int? id)
         {
-            return db.Tickets.Where(x => x.TicketId == id).FirstOrDefault();
+            if (id != null)
+            {
+                return db.Tickets.Where(x => x.TicketId == id).FirstOrDefault()!;
+            }
+            else
+            {
+                return null!;
+            }
         }
 
         //returns a bool to see if a user saved in state is a technician
@@ -418,6 +422,32 @@ namespace DUT_HelpDesk.Controllers
             {
                 return "N/A";
             }
+        }
+
+        //returns true if the student is authorised to access the ticket. False if not.
+        public static bool authoriseStudentTicketAccess(int? ticketID)
+        {
+            Ticket ts = GetTicket(ticketID);
+            if (ts != null && user != null)
+            {
+                if(ts.UserId == user.UserId)
+                {
+                    return true;
+                }
+                else { return false; }
+            }
+            else { return false; }           
+        }
+
+
+        public static bool authoriseStudentReplyAccess(int replyID)
+        {
+            Reply? r = db.Replies.Where(x => x.ReplyId == replyID).FirstOrDefault();
+            if (r != null)
+            {
+                return authoriseStudentTicketAccess(r.TicketId);
+            }
+            return false;
         }
     }
 }

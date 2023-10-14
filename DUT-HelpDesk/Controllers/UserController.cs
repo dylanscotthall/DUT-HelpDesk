@@ -69,6 +69,10 @@ namespace DUT_HelpDesk.Controllers
         }
         public IActionResult ViewTicket(int id)
         {
+            if (!StateManager.authoriseStudentTicketAccess(id)) // Authorises student access to ticket
+            {
+                return NotFound();
+            }
             Ticket ticket = StateManager.GetTicket(id);
             List<Reply> replies = StateManager.GetTicketReplies(id);
             ViewBag.replies = replies;
@@ -93,12 +97,14 @@ namespace DUT_HelpDesk.Controllers
             await StateManager.MyReplies(vm);
 
 
-            return RedirectToAction("ViewTicket", new { id = vm.id });
+            return RedirectToAction("ViewTicket", new { vm.id });
         }
         public async Task<IActionResult> ViewReplyAttachment(int id)
         {
-
-
+            if (!StateManager.authoriseStudentReplyAccess(id)) // Authorises student access to attachment
+            {
+                return NotFound();
+            }
             var uploadedFile = await db.Attachments.FirstOrDefaultAsync(f => f.ReplyId == id);
 
             if (uploadedFile == null)
@@ -110,8 +116,10 @@ namespace DUT_HelpDesk.Controllers
         }
         public async Task<IActionResult> ViewAttachment(int id)
         {
-
-
+            if (!StateManager.authoriseStudentTicketAccess(id)) // Authorises student access to attachment
+            {
+                return NotFound();
+            }
             var uploadedFile = await db.Attachments.FirstOrDefaultAsync(f => f.TicketId == id);
 
             if (uploadedFile == null)

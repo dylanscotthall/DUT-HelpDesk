@@ -1,44 +1,59 @@
-﻿@model DUT_HelpDesk.DatabaseModels.ReplyTicketViewModel
+﻿@using DUT_HelpDesk.Controllers
+@model DUT_HelpDesk.DatabaseModels.ReplyTicketViewModel
 
 @{
     ViewBag.Title = "Technician";
 }
-
-<h2>Ticket Details</h2>
-<br/>
 <p>
     @Html.ActionLink("Back", "TechnicianTicketQueue", "Technician")
 </p>
-<div>
-    <div>
-        <table class="table table-responsive table-hover">
-            <tr>
-                <th style="width: 15%;">Date Created</th>
-                <th style="width: 20%;">Subject</th>
-                <th style="width: 50%;">Description</th>
-                <th style="width: 10%;"></th>
-            </tr>
-            <tr>
-                <td>@string.Format("{0:dd, MMM yyyy - HH:mm}", Model.ticket.DateCreated)</td>
-                <td>@Html.DisplayTextFor(model => model.ticket.Subject)</td>
-                <td>@Html.DisplayTextFor(model => model.ticket.QueryBody)</td>
-                <td>
-            @{
-                DUT_HelpDesk.DatabaseModels.DutHelpdeskdbContext db = new DUT_HelpDesk.DatabaseModels.DutHelpdeskdbContext();
-                string id = Model.ticket.TicketId.ToString();
-                var uploadedFile = db.Attachments.FirstOrDefault(f => f.TicketId == int.Parse(id));
-
-                if (uploadedFile != null)
-                {
-                    <a href="@Url.Action("ViewAttachment", "Technician", new { id = id })">Attachment</a>
+<div style="background-color: #F1F1F1; padding: 10px; border-radius: 10px;">
+    <h2>Ticket Details</h2>
+    <table class="table">
+        <tr>
+            <th>Created By</th>
+            <td>
+                @{
+                    int? userId = Model.ticket.UserId;
+                    User user = StateManager.GetUser(userId);
+                    string? email = user.Email;
                 }
-            }
-                </td>
-            </tr>
-        </table>
-    </div>
-    <hr />
-    <br />
+                @email
+            </td>
+        </tr>
+        <tr>
+            <th>Open Date</th>
+            <td>@string.Format("{0:dd, MMM yyyy - HH:mm}", Model.ticket.DateCreated)</td>
+        </tr>
+        <tr>
+            <th>Subject</th>
+            <td>@Html.DisplayTextFor(model => model.ticket.Subject)</td>
+        </tr>
+        <tr>
+            <th>Query</th>
+            <td>@Html.DisplayTextFor(model => model.ticket.QueryBody)</td>
+        </tr>
+
+    </table>
+    @{
+        DUT_HelpDesk.DatabaseModels.DutHelpdeskdbContext db = new DUT_HelpDesk.DatabaseModels.DutHelpdeskdbContext();
+        string id = Model.ticket.TicketId.ToString();
+        var uploadedFile = db.Attachments.FirstOrDefault(f => f.TicketId == int.Parse(id));
+
+        if (uploadedFile != null)
+        {
+            <div style="text-align: center;">
+                <a href="@Url.Action("ViewAttachment", "Technician", new { id = id })">Attachment</a>
+            </div>
+        }
+    }
+</div>
+
+<br />
+
+@*------------------------------------------------Ticket Replies Section------------------------------------------------*@
+<div style="background-color: #F1F1F1; padding: 10px; border-radius: 10px;">
+
     <h4>Replies</h4>
     <table class="table table-responsive table-hover">
         <tr>
@@ -86,5 +101,4 @@
             <td></td>
         }
     </table>
-    <hr />
 </div>
