@@ -119,16 +119,14 @@
     @*------------------------------------------------New Reply Section------------------------------------------------*@
     @{
         if (!closed)
-        {
-
-
-            
+        {        
             <div style="width: 50%; background-color: #F1F1F1; padding: 10px; border-radius: 10px;">
                 <form method="post" asp-action="MyReplies" enctype="multipart/form-data">
-                    <div class="form-group" style="width: 600px;">
+                    <div class="form-group" style="width: 100%;">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <label asp-for="Message"><h6>New Reply</h6></label>
                         <textarea asp-for="Message" class="form-control" maxlength="255"></textarea>
+                        <span asp-validation-for="Message" class="text-danger"></span>
                     </div>
                     <input asp-for="id" type="hidden" value="@Model.ticket.TicketId" />
 
@@ -221,3 +219,9 @@
         }
     }
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

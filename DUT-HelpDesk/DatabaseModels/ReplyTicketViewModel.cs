@@ -1,4 +1,7 @@
-﻿namespace DUT_HelpDesk.DatabaseModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DUT_HelpDesk.DatabaseModels
+
 {
     public class ReplyTicketViewModel
     {
@@ -8,6 +11,7 @@
         public Ticket ticket { get; set; }
 
         //The reply message.
+        [Required(ErrorMessage = "Please enter a message.")]
         public string? Message { get; set; }
         
         //The email to forward ticket details to.

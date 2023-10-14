@@ -1,21 +1,14 @@
 ﻿using DUT_HelpDesk.DatabaseModels;
 using Firebase.Auth;
-using Humanizer.Localisation.TimeToClockNotation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Web.WebPages;
-
 
 namespace DUT_HelpDesk.Controllers
 {
     public class UserController : Controller
     {
-        private DatabaseModels.DutHelpdeskdbContext db = new DatabaseModels.DutHelpdeskdbContext();
+        private DatabaseModels.DutHelpdeskdbContext db = new DutHelpdeskdbContext();
         private readonly ILogger<UserController> _logger;
         FirebaseAuthProvider auth;
 
@@ -57,7 +50,7 @@ namespace DUT_HelpDesk.Controllers
                 }
                 else if (sortBy == "Alpha")
                 {
-                    tickets = tickets.OrderBy(t => t.Subject.ToLower());
+                    tickets = tickets.OrderBy(t => t.Subject!.ToLower());
                 }
             }
             ViewBag.startDate = startDate; ViewBag.endDate = endDate;
@@ -85,6 +78,7 @@ namespace DUT_HelpDesk.Controllers
             else
             {
                 ReplyTicketViewModel model = new ReplyTicketViewModel();
+                model.isClosed = StateManager.TicketIsClosed(id);
                 model.ticket = ticket;
                 return View(model);
             }
@@ -93,10 +87,10 @@ namespace DUT_HelpDesk.Controllers
         [HttpPost]
         public async Task<IActionResult> MyReplies(ReplyTicketViewModel vm)
         {
-
-            await StateManager.MyReplies(vm);
-
-
+            if (ModelState.IsValid)
+            {
+                await StateManager.MyReplies(vm);              
+            }
             return RedirectToAction("ViewTicket", new { vm.id });
         }
         public async Task<IActionResult> ViewReplyAttachment(int id)
@@ -112,7 +106,7 @@ namespace DUT_HelpDesk.Controllers
                 return NotFound();
             }
 
-            return File(uploadedFile.FileContent, uploadedFile.ContentType); // Adjust the content type as needed
+            return File(uploadedFile.FileContent!, uploadedFile.ContentType!); // Adjust the content type as needed
         }
         public async Task<IActionResult> ViewAttachment(int id)
         {
@@ -127,7 +121,7 @@ namespace DUT_HelpDesk.Controllers
                 return NotFound();
             }
 
-            return File(uploadedFile.FileContent, uploadedFile.ContentType); // Adjust the content type as needed
+            return File(uploadedFile.FileContent!, uploadedFile.ContentType!); // Adjust the content type as needed
         }
 
         public IActionResult CreateTicket()
@@ -141,9 +135,14 @@ namespace DUT_HelpDesk.Controllers
             if (ModelState.IsValid)
             {
                 await StateManager.CreateTicket(model, auth);
+                IEnumerable<Ticket> tickets = StateManager.GetUserTickets();
+                return View("UserTicket", tickets);
             }
-            IEnumerable<Ticket> tickets = StateManager.GetUserTickets();
-            return View("UserTicket", tickets);
+            else
+            {
+                return View();
+            }
+            
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
