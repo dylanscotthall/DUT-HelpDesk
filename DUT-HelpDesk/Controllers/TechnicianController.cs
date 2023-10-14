@@ -103,11 +103,8 @@ namespace DUT_HelpDesk.Controllers
             ViewBag.user = StateManager.user;
             ViewBag.technician = StateManager.technician;
             faq.TechnicianId = StateManager.technician.TechnicianId;
-
-         StateManager.CreateFaq(faq);
-   
-            return RedirectToAction("FaqDashboard");
-       
+            StateManager.CreateFaq(faq);
+            return RedirectToAction("FaqDashboard");      
         }
 
         public IActionResult TechnicianTicketQueueReport()
@@ -115,17 +112,16 @@ namespace DUT_HelpDesk.Controllers
             ViewBag.technician = StateManager.technician;
             var pdf = new ViewAsPdf(StateManager.filteredTickets);
             return pdf;
-
         }
 
 
         [HttpPost]
         public async Task<IActionResult> MyReplies(ReplyTicketViewModel vm)
         {
-            
+            if (ModelState.IsValid)
+            {
                 await StateManager.MyReplies(vm);
-            
-            
+            }           
             return RedirectToAction("TechnicianDashboardDetail", new { id = vm.id });
         }
         public async Task<IActionResult> ViewReplyAttachment(int id)

@@ -1,10 +1,10 @@
-﻿@model DUT_HelpDesk.DatabaseModels.ReplyTicketViewModel
+﻿@using DUT_HelpDesk.Controllers
+@model DUT_HelpDesk.DatabaseModels.ReplyTicketViewModel
 
 @{
     ViewBag.Title = "Technician";
 }
 
-<h2>Ticket Details</h2>
 <div>
     <p>
         @Html.ActionLink("Back", "TechnicianDashboard", "Technician")
@@ -13,42 +13,60 @@
         bool closed = Model.isClosed ?? false;
         if (closed)
         {
-            <span style="color: red; text-align: center">This ticket has been closed and is in "view only" mode.</span>
+            <p>
+                <span style="color: red; text-align: center">This ticket has been closed and is in "view only" mode.</span>
+            </p>
         }
     }
     @*------------------------------------------------Ticket Details Section------------------------------------------------*@
-    <div>
-        <table class="table table-responsive table-hover">
+
+    <div style="background-color: #F1F1F1; padding: 10px; border-radius: 10px;">
+        <h2>Ticket Details</h2>
+        <table class="table">
             <tr>
-                <th style="width: 15%;">Date Created</th>
-                <th style="width: 20%;">Subject</th>
-                <th style="width: 50%;">Description</th>
-                <th style="width: 10%;"></th>
-            </tr>
-            <tr>
-                <td>@string.Format("{0:dd, MMM yyyy - HH:mm}", Model.ticket.DateCreated)</td>
-                <td>@Html.DisplayTextFor(model => model.ticket.Subject)</td>
-                <td>@Html.DisplayTextFor(model => model.ticket.QueryBody)</td>
+                <th>Created By</th>
                 <td>
                     @{
-                        DUT_HelpDesk.DatabaseModels.DutHelpdeskdbContext db = new DUT_HelpDesk.DatabaseModels.DutHelpdeskdbContext();
-                        string id = Model.ticket.TicketId.ToString();
-                        var uploadedFile = db.Attachments.FirstOrDefault(f => f.TicketId == int.Parse(id));
-
-                        if (uploadedFile != null)
-                        {
-                            <a href="@Url.Action("ViewAttachment", "Technician", new { id = id })">Attachment</a>
-                        }
+                        int? userId = Model.ticket.UserId;
+                        User user = StateManager.GetUser(userId);
+                        string? email = user.Email;
                     }
+                    @email
                 </td>
             </tr>
+            <tr>
+                <th>Open Date</th>
+                <td>@string.Format("{0:dd, MMM yyyy - HH:mm}", Model.ticket.DateCreated)</td>
+            </tr>
+            <tr>
+                <th>Subject</th>
+                <td>@Html.DisplayTextFor(model => model.ticket.Subject)</td>
+            </tr>
+            <tr>
+                <th>Query</th>
+                <td>@Html.DisplayTextFor(model => model.ticket.QueryBody)</td>
+            </tr>
+
         </table>
+        @{
+            DUT_HelpDesk.DatabaseModels.DutHelpdeskdbContext db = new DUT_HelpDesk.DatabaseModels.DutHelpdeskdbContext();
+            string id = Model.ticket.TicketId.ToString();
+            var uploadedFile = db.Attachments.FirstOrDefault(f => f.TicketId == int.Parse(id));
+
+            if (uploadedFile != null)
+            {
+                <div style="text-align: center;">
+                    <a href="@Url.Action("ViewAttachment", "Technician", new { id = id })">Attachment</a>
+                </div>
+            }
+        }
     </div>
 
+    <br />
+
     @*------------------------------------------------Ticket Replies Section------------------------------------------------*@
-    <div>
-        <br />
-        <hr>
+    <div style="background-color: #F1F1F1; padding: 10px; border-radius: 10px;">
+
         <h4>Replies</h4>
         <table class="table table-responsive table-hover">
             <tr>
@@ -96,89 +114,114 @@
                 <td></td>
             }
         </table>
-        <br />
-        <div />
+    </div>
 
-        @{
-            if (!closed)
-            {
-                
+    @*------------------------------------------------New Reply Section------------------------------------------------*@
+    @{
+        if (!closed)
+        {        
+            <div style="width: 50%; background-color: #F1F1F1; padding: 10px; border-radius: 10px;">
+                <form method="post" asp-action="MyReplies" enctype="multipart/form-data">
+                    <div class="form-group" style="width: 100%;">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <label asp-for="Message"><h6>New Reply</h6></label>
+                        <textarea asp-for="Message" class="form-control" maxlength="255"></textarea>
+                        <span asp-validation-for="Message" class="text-danger"></span>
+                    </div>
+                    <input asp-for="id" type="hidden" value="@Model.ticket.TicketId" />
 
-        @*------------------------------------------------New Reply Section------------------------------------------------*@
-        <div>
-            <hr>
-            <h4>New Reply</h4>
-            <form method="post" asp-action="MyReplies" enctype="multipart/form-data">
-                <div class="form-group">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <label asp-for="Message">Reply:</label>
-                    <textarea asp-for="Message" class="form-control" maxlength="255"></textarea>
-                </div>
-                <input asp-for="id" type="hidden" value="@Model.ticket.TicketId" />
-                <br />
-                <div>
-                    <label asp-for="file" class="control-label">Attachment</label>
-                    <input asp-for="file" class="form-control" />
-                </div>
-                <br />
-                <button type="submit" class="btn btn-primary">Submit Reply</button>
-            </form>
-            <br />
+                    <div style="width: 100%; max-width: 600px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <div style="width: 49%;margin-top: 20px">
+                                <input asp-for="file" class="form-control" />
+                            </div>
+                            <div style="width: 49%; text-align: right; margin-top: 20px">
+                                <button style="width: 100px" type="submit" class="btn btn-primary">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
 
 
             @*------------------------------------------------Lead Technician Options Section------------------------------------------------*@
-            @{
-                if (ViewBag.userType == "TechnicianLead")
-                {
-                    <br />
-                    <hr>
-                    <h4>Lead Technician Options</h4>
-                    <div style="max-width: 300px; background-color: #F1F1F1; padding: 10px; border-radius: 10px">
-                        <form id="assignTechnicianForm" method="post" asp-action="AssignTechnician">
-                            <h5>Assign ticket to a technician</h5>
-                            <div class="form-group">
-                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                <label asp-for="assignID">Technician ID:</label>
-                                <input asp-for="assignID" class="form-control" maxlength="5" />
-                                <button style="margin-top: 10px" type="submit" class="btn btn-primary">Assign to Ticket</button>
-                            </div>
-                        </form>
-                    </div>
+            <div>
+                @{
+                    if (ViewBag.userType == "TechnicianLead")
+                    {
+                        <br />
+                        <hr>
+                        <h4>Lead Technician Options</h4>
+                        <div style="max-width: 300px; background-color: #F1F1F1; padding: 10px; border-radius: 10px">
+                            <form id="assignTechnicianForm" method="post" asp-action="AssignTechnician">
+                                <h5>Assign ticket to a technician</h5>
+                                <div class="form-group">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <label asp-for="assignID">Technician ID:</label>
+                                    <input asp-for="assignID" class="form-control" maxlength="5" />
+                                    <button style="margin-top: 10px" type="submit" class="btn btn-primary">Assign to Ticket</button>
+                                </div>
+                            </form>
+                        </div>
+                    }
+                    else
+                    {
+                        <br />
+                    }
                 }
-                else
-                {
-                    <br />
-                }
-            }
-        </div>
+            </div>
 
-        @*------------------------------------------------General Ticket Options Section------------------------------------------------*@
-        <hr>
-        <h4>General Ticket Options</h4>
+            @*------------------------------------------------General Ticket Options Section------------------------------------------------*@
+            <hr>
+            <h4>General Ticket Options</h4>
 
-        <div style="max-width: 300px; background-color: #F1F1F1; padding: 10px; border-radius: 10px">
-            <form id="forwardTicketDetailsForm" method="post" asp-action="ForwardTicketDetails">
-                <h5>Forward ticket details</h5>
-                <div class="form-group">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <label asp-for="forwardEmail">Email:</label>
-                    <input asp-for="forwardEmail" class="form-control" maxlength="100" />
-                    <button style="margin-top: 10px" type="submit" class="btn btn-primary">Forward</button>
+            <div>
+
+                <div style="display: inline-block; width: 300px; background-color: #F1F1F1; padding: 10px; border-radius: 10px">
+                    <form id="forwardTicketDetailsForm" method="post" asp-action="ForwardTicketDetails">
+                        <h5>Forward ticket details</h5>
+                        <div class="form-group">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <label asp-for="forwardEmail">Email:</label>
+                            <input asp-for="forwardEmail" class="form-control" maxlength="100" />
+                            <button style="margin-top: 10px" type="submit" class="btn btn-primary">Forward</button>
+                        </div>
+                    </form>
                 </div>
+
+                <div style="display: inline-block; width: 300px; background-color: #F1F1F1; padding: 10px; border-radius: 10px">
+                    <form id="forwardTicketDetailsForm" method="post" asp-action="ForwardTicketDetails">
+                        <h5>Forward ticket details</h5>
+                        <div class="form-group">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <label asp-for="forwardEmail">Email:</label>
+                            <input asp-for="forwardEmail" class="form-control" maxlength="100" />
+                            <button style="margin-top: 10px" type="submit" class="btn btn-primary">Forward</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+            <br />
+            <form id="closeTicketForm" method="post" asp-action="CloseTicket">
+                <input type="hidden" name="ticketId" value="@Model.ticket.TicketId" />
+                <button type="button" class="btn btn-danger" onclick="confirmCloseTicket()">Close This Ticket</button>
             </form>
-        </div>
-        <br />
-        <form id="closeTicketForm" method="post" asp-action="CloseTicket">
-            <input type="hidden" name="ticketId" value="@Model.ticket.TicketId" />
-            <button type="button" class="btn btn-danger" onclick="confirmCloseTicket()">Close This Ticket</button>
-        </form>
-        <script>
-            function confirmCloseTicket() {
-                if (confirm("Are you sure you want to close the ticket? This cannot be undone.")) {
-                    document.getElementById("closeTicketForm").submit(); // Submit the form
+            <script>
+                function confirmCloseTicket() {
+                    if (confirm("Are you sure you want to close the ticket? This cannot be undone.")) {
+                        document.getElementById("closeTicketForm").submit(); // Submit the form
+                    }
                 }
-            }
-        </script>
-            }
+            </script>
         }
-    </div>
+    }
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
