@@ -67,7 +67,18 @@
                     <td>@Html.DisplayFor(modelItem => item.TicketId)</td>
                     <td>@Html.DisplayFor(modelItem => item.Subject)</td>
                     <td>@string.Format("{0:dd, MMM yyyy - HH:mm}", item.DateCreated)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Priority)</td>
+                    @if (item.Priority.Equals("Low"))
+                    {
+                        <td style="color: #00c20d">@Html.DisplayTextFor(model => item.Priority)</td>
+                    }
+                    @if (item.Priority.Equals("Normal"))
+                    {
+                        <td style="color: darkorange">@Html.DisplayTextFor(model => item.Priority)</td>
+                    }
+                    @if (item.Priority.Equals("High"))
+                    {
+                        <td style="color: red">@Html.DisplayTextFor(model => item.Priority)</td>
+                    }
                     <td>@status</td>
                     <td>@Html.ActionLink("Details", "ViewTicket", "User", new { id=item.TicketId }, null)</td>
                 </tr>

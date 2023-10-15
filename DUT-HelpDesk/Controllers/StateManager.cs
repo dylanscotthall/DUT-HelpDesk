@@ -1,7 +1,7 @@
 using DUT_HelpDesk.DatabaseModels;
 using Firebase.Auth;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.IdentityModel.Tokens;
 
 namespace DUT_HelpDesk.Controllers
 {
@@ -127,7 +127,7 @@ namespace DUT_HelpDesk.Controllers
         }
 
         //gets a single ticket from the database 
-        public static Ticket GetTicket(int? id)
+        public static  Ticket GetTicket(int? id)
         {
             if (id != null)
             {
@@ -142,7 +142,7 @@ namespace DUT_HelpDesk.Controllers
         //returns a bool to see if a user saved in state is a technician
         public static string getUserType()
         {
-            return user.Type;
+                return user.Type;
         }
 
         //returns a technician if the user is already assigned as a technician
@@ -439,7 +439,6 @@ namespace DUT_HelpDesk.Controllers
             else { return false; }           
         }
 
-
         public static bool authoriseStudentReplyAccess(int replyID)
         {
             Reply? r = db.Replies.Where(x => x.ReplyId == replyID).FirstOrDefault();
@@ -448,6 +447,16 @@ namespace DUT_HelpDesk.Controllers
                 return authoriseStudentTicketAccess(r.TicketId);
             }
             return false;
+        }
+
+        public static async Task ChangeTicketPriority(int ticketId, string p)
+        {
+            Ticket? ticket = db.Tickets.Find(ticketId);
+            if (ticket != null)
+            {
+                ticket.Priority = p;
+            }
+            await db.SaveChangesAsync();
         }
     }
 }

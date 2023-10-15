@@ -118,7 +118,7 @@ namespace DUT_HelpDesk.Controllers
         [HttpPost]
         public async Task<IActionResult> MyReplies(ReplyTicketViewModel vm)
         {
-            if (ModelState.IsValid)
+            if (vm.Message != null)
             {
                 await StateManager.MyReplies(vm);
             }           
@@ -185,6 +185,17 @@ namespace DUT_HelpDesk.Controllers
             await StateManager.CloseTicket(ticketId);
             int count = StateManager.GetTechnicianClosedTicketCount(StateManager.technician.TechnicianId);
             return RedirectToAction("TechnicianDashboardDetail", new {id = ticketId});
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePriority(ReplyTicketViewModel vm)
+        {
+            if (vm.Priority.HasValue)
+            {
+                string p = vm.Priority.Value.ToString();
+                await StateManager.ChangeTicketPriority(vm.id, p);
+            }
+            return RedirectToAction("TechnicianDashboardDetail", new { id = vm.id });
         }
 
     }

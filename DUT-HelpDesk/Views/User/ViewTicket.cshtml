@@ -37,6 +37,21 @@
                 <td>@string.Format("{0:dd, MMM yyyy - HH:mm}", Model.ticket.DateCreated)</td>
             </tr>
             <tr>
+                <th>Priority</th>
+                @if (Model.ticket.Priority.Equals("Low"))
+                {
+                    <td style="color: #00c20d">@Html.DisplayTextFor(model => model.ticket.Priority)</td>
+                }
+                @if (Model.ticket.Priority.Equals("Normal"))
+                {
+                    <td style="color: darkorange">@Html.DisplayTextFor(model => model.ticket.Priority)</td>
+                }
+                @if (Model.ticket.Priority.Equals("High"))
+                {
+                    <td style="color: red">@Html.DisplayTextFor(model => model.ticket.Priority)</td>
+                }
+            </tr>
+            <tr>
                 <th>Subject</th>
                 <td>@Html.DisplayTextFor(model => model.ticket.Subject)</td>
             </tr>

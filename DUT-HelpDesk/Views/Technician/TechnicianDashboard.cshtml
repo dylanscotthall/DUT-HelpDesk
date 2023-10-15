@@ -10,10 +10,12 @@
     <br />
     <table class="table table-responsive table-hover">
         <tr>
-            <th>Description</th>
-            <th>Date</th>
+            <th>Id</th>
+            <th>Subject</th>
+            <th>Date Created</th>
             <th>Priority</th>
             <th>Status</th>
+            <th>Technicians</th>
             <th></th>
             <th></th>
         </tr>
@@ -23,18 +25,40 @@
             {
                 var ticketStatus = StateManager.GetTicketStatus(item.TicketId);
                 <tr>
+                    <td>@Html.DisplayFor(modelItem => item.TicketId)</td>
                     <td>@Html.DisplayFor(modelItem => item.Subject)</td>
-                    <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Priority)</td>
+                    <td>@string.Format("{0:dd, MMM yyyy - HH:mm}", item.DateCreated)</td>
+                    @if (item.Priority.Equals("Low"))
+                    {
+                        <td style="color: #00c20d">@Html.DisplayTextFor(model => item.Priority)</td>
+                    }
+                    @if (item.Priority.Equals("Normal"))
+                    {
+                        <td style="color: darkorange">@Html.DisplayTextFor(model => item.Priority)</td>
+                    }
+                    @if (item.Priority.Equals("High"))
+                    {
+                        <td style="color: red">@Html.DisplayTextFor(model => item.Priority)</td>
+                    }
                     <td>@ticketStatus</td>
-                    <td>@Html.ActionLink("Details", "TechnicianDashboardDetail", "Technician", new { id=item.TicketId }, null)</td>
+                    @if (item.TechnicianCount == null)
+                    {
+                        <td>@Html.DisplayName("0")</td>
+                    }
+                    else
+                    {
+                        <td>@Html.DisplayFor(modelItem => item.TechnicianCount)</td>
+                    }                   
+                    
                     @{
                         if (ticketStatus != "Closed")
                         {
-                            <td>@Html.ActionLink("Unaccept", "UnAssignTicketToTechnician", "Technician", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId }, null)</td>
+                            <td>@Html.ActionLink("Handle", "TechnicianDashboardDetail", "Technician", new { id=item.TicketId },  new { style = "color: #00c20d;" })</td>
+                            <td>@Html.ActionLink("Unaccept", "UnAssignTicketToTechnician", "Technician", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId }, new { style = "color: #f00;" })</td>
                         }
                         else{
-                            <td></td>                     
+                            <td>@Html.ActionLink("Details", "TechnicianDashboardDetail", "Technician", new { id=item.TicketId }, null)</td>
+                            <td></td>
                         }
                      }
                 </tr>

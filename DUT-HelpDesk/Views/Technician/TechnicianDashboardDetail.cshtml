@@ -39,6 +39,21 @@
                 <td>@string.Format("{0:dd, MMM yyyy - HH:mm}", Model.ticket.DateCreated)</td>
             </tr>
             <tr>
+                <th>Priority</th>
+                @if (Model.ticket.Priority.Equals("Low"))
+                {
+                    <td style="color: #00c20d">@Html.DisplayTextFor(model => model.ticket.Priority)</td>
+                }
+                @if (Model.ticket.Priority.Equals("Normal"))
+                {
+                    <td style="color: darkorange">@Html.DisplayTextFor(model => model.ticket.Priority)</td>
+                }
+                @if (Model.ticket.Priority.Equals("High"))
+                {
+                    <td style="color: red">@Html.DisplayTextFor(model => model.ticket.Priority)</td>
+                }
+            </tr>
+            <tr>
                 <th>Subject</th>
                 <td>@Html.DisplayTextFor(model => model.ticket.Subject)</td>
             </tr>
@@ -191,13 +206,16 @@
                 </div>
 
                 <div style="display: inline-block; width: 300px; background-color: #F1F1F1; padding: 10px; border-radius: 10px">
-                    <form id="forwardTicketDetailsForm" method="post" asp-action="ForwardTicketDetails">
-                        <h5>Forward ticket details</h5>
+                    <form id="changePriorityForm" method="post" asp-action="ChangePriority">
+                        <h5>Change ticket priority</h5>
                         <div class="form-group">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <label asp-for="forwardEmail">Email:</label>
-                            <input asp-for="forwardEmail" class="form-control" maxlength="100" />
-                            <button style="margin-top: 10px" type="submit" class="btn btn-primary">Forward</button>
+                            <label asp-for="Priority" class="control-label">Priority:</label>
+                            <select asp-for="Priority" asp-items="Html.GetEnumSelectList<DUT_HelpDesk.DatabaseModels.Priority>()" class="form-control">
+                                <option value="">Select Priority</option>
+                            </select>
+                            <span asp-validation-for="Priority" class="text-danger"></span>
+                            <input asp-for="id" type="hidden" value="@Model.ticket.TicketId"/>
+                            <button style="margin-top: 10px" type="submit" class="btn btn-primary">Change</button>
                         </div>
                     </form>
                 </div>

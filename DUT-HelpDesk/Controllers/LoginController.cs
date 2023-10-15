@@ -1,7 +1,6 @@
 ﻿using DUT_HelpDesk.DatabaseModels;
 using Microsoft.AspNetCore.Mvc;
 using Firebase.Auth;
-using System.Text.Json;
 namespace DUT_HelpDesk.Controllers
 {
     public class LoginController : Controller
