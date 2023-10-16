@@ -62,7 +62,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Technician" asp-action="TechnicianDashboard">Assigned Tickets</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Technician" asp-action="TechnicianDashboard">Insights</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Technician" asp-action="TechnicianInsightsDashboard">Insights</a>
                             </li>
                         }
                         else if (Html.Raw(httpContextaccessor.HttpContext.Session.GetString("_UserType")).ToString() == "TechnicianLead")
@@ -81,7 +81,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="TechnicianLead" asp-action="TechniciansListDashboard">Technicians</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="TechnicianLead" asp-action="InsightsDashboard">Insights</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Technician" asp-action="TechnicianInsightsDashboard">Insights</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="TechnicianLead" asp-action="ToolsDashboard">Tools</a>

@@ -60,12 +60,27 @@ namespace DUT_HelpDesk.Controllers
             {
                 tickets = tickets.Where(x => x.DateCreated >= DateTime.Parse(startDate) && x.DateCreated <= DateTime.Parse(endDate).AddDays(1)).ToList();
             }
+            else
+            {
+                if (startDate != null)
+                {
+                    tickets = tickets.Where(x => x.DateCreated >= DateTime.Parse(startDate)).ToList();
+                }
+                else
+                {
+                    if (endDate != null)
+                    {
+                        tickets = tickets.Where(x => x.DateCreated <= DateTime.Parse(endDate).AddDays(1)).ToList();
+                    }
+                }
+            }
+
             if (status != null)
             {
                 tickets = tickets.Where(x => x.TicketStatuses.OrderByDescending(s => s.TimeStamp).FirstOrDefault().Status.Name == status);
             }
             //Saved to StateManager for report generation in TechnicianTicketQueueReport
-            StateManager.filteredTickets = tickets.ToList(); 
+            StateManager.filteredTickets = tickets.ToList();
             return View(StateManager.filteredTickets);
         }
         public IActionResult AssignTicketToTechnician(int? id, int? techId)
@@ -104,7 +119,7 @@ namespace DUT_HelpDesk.Controllers
             ViewBag.technician = StateManager.technician;
             faq.TechnicianId = StateManager.technician.TechnicianId;
             StateManager.CreateFaq(faq);
-            return RedirectToAction("FaqDashboard");      
+            return RedirectToAction("FaqDashboard");
         }
 
         public IActionResult TechnicianTicketQueueReport()
@@ -121,7 +136,7 @@ namespace DUT_HelpDesk.Controllers
             if (vm.Message != null)
             {
                 await StateManager.MyReplies(vm);
-            }           
+            }
             return RedirectToAction("TechnicianDashboardDetail", new { id = vm.id });
         }
         public async Task<IActionResult> ViewReplyAttachment(int id)
@@ -159,12 +174,12 @@ namespace DUT_HelpDesk.Controllers
 
         }
 
-        public ActionResult TechViewTicket(int id)
+        public IActionResult TechViewTicket(int id)
         {
             Ticket ticket = StateManager.GetTicket(id);
             List<Reply> replies = StateManager.GetTicketReplies(id);
             ViewBag.replies = replies;
-            List<DatabaseModels.User> users = StateManager.GetUsers();
+            List<User> users = StateManager.GetUsers();
             ViewBag.users = users;
             if (ticket == null)
             {
@@ -184,7 +199,7 @@ namespace DUT_HelpDesk.Controllers
             int ticketId = Convert.ToInt32(vticketId);
             await StateManager.CloseTicket(ticketId);
             int count = StateManager.GetTechnicianClosedTicketCount(StateManager.technician.TechnicianId);
-            return RedirectToAction("TechnicianDashboardDetail", new {id = ticketId});
+            return RedirectToAction("TechnicianDashboardDetail", new { id = ticketId });
         }
 
         [HttpPost]
@@ -198,5 +213,42 @@ namespace DUT_HelpDesk.Controllers
             return RedirectToAction("TechnicianDashboardDetail", new { id = vm.id });
         }
 
+
+        public IActionResult TechnicianInsightsDashboard(string? startDate, string? endDate)
+        {
+            Technician technician = StateManager.GetTechnician();
+            List<User> users = StateManager.GetUsers();
+            if (technician != null && users.Count>0)
+            {
+                List<Ticket> closedTickets = StateManager.GetTechClosedTickets(technician.TechnicianId);
+                ViewBag.startDate = startDate; ViewBag.endDate = endDate;
+                if (startDate != null && endDate != null)
+                {
+                    closedTickets = closedTickets.Where(x => x.DateCreated >= DateTime.Parse(startDate) && x.DateCreated <= DateTime.Parse(endDate).AddDays(1)).ToList();
+                }
+                else
+                {
+                    if (startDate != null)
+                    {
+                        closedTickets = closedTickets.Where(x => x.DateCreated >= DateTime.Parse(startDate)).ToList();
+                    }
+                    else
+                    {
+                        if (endDate != null)
+                        {
+                            closedTickets = closedTickets.Where(x => x.DateCreated <= DateTime.Parse(endDate).AddDays(1)).ToList();
+                        }
+                    }
+                }
+                ViewBag.AvgResolutionTime = StateManager.GetAverageResolutionTime(closedTickets);
+                ViewBag.ClosedTickets = closedTickets;
+                ViewBag.UsersList = users;
+                return View(technician);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
     }
 }
