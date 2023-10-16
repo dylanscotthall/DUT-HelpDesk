@@ -24,5 +24,8 @@ namespace DUT_HelpDesk.DatabaseModels
         public bool? isClosed { get; set; }
 
         public int id { get; set; }
+
+        [Required]
+        public Priority? Priority { get; set; }
     }
 }

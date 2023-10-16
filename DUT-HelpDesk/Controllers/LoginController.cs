@@ -1,7 +1,6 @@
 ﻿using DUT_HelpDesk.DatabaseModels;
 using Microsoft.AspNetCore.Mvc;
 using Firebase.Auth;
-using System.Text.Json;
 namespace DUT_HelpDesk.Controllers
 {
     public class LoginController : Controller
@@ -56,8 +55,8 @@ namespace DUT_HelpDesk.Controllers
             }
             catch(FirebaseAuthException ex)
             {
-                var firebaseEx = JsonSerializer.Deserialize<FirebaseError>(ex.ResponseData);
-                ModelState.AddModelError(String.Empty, firebaseEx.error.message);
+                //var firebaseEx = JsonSerializer.Deserialize<FirebaseError>(ex.ResponseData);
+                ModelState.AddModelError(String.Empty, "Invalid Credentials");
                 ViewBag.errors = "Login failed. Please check that your credentials are correct.";
                 return View(model);
             }

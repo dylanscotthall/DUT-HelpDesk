@@ -87,7 +87,7 @@ namespace DUT_HelpDesk.Controllers
         [HttpPost]
         public async Task<IActionResult> MyReplies(ReplyTicketViewModel vm)
         {
-            if (ModelState.IsValid)
+            if (vm.Message != null)
             {
                 await StateManager.MyReplies(vm);              
             }
