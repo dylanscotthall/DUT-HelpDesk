@@ -7,8 +7,8 @@
 
 ### 🤖 Team BitBots
 |<sub>Jishen Harilal|<sub>Evan Teague|<sub>Dylan Hall|<sub>Ricardo Sánchez|<sub>Fawwaz Osman|<sub>Deylin Nair|<sub>Keval Rohith|<sub>Ayrton Mulqueeny|
-|-|-|-|-|-|-|-|-|
-|ST10083511|ST10083451|ST10083367|ST10083248|ST10083880|ST10083739|ST10083780|ST10083575|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|<sub>ST10083511|<sub>ST10083451|<sub>ST10083367|<sub>ST10083248|<sub>ST10083880|<sub>ST10083739|<sub>ST10083780|<sub>ST10083575|
 ---
 ### 📌 Noticeboard
 > [!Important]
