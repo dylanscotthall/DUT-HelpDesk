@@ -318,7 +318,6 @@ namespace DUT_HelpDesk.Controllers
 
         public static async Task MyReplies(ReplyTicketViewModel model)
         {
-
             Reply reply = new Reply()
             {
                 TicketId = model.id,
@@ -327,13 +326,10 @@ namespace DUT_HelpDesk.Controllers
                 UserId = user.UserId,
 
             };
-
             await db.Replies.AddAsync(reply);
             await db.SaveChangesAsync();
-
             if (model.file != null)
             {
-
                 using (var stream = new MemoryStream())
                 {
                     await model.file.CopyToAsync(stream);
@@ -352,16 +348,16 @@ namespace DUT_HelpDesk.Controllers
                     await db.Attachments.AddAsync(uploadedFile);
                     await db.SaveChangesAsync();
                 }
-
             }
-
         }
 
         //returns the number tickets that a technician has closed.
         public static int GetTechnicianClosedTicketCount(int techId)
         {
+            using var db = new DutHelpdeskdbContext();
             List<TicketTechnician> tt = db.TicketTechnicians.Where(x => x.TechnicianId == techId && x.IsAssigned == true).ToList();
             List<TicketStatus> ts = db.TicketStatuses.Where(x => x.StatusId == 3).ToList();
+            db.Dispose();
             List<TicketStatus> tts = new List<TicketStatus>();
             foreach (TicketTechnician ticketTechnician in tt)
             {
@@ -380,8 +376,9 @@ namespace DUT_HelpDesk.Controllers
         public static bool TicketIsClosed(int ticketID)
         {
             //gets the tickets latest status
+            using var db = new DutHelpdeskdbContext();
             TicketStatus? ts = db.TicketStatuses.Where(x => x.TicketId == ticketID).OrderByDescending(x => x.TimeStamp).FirstOrDefault();
-
+            db.Dispose();
             if (ts == null) //if no ticket status, ticket is not closed
             {
                 return false;
@@ -403,6 +400,7 @@ namespace DUT_HelpDesk.Controllers
         //closes a ticket given the ticketID
         public static async Task CloseTicket(int ticketID)
         {
+            using var db = new DutHelpdeskdbContext();
             Ticket? ticket = db.Tickets.Find(ticketID);
             if (ticket != null)
             {
@@ -419,31 +417,31 @@ namespace DUT_HelpDesk.Controllers
 
             db.TicketStatuses.Add(ticketStatus);
             await db.SaveChangesAsync();
+            db.Dispose();
         }
 
         //returns the name of the ticket's latest status
         public static string GetTicketStatus(int ticketID)
         {
             //gets the tickets latest status
-            using (var db = new DutHelpdeskdbContext())
+            using var db = new DutHelpdeskdbContext();
+            TicketStatus? ts = db.TicketStatuses.Where(x => x.TicketId == ticketID).OrderByDescending(x => x.TimeStamp).FirstOrDefault();
+            if (ts != null)
             {
-                TicketStatus? ts = db.TicketStatuses.Where(x => x.TicketId == ticketID).OrderByDescending(x => x.TimeStamp).FirstOrDefault();
-                if (ts != null)
+                Status? status = db.Statuses.Where(x => x.StatusId == ts.StatusId).FirstOrDefault();
+                db.Dispose();
+                if (status != null && status.Name != null)
                 {
-                    Status? status = db.Statuses.Where(x => x.StatusId == ts.StatusId).FirstOrDefault();
-                    if (status != null && status.Name != null)
-                    {
-                        return status.Name;
-                    }
-                    else
-                    {
-                        return "N/A";
-                    }
+                    return status.Name;
                 }
                 else
                 {
                     return "N/A";
                 }
+            }
+            else
+            {
+                return "N/A";
             }
         }
 
@@ -464,7 +462,9 @@ namespace DUT_HelpDesk.Controllers
 
         public static bool authoriseStudentReplyAccess(int replyID)
         {
+            using var db = new DutHelpdeskdbContext();
             Reply? r = db.Replies.Where(x => x.ReplyId == replyID).FirstOrDefault();
+            db.Dispose();
             if (r != null)
             {
                 return authoriseStudentTicketAccess(r.TicketId);
@@ -474,29 +474,32 @@ namespace DUT_HelpDesk.Controllers
 
         public static async Task ChangeTicketPriority(int ticketId, string p)
         {
+            using var db = new DutHelpdeskdbContext();
             Ticket? ticket = db.Tickets.Find(ticketId);
             if (ticket != null)
             {
                 ticket.Priority = p;
             }
             await db.SaveChangesAsync();
+            db.Dispose();
         }
 
+        //gets the closed tickets that a specific technician is assigned to.
         public static List<Ticket> GetTechClosedTickets(int techId)
         {
-            using (var db = new DutHelpdeskdbContext())
-            {
-                List<TicketTechnician> tt = db.TicketTechnicians.Where(x => x.TechnicianId == techId && x.IsAssigned == true).ToList();
-                List<int?> ticketIds = tt.Select(ttItem => ttItem.TicketId).ToList();
+            using var db = new DutHelpdeskdbContext();
+            List<TicketTechnician> tt = db.TicketTechnicians.Where(x => x.TechnicianId == techId && x.IsAssigned == true).ToList();
+            List<int?> ticketIds = tt.Select(ttItem => ttItem.TicketId).ToList();
 
-                List<Ticket> tickets = db.Tickets
-                    .Where(t => ticketIds.Contains(t.TicketId) && t.DateClosed != null)
-                    .ToList();
-
-                return tickets;
-            }
+            List<Ticket> tickets = db.Tickets
+                .Where(t => ticketIds.Contains(t.TicketId) && t.DateClosed != null)
+                .ToList();
+            db.Dispose();
+            return tickets;
         }
 
+
+        //returns the formatted average resolution time for a list of tickets.
         public static string GetAverageResolutionTime(List<Ticket> tickets)
         {
             List<TimeSpan?> timeSpans = new();
@@ -509,11 +512,11 @@ namespace DUT_HelpDesk.Controllers
                     continue;
                 }
                 time1 = ticket.DateCreated;
-                time2 = ticket.DateClosed;          
-                TimeSpan? timeDifference = time2 - time1;              
+                time2 = ticket.DateClosed;
+                TimeSpan? timeDifference = time2 - time1;
                 timeSpans.Add(timeDifference);
             }
-            if(timeSpans.Count == 0)
+            if (timeSpans.Count == 0)
             {
                 return "N/A";
             }
@@ -523,8 +526,57 @@ namespace DUT_HelpDesk.Controllers
                 $"{(averageDifference.Days != 0 ? $"{averageDifference.Days} day{(averageDifference.Days != 1 ? "s" : "")}\n" : "")}" +
                 $"{(averageDifference.Hours != 0 ? $"{averageDifference.Hours} hr{(averageDifference.Hours != 1 ? "s" : "")}\n" : "")}" +
                 $"{(averageDifference.Minutes != 0 ? $"{averageDifference.Minutes} min{(averageDifference.Minutes != 1 ? "s" : "")}\n" : "")}";
-
             return formattedDifference;
         }
+
+
+        //checks if a ticket has recieved feedback, returns true if it does.
+        public static bool TicketHasFeedback(int ticketId)
+        {
+            using var db = new DutHelpdeskdbContext();
+            Feedback? feedback = null;
+            feedback = db.Feedbacks.Where(x => x.TicketId == ticketId).FirstOrDefault();
+            db.Dispose();
+            if (feedback != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        //stores user feedback for a ticket
+        public static async Task SubmitFeedback(int ticketId, int rating, string comments)
+        {
+            if (!TicketHasFeedback(ticketId))
+            {
+                using var db = new DutHelpdeskdbContext();
+                var feedback = new Feedback
+                {
+                    TicketId = ticketId,
+                    Rating = rating,
+                    Comments = comments,
+                    Date = DateTime.UtcNow
+                };
+                db.Feedbacks.Add(feedback);
+                await db.SaveChangesAsync();
+                db.Dispose();
+            }
+        }
+
+        public static Feedback? GetTicketFeedback(int ticketId)
+        {
+            using var db = new DutHelpdeskdbContext();
+            Feedback? feedback = null;
+            if (TicketHasFeedback(ticketId))
+            {
+                feedback = db.Feedbacks.FirstOrDefault(x => x.TicketId == ticketId);
+                db.Dispose();
+            }
+            return feedback;
+        }
+
     }
 }

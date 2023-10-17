@@ -142,7 +142,7 @@ namespace DUT_HelpDesk.Controllers
         public async Task<IActionResult> ViewReplyAttachment(int id)
         {
 
-            DatabaseModels.DutHelpdeskdbContext db = new DutHelpdeskdbContext();
+            DutHelpdeskdbContext db = new DutHelpdeskdbContext();
             var uploadedFile = await db.Attachments.FirstOrDefaultAsync(f => f.ReplyId == id);
 
             if (uploadedFile == null)
@@ -154,7 +154,7 @@ namespace DUT_HelpDesk.Controllers
         }
         public async Task<IActionResult> ViewAttachment(int id)
         {
-            DatabaseModels.DutHelpdeskdbContext db = new DutHelpdeskdbContext();
+            DutHelpdeskdbContext db = new DutHelpdeskdbContext();
 
             var uploadedFile = await db.Attachments.FirstOrDefaultAsync(f => f.TicketId == id);
 
