@@ -16,6 +16,7 @@ namespace DUT_HelpDesk.Controllers
         }
         public IActionResult TechnicianDashboardDetail(int id)
         {
+            ViewBag.feedback = StateManager.GetTicketFeedback(id);
             ViewBag.userType = StateManager.getUserType();
             Ticket ticket = StateManager.GetTicket(id);
             List<Reply> replies = StateManager.GetTicketReplies(id);
