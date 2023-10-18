@@ -316,6 +316,7 @@ namespace DUT_HelpDesk.Controllers
             }
         }
 
+        //Adds a new reply for a ticket.
         public static async Task MyReplies(ReplyTicketViewModel model)
         {
             Reply reply = new Reply()
@@ -472,6 +473,7 @@ namespace DUT_HelpDesk.Controllers
             return false;
         }
 
+        //Changes a tickets priority to a new value.
         public static async Task ChangeTicketPriority(int ticketId, string p)
         {
             using var db = new DutHelpdeskdbContext();
@@ -566,6 +568,7 @@ namespace DUT_HelpDesk.Controllers
             }
         }
 
+        //gets the feedback for a ticket
         public static Feedback? GetTicketFeedback(int ticketId)
         {
             using var db = new DutHelpdeskdbContext();
@@ -578,5 +581,41 @@ namespace DUT_HelpDesk.Controllers
             return feedback;
         }
 
+
+        //returns the average feedback rating for a list of tickets.
+        public static string GetAverageFeedbackRating(List<Ticket> tickets)
+        {
+            using var db = new DutHelpdeskdbContext();
+            List<Feedback> feedbacks = new();
+            double? avgRating = 0;
+            double? numRatings = 0;
+            double? aggregateRating = 0;        
+            foreach (var ticket in tickets)
+            {
+                Feedback? feedback = db.Feedbacks.Where(x => x.TicketId == ticket.TicketId).FirstOrDefault();
+                if(feedback != null)
+                {
+                    feedbacks.Add(feedback);
+                }
+            }
+            db.Dispose();
+            foreach (var f in feedbacks)
+            {
+                numRatings++;
+                aggregateRating += f.Rating;
+            }
+            if(numRatings > 0) 
+            {
+                avgRating = aggregateRating / numRatings;
+
+                return $"{avgRating}/5 ({numRatings} {(numRatings == 1 ? "Rating" : "Ratings")})";
+
+            }
+            else
+            {
+                return ($"No Ratings");
+            }
+            
+        }
     }
 }

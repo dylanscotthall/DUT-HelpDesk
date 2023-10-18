@@ -241,6 +241,7 @@ namespace DUT_HelpDesk.Controllers
                         }
                     }
                 }
+                ViewBag.AvgFeedbackRating = StateManager.GetAverageFeedbackRating(closedTickets);
                 ViewBag.AvgResolutionTime = StateManager.GetAverageResolutionTime(closedTickets);
                 ViewBag.ClosedTickets = closedTickets;
                 ViewBag.UsersList = users;
