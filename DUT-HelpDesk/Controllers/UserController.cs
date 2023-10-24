@@ -61,7 +61,7 @@ namespace DUT_HelpDesk.Controllers
             return View(tickets);
         }
         public IActionResult ViewTicket(int id)
-        {
+        {                    
             if (!StateManager.authoriseStudentTicketAccess(id)) // Authorises student access to ticket
             {
                 return NotFound();
@@ -149,6 +149,16 @@ namespace DUT_HelpDesk.Controllers
         public IActionResult Error()
         {
             return View(new DatabaseModels.ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SubmitFeedback(ReplyTicketViewModel vm)
+        {
+            if (vm.Comments != null)
+            {
+                await StateManager.SubmitFeedback(vm.id, vm.Rating, vm.Comments);
+            }
+            return RedirectToAction("ViewTicket", new { vm.id });
         }
     }
 }

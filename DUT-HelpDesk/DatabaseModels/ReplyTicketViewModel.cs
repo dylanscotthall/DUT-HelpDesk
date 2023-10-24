@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DUT_HelpDesk.DatabaseModels
+namespace DUT_HelpDesk.DatabaseModels{
 
-{
+
     public class ReplyTicketViewModel
     {
         //The file attachment of the reply.
@@ -27,5 +27,12 @@ namespace DUT_HelpDesk.DatabaseModels
 
         [Required]
         public Priority? Priority { get; set; }
+
+        [Required (ErrorMessage = "Please select a rating.")]
+        [Range(1, 5, ErrorMessage = "Please select a rating between 1 and 5.")]
+        public int Rating { get; set; }
+
+        [Required]
+        public string? Comments { get; set;}
     }
 }
