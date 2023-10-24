@@ -526,5 +526,18 @@ namespace DUT_HelpDesk.Controllers
 
             return formattedDifference;
         }
+        // Delete FAQ
+        public static DatabaseModels.Faq GetFaq(int id)
+        {
+            Faq? r = db.Faqs.Where(x => x.FaqId == id).FirstOrDefault();
+            return r;
+        }
+
+        public static void DeleteFaq(DatabaseModels.Faq faq)
+        {
+            db.Faqs.Remove(faq);
+            db.SaveChanges();
+        }
+
     }
 }

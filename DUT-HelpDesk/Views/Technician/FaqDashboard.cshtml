@@ -1,28 +1,39 @@
 ﻿@model List<DUT_HelpDesk.DatabaseModels.Faq>
-    @{
-        ViewData["Title"] = "FAQ";
-    }
+@{
+    ViewData["Title"] = "FAQ";
+}
+@*For Deletion*@
+@if (TempData["Msg"] != null)
+{
+    <div class="alert alert-success">
+        <b>@TempData["Msg"]</b>
+    </div>
+}
 
-    <div>
-        <h1>FAQ</h1>
-        <br />
+<div>
+    <h1>FAQ</h1>
+    <br />
     <a asp-controller="Technician" asp-action="TechCreateFAQ">Create FAQ</a>
     <br />
-        <table class="table table-responsive table-hover">
-            <tr>
-                <th>Question</th>
-                <th>Answer</th>
-            </tr>
-            <br />
-            @foreach (var item in Model)
+    <table class="table table-responsive table-hover">
+        <tr>
+            <th>Question</th>
+            <th>Answer</th>
+            <th></th>
+        </tr>
+        <br />
+        @foreach (var item in Model)
+        {
+            @if (item != null)
             {
-                @if (item != null)
-                {
-                    <tr>
-                        <td>@Html.DisplayFor(modelItem => item.Question)</td>
-                        <td>@Html.DisplayFor(modelItem => item.Answer)</td>
-                    </tr>
-                }
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Question)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Answer)</td>
+                    @*each entry*@
+                    <td><a asp-action="Delete" asp-route-id="@item.FaqId">Delete</a></td>
+
+                </tr>
             }
-        </table>
-    </div>
+        }
+    </table>
+</div>

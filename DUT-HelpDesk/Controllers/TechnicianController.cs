@@ -249,6 +249,25 @@ namespace DUT_HelpDesk.Controllers
             {
                 return NotFound();
             }
+        }//Delete FAQ
+        public IActionResult Delete(int id)
+        {
+            Faq fq = StateManager.GetFaq(id);
+            return View(fq);
         }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            Faq fq = StateManager.GetFaq(id);
+
+            StateManager.DeleteFaq(fq);
+            TempData["Msg"] = "FAQ Successfully Deleted";
+
+            return RedirectToAction("FaqDashboard");
+        }
+
+
     }
 }
