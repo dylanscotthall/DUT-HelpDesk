@@ -530,7 +530,19 @@ namespace DUT_HelpDesk.Controllers
                 $"{(averageDifference.Minutes != 0 ? $"{averageDifference.Minutes} min{(averageDifference.Minutes != 1 ? "s" : "")}\n" : "")}";
             return formattedDifference;
         }
+      
+        // Delete FAQ
+        public static DatabaseModels.Faq GetFaq(int id)
+        {
+            Faq? r = db.Faqs.Where(x => x.FaqId == id).FirstOrDefault();
+            return r;
+        }
 
+        public static void DeleteFaq(DatabaseModels.Faq faq)
+        {
+            db.Faqs.Remove(faq);
+            db.SaveChanges();
+        }
 
         //checks if a ticket has recieved feedback, returns true if it does.
         public static bool TicketHasFeedback(int ticketId)
