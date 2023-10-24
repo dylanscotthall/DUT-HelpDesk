@@ -16,6 +16,7 @@ namespace DUT_HelpDesk.Controllers
         }
         public IActionResult TechnicianDashboardDetail(int id)
         {
+            ViewBag.feedback = StateManager.GetTicketFeedback(id);
             ViewBag.userType = StateManager.getUserType();
             Ticket ticket = StateManager.GetTicket(id);
             List<Reply> replies = StateManager.GetTicketReplies(id);
@@ -142,7 +143,7 @@ namespace DUT_HelpDesk.Controllers
         public async Task<IActionResult> ViewReplyAttachment(int id)
         {
 
-            DatabaseModels.DutHelpdeskdbContext db = new DutHelpdeskdbContext();
+            DutHelpdeskdbContext db = new DutHelpdeskdbContext();
             var uploadedFile = await db.Attachments.FirstOrDefaultAsync(f => f.ReplyId == id);
 
             if (uploadedFile == null)
@@ -154,7 +155,7 @@ namespace DUT_HelpDesk.Controllers
         }
         public async Task<IActionResult> ViewAttachment(int id)
         {
-            DatabaseModels.DutHelpdeskdbContext db = new DutHelpdeskdbContext();
+            DutHelpdeskdbContext db = new DutHelpdeskdbContext();
 
             var uploadedFile = await db.Attachments.FirstOrDefaultAsync(f => f.TicketId == id);
 
@@ -240,6 +241,7 @@ namespace DUT_HelpDesk.Controllers
                         }
                     }
                 }
+                ViewBag.AvgFeedbackRating = StateManager.GetAverageFeedbackRating(closedTickets);
                 ViewBag.AvgResolutionTime = StateManager.GetAverageResolutionTime(closedTickets);
                 ViewBag.ClosedTickets = closedTickets;
                 ViewBag.UsersList = users;

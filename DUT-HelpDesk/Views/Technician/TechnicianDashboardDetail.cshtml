@@ -229,11 +229,51 @@
             </form>
             <script>
                 function confirmCloseTicket() {
-                    if (confirm("Are you sure you want to close the ticket? This cannot be undone.")) {
-                        document.getElementById("closeTicketForm").submit(); // Submit the form
-                    }
+                if (confirm("Are you sure you want to close the ticket? This cannot be undone.")) {
+                document.getElementById("closeTicketForm").submit(); // Submit the form
+                }
                 }
             </script>
+        }
+        else
+        {
+            <br />
+        
+       
+            if (StateManager.TicketHasFeedback(Model.ticket.TicketId) && ViewBag.feedback != null)
+            {
+                <div style="display: inline-block; width: 600px; background-color: #F1F1F1; padding: 10px; border-radius: 10px">
+                    <h4>Feedback</h4>
+                    <span><h6>From</h6>@email</span>
+                    <hr>
+                    <span><h6>Comment</h6>@ViewBag.feedback.Comments</span>
+                    <hr>
+                    <h6>Rating</h6>
+                    @{
+                        if (ViewBag.feedback.Rating < 3)
+                        {
+                            <h3 style="width: fit-content; background-color: red; padding: 10px; border-radius: 10px">@ViewBag.feedback.Rating/5</h3>
+                        }
+                        if (ViewBag.feedback.Rating == 3)
+                        {
+                            <h3 style="width: fit-content; background-color: orange; padding: 10px; border-radius: 10px">@ViewBag.feedback.Rating/5</h3>
+                        }
+                        if (ViewBag.feedback.Rating > 3)
+                        {
+                            <h3 style="width: fit-content; background-color: lime; padding: 10px; border-radius: 10px">@ViewBag.feedback.Rating/5</h3>
+                        }
+                    }
+                   
+                </div>
+            }
+            else
+            {
+                <div style="display: inline-block; width: 600px; background-color: #F1F1F1; padding: 10px; border-radius: 10px">
+
+                    <h4>Feedback</h4>
+                <span>This ticket has not recieved any feedback yet.</span>
+                </div>
+            }
         }
     }
 </div>

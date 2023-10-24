@@ -155,6 +155,51 @@
                 </form>
             </div>
         }
+        else 
+        {
+            <br />
+            int ticketId = Model.ticket.TicketId;
+            if (!StateManager.TicketHasFeedback(ticketId)) {
+                <div style="width: 50%; background-color: #F1F1F1; padding: 10px; border-radius: 10px;">
+                    <form method="post" asp-action="SubmitFeedback" enctype="multipart/form-data">
+                    <div class="form-group" style="width: 100%;">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <h4>Feedback</h4>
+                        <label asp-for="Comments"><h6>Comments</h6></label>
+                        <textarea asp-for="Comments" class="form-control" maxlength="255"></textarea>
+                        <span asp-validation-for="Comments" class="text-danger"></span>
+                    </div>
+                    <input asp-for="id" type="hidden" value="@Model.ticket.TicketId" />
+
+                    <div style="width: 100%; max-width: 600px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <div style="width: 25%;margin-top: 15px">
+                                <label for="Rating"><h6>Rating</h6></label>
+                                <select class="form-control" asp-for="Rating">
+
+                                    <option value="5">5 (Very Good)</option>
+                                    <option value="4">4</option>
+                                    <option value="3">3 (Ok)</option>
+                                    <option value="2">2</option>
+                                    <option value="1">1 (Bad)</option>
+                                    
+                                    
+                                </select>
+                                <span asp-validation-for="Rating" class="text-danger"></span>
+                            </div>
+                            <div style="width: 49%; text-align: right; margin-top: 45px">
+                                <button style="width: 100px" type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                </div>
+            }
+            else
+            {
+                <span>Thank you for your feedback!</span>
+            }
+        }
     }
 
     <br />
