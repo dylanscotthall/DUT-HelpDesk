@@ -68,7 +68,7 @@
                         <td>@Html.DisplayFor(modelItem => item.TicketId)</td>
                         <td>@Html.DisplayFor(modelItem => item.Subject)</td>
                         <td>@string.Format("{0:dd, MMM yyyy - HH:mm}", item.DateCreated)</td>
-                        @if (item.Priority.Equals("Low"))
+                        @if (item.Priority!.Equals("Low"))
                         {
                             <td style="color: #00c20d">@Html.DisplayTextFor(model => item.Priority)</td>
                         }

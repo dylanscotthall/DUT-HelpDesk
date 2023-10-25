@@ -9,6 +9,25 @@
     <p>
         <a href="javascript:void(0);" onclick="goBack()">Go Back</a>
     </p>
+
+    @if (TempData["error"] != null)
+    {
+        <div class="alert alert-danger">
+            <p>
+            <b>@TempData["error"]</b>
+            </p>
+        </div>
+    }
+
+
+    @if (TempData["success"] != null)
+    {
+        <div class="alert alert-success">
+            <p>
+            <b>@TempData["success"]</b>
+            </p>
+        </div>
+    }
     @{
         bool closed = Model.isClosed ?? false;
         if (closed)
@@ -40,7 +59,7 @@
             </tr>
             <tr>
                 <th>Priority</th>
-                @if (Model.ticket.Priority.Equals("Low"))
+                @if (Model.ticket.Priority!.Equals("Low"))
                 {
                     <td style="color: #00c20d">@Html.DisplayTextFor(model => model.ticket.Priority)</td>
                 }
@@ -174,7 +193,8 @@
                                 <div class="form-group">
                                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                     <label asp-for="assignID">Technician ID:</label>
-                                    <input asp-for="assignID" class="form-control" maxlength="5" />
+                                    <input asp-for="assignID" class="form-control" min="1"/>
+                                    <input asp-for="id" type="hidden" value="@Model.ticket.TicketId" />
                                     <button style="margin-top: 10px" type="submit" class="btn btn-primary">Assign to Ticket</button>
                                 </div>
                             </form>

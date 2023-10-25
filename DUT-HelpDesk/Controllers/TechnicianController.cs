@@ -272,6 +272,37 @@ namespace DUT_HelpDesk.Controllers
             return RedirectToAction("FaqDashboard");
         }
 
+        [HttpPost]
+        public IActionResult AssignTechnician(ReplyTicketViewModel vm)
+        {
+            if (vm.assignID.HasValue)
+            {
+                Technician? tech =  StateManager.GetTech(vm.assignID.Value);
+                if (tech != null)
+                {
+                    if (StateManager.TechIsAssigned(vm.id, tech.TechnicianId))
+                    {
+                        TempData["error"] = "The specified technician is already assigned to this ticket!";
+                    }
+                    else
+                    {
+                        //Ticket Assignment Logic Goes Here....
+                        TempData["success"] = "Technician successfully assigned to ticket!";
+                    }
+                }
+                else
+                {
+                    TempData["error"] = "The specified technician does not exist!";
+                }
+
+            }
+            else
+            {
+                TempData["error"] = "No technician ID provided!";
+            }
+            return RedirectToAction("TechnicianDashboardDetail", new { id = vm.id });
+        }
+
 
     }
 }
