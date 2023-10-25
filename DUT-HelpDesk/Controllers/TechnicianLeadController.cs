@@ -42,19 +42,19 @@ namespace DUT_HelpDesk.Controllers
                     ViewBag.startDate = startDate; ViewBag.endDate = endDate;
                     if (startDate != null && endDate != null)
                     {
-                        closedTickets = closedTickets.Where(x => x.DateCreated >= DateTime.Parse(startDate) && x.DateCreated <= DateTime.Parse(endDate).AddDays(1)).ToList();
+                        closedTickets = closedTickets.Where(x => x.DateClosed >= DateTime.Parse(startDate) && x.DateClosed <= DateTime.Parse(endDate).AddDays(1)).ToList();
                     }
                     else
                     {
                         if (startDate != null)
                         {
-                            closedTickets = closedTickets.Where(x => x.DateCreated >= DateTime.Parse(startDate)).ToList();
+                            closedTickets = closedTickets.Where(x => x.DateClosed >= DateTime.Parse(startDate)).ToList();
                         }
                         else
                         {
                             if (endDate != null)
                             {
-                                closedTickets = closedTickets.Where(x => x.DateCreated <= DateTime.Parse(endDate).AddDays(1)).ToList();
+                                closedTickets = closedTickets.Where(x => x.DateClosed <= DateTime.Parse(endDate).AddDays(1)).ToList();
                             }
                         }
                     }

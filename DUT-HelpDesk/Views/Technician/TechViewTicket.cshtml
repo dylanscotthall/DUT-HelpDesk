@@ -5,7 +5,7 @@
     ViewBag.Title = "Technician";
 }
 <p>
-    @Html.ActionLink("Back", "TechnicianTicketQueue", "Technician")
+    <a href="javascript:void(0);" onclick="goBack()">Go Back</a>
 </p>
 <div style="background-color: #F1F1F1; padding: 10px; border-radius: 10px;">
     <h2>Ticket Details</h2>
@@ -117,3 +117,12 @@
         }
     </table>
 </div>
+
+@section scripts
+    {
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+    }

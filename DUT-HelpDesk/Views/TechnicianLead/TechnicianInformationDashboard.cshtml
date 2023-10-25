@@ -40,7 +40,7 @@
 
 
 <div style="text-align: center;">
-    <h2>Performance</h2>
+    <h2>Performance Report</h2>
 </div>
 
 <br />
@@ -92,6 +92,58 @@
 
 
 </div>
+
+<table class="table table-responsive table-hover">
+    <tr>
+        <th>ID</th>
+        <th>Query</th>
+        <th>Date Open</th>
+        <th>Date Closed</th>
+        <th>Priority</th>
+        <th>Rating</th>
+        <th></th>
+    </tr>
+    @if (Model != null)
+    {
+        @foreach (Ticket item in ViewBag.ClosedTickets)
+        {
+            if (item != null)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.TicketId)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Subject)</td>
+                    <td>@string.Format("{0:dd, MMM yyyy - HH:mm}", item.DateCreated)</td>
+                    <td>@string.Format("{0:dd, MMM yyyy - HH:mm}", item.DateClosed)</td>
+                    @if (item.Priority.Equals("Low"))
+                    {
+                        <td style="color: #00c20d">@Html.DisplayTextFor(model => item.Priority)</td>
+                    }
+                    @if (item.Priority.Equals("Normal"))
+                    {
+                        <td style="color: darkorange">@Html.DisplayTextFor(model => item.Priority)</td>
+                    }
+                    @if (item.Priority.Equals("High"))
+                    {
+                        <td style="color: red">@Html.DisplayTextFor(model => item.Priority)</td>
+                    }
+                    @{
+                        Feedback? feedback = StateManager.GetTicketFeedback(item.TicketId);
+                        if (feedback != null)
+                        {
+                            <td>@feedback.Rating/5</td>
+                        }
+                        else
+                        {
+                            <td>--</td>
+                        }
+                    }
+
+                    <td>@Html.ActionLink("Details", "TechnicianDashboardDetail", "Technician", new { id=item.TicketId }, null)</td>
+                </tr>
+            }
+        }
+    }
+</table>
 
 @section scripts
     {

@@ -7,7 +7,7 @@
 
 <div>
     <p>
-        @Html.ActionLink("Back", "UserTicket")
+        <a href="javascript:void(0);" onclick="goBack()">Go Back</a>
     </p>
     @{
         bool closed = Model.isClosed ?? false;
@@ -208,5 +208,11 @@
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
+
+        <script>
+            function goBack() {
+                window.history.back();
+            }
+        </script>
     }
 }
