@@ -23,7 +23,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.9" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="Rotativa.AspNetCore" Version="1.2.0" />
   </ItemGroup>
 
