@@ -165,12 +165,21 @@ namespace DUT_HelpDesk.Controllers
             }
         }
 
-        //returns a single technician by ID
+        //returns a single technician by user ID
         public static Technician GetTechnician(int id)
         {
             using (var db = new DutHelpdeskdbContext())
             {
                 return db.Technicians.Where(x => x.UserId == id).FirstOrDefault();
+            }
+        }
+
+        //returns a single technician by technician ID
+        public static Technician GetTech(int techId)
+        {
+            using (var db = new DutHelpdeskdbContext())
+            {
+                return db.Technicians.Where(x => x.TechnicianId == techId).FirstOrDefault();
             }
         }
 

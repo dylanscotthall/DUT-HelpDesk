@@ -1,0 +1,103 @@
+﻿@using DUT_HelpDesk.Controllers
+@model DUT_HelpDesk.DatabaseModels.Technician
+@{
+    ViewData["Title"] = "Information";
+}
+
+<div style="text-align: center;">
+    <h2>Technician Information</h2>
+</div>
+
+<br />
+
+<div style="display: flex; justify-content: center; align-items: center; text-align: center;">
+    <div style="width: 50%; background-color: #F1F1F1; padding: 10px; border-radius: 10px;">
+
+        <br />
+
+        <table class="table table-responsive table-hover" style="text-align: start;">
+            <tr>
+                <th>Technician ID</th>
+                <td>@Model.TechnicianId</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>@((ViewBag.UsersList as List<User>)?.FirstOrDefault(u => u.UserId == Model.UserId)?.Email)</td>
+            </tr>
+            <tr>
+                <th>Date Joined</th>
+                <td>@string.Format("{0:dd, MMM yyyy}", Model.DateJoined)</td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+
+<br />
+<br />
+<br />
+
+
+
+<div style="text-align: center;">
+    <h2>Performance</h2>
+</div>
+
+<br />
+<div style="display: flex; justify-content: center; align-items: center; text-align: center;">
+    @if (ViewBag.startDate != null)
+    {
+        <input style="width:15%;display:inline;" id="startDate" class="form-control" type="date" value="@ViewBag.startDate" />
+    }
+    else
+    {
+        <input style="width:15%;display:inline;" id="startDate" class="form-control" type="date" />
+    }
+    <span style="margin-inline: 10px"></span>
+    @if (ViewBag.endDate != null)
+    {
+        <input style="width:15%;display:inline;" id="endDate" class="form-control col-sm-5" type="date" value="@ViewBag.endDate" />
+    }
+    else
+    {
+        <input style="width:15%;display:inline;" id="endDate" class="form-control col-sm-5" type="date" />
+    }
+    <span style="margin-inline: 10px"></span>
+    <input style="width:15%;display:inline;" id="filter" class="form-control col-sm-5" type="button" value="Apply Date Range" onclick="SetSort(startDate.value, endDate.value)" />
+</div>
+<br />
+
+<div style="text-align: center">
+
+    @*Avg Rating*@
+    <div style="text-align:center; display:inline-block; width: 25%; background-color: #F1F1F1; padding: 10px; border-radius: 10px; margin-inline: 20px">
+        <h6>Average Feedback Rating</h6>
+        <br />
+        <h4>@ViewBag.AvgFeedbackRating</h4>
+    </div>
+
+    @*Number of Closed Tickets*@
+    <div style="text-align:center; display:inline-block; width: 25%; background-color: #F1F1F1; padding: 10px; border-radius: 10px; margin-inline: 20px">
+        <h6>Number of Closed Tickets</h6>
+        <br />
+        <h3>@ViewBag.ClosedTickets.Count</h3>
+    </div>
+
+    @*Avg Ticket Resolution Time*@
+    <div style="text-align:center; display:inline-block; width: 25%; background-color: #F1F1F1; padding: 10px; border-radius: 10px; margin-inline: 20px">
+        <h6>Average Ticket Resolution Time</h6>
+        <br />
+        <h4>@ViewBag.AvgResolutionTime</h4>
+    </div>
+
+
+</div>
+
+@section scripts
+    {
+    <script>
+        function SetSort(startDate, endDate) {
+            window.location.href = "/TechnicianLead/TechnicianInformationDashboard?techId="+ @Model.TechnicianId +"&startDate=" + startDate + "&endDate=" + endDate;
+        }
+    </script>
+    }

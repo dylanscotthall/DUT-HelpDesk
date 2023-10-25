@@ -251,7 +251,9 @@ namespace DUT_HelpDesk.Controllers
             {
                 return NotFound();
             }
-        }//Delete FAQ
+        }
+        
+        //Delete FAQ
         public IActionResult Delete(int id)
         {
             Faq fq = StateManager.GetFaq(id);
