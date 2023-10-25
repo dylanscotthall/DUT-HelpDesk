@@ -24,9 +24,8 @@ jobs:
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
-
       - name: Test
-        run: dotnet test --logger "trx;LogFileName=test-results.trx" || true
+        run: dotnet test DUT-HelpDesk.sln --configuration Release --logger "trx;LogFileName=test-results.trx" || true
       - name: Test Report
         uses: dorny/test-reporter@v1
         if: always()
