@@ -28,7 +28,7 @@
                         <td>@((ViewBag.UsersList as List<User>)?.FirstOrDefault(u => u.UserId == technician.UserId)?.Email)</td>
                         <td>@string.Format("{0:dd, MMM yyyy}", technician.DateJoined)</td>
                         <td>@numClosed</td>
-                        <td>@Html.ActionLink("Information", "Information", "TechnicianLead", new {  }, null)</td>
+                        <td>@Html.ActionLink("Information", "TechnicianInformationDashboard", "TechnicianLead", new {techId = technician.TechnicianId}, null)</td>
                     </tr>
                 }
             }

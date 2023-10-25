@@ -1,11 +1,11 @@
 ﻿@using DUT_HelpDesk.Controllers
 @model DUT_HelpDesk.DatabaseModels.Technician
 @{
-    ViewData["Title"] = "Insights";
+    ViewData["Title"] = "Information";
 }
 
 <div style="text-align: center;">
-    <h2>Details</h2>
+    <h2>Technician Information</h2>
 </div>
 
 <br />
@@ -40,7 +40,7 @@
 
 
 <div style="text-align: center;">
-    <h2>Performance</h2>
+    <h2>Performance Report</h2>
 </div>
 
 <br />
@@ -130,7 +130,7 @@
                     }
                     @{
                         Feedback? feedback = StateManager.GetTicketFeedback(item.TicketId);
-                        if(feedback != null)
+                        if (feedback != null)
                         {
                             <td>@feedback.Rating/5</td>
                         }
@@ -139,7 +139,7 @@
                             <td>--</td>
                         }
                     }
-                    
+
                     <td>@Html.ActionLink("Details", "TechnicianDashboardDetail", "Technician", new { id=item.TicketId }, null)</td>
                 </tr>
             }
@@ -151,14 +151,7 @@
     {
     <script>
         function SetSort(startDate, endDate) {
-            window.location.href = "/Technician/TechnicianInsightsDashboard?startDate=" + startDate + "&endDate=" + endDate;
-        }
-    </script>
-
-    <script>
-        function goBack() {
-            window.history.back();
+            window.location.href = "/TechnicianLead/TechnicianInformationDashboard?techId="+ @Model.TechnicianId +"&startDate=" + startDate + "&endDate=" + endDate;
         }
     </script>
     }
-
