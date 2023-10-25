@@ -1,6 +1,7 @@
 using DUT_HelpDesk.DatabaseModels;
 using Firebase.Auth;
 using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
 
 namespace DUT_HelpDesk.Controllers
 {
@@ -15,6 +16,7 @@ namespace DUT_HelpDesk.Controllers
         public static string? email;
 
         //returns a list of all users
+        [Test]
         public static List<DatabaseModels.User> GetUsers()
         {
             return db.Users.ToList();
@@ -51,12 +53,14 @@ namespace DUT_HelpDesk.Controllers
         }
 
         //returns a list of all tickets for a single user
+        [Test]
         public static List<Ticket> GetUserTickets()
         {
             return db.Tickets.Where(x => x.UserId == user.UserId).ToList();
         }
 
         //returns a list of all FAQs
+        [Test]
         public static List<Faq> GetAllFaqs()
         {
             return db.Faqs.ToList();
@@ -70,6 +74,7 @@ namespace DUT_HelpDesk.Controllers
         }
 
         //returns a list of tickets a technician is working on
+        [Test]
         public static List<Ticket> GetTechnicianTickets()
         {
             using (var db = new DutHelpdeskdbContext())
@@ -90,6 +95,7 @@ namespace DUT_HelpDesk.Controllers
         }
 
         //returns all tickets in database (not for website)
+        [Test]
         public static List<Technician> GetAllTechnicians()
         {
             List<Technician> technicians = db.Technicians.Include(x => x.TicketTechnicians).ToList();
@@ -105,12 +111,14 @@ namespace DUT_HelpDesk.Controllers
         }
 
         //returns all ticket technicians
+        [Test]
         public static List<TicketTechnician> GetAllTicketTechnicians()
         {
             return db.TicketTechnicians.ToList();
         }
 
         //returns a list of tickets that have not been assigned to a technician
+        [Test]
         public static List<Ticket> GetAllUnassignedTickets()
         {
             using (var db = new DutHelpdeskdbContext())
