@@ -35,7 +35,7 @@ jobs:
           path: ${{env.DOTNET_ROOT}}/myapp
   test:
     runs-on: windows-latest
-
+    needs: build
     steps:
       - uses: actions/checkout@v2
       - name: Test
@@ -51,7 +51,7 @@ jobs:
       
   deploy:
     runs-on: windows-latest
-    needs: build
+    needs: test
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
