@@ -34,7 +34,6 @@ jobs:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
   security:
-    runs-on: windows-latest
     needs: build
     steps:
       - uses: actions/checkout@v2
