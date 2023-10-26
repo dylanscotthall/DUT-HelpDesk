@@ -35,6 +35,7 @@ jobs:
           path: ${{env.DOTNET_ROOT}}/myapp
   security:
     needs: build
+    runs-on: linux-latest
     steps:
       - uses: actions/checkout@v2
       - uses: microsoft/ApplicationInspector-Action@v1
