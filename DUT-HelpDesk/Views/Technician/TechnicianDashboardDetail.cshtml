@@ -10,24 +10,6 @@
         <a href="javascript:void(0);" onclick="goBack()">Go Back</a>
     </p>
 
-    @if (TempData["error"] != null)
-    {
-        <div class="alert alert-danger">
-            <p>
-            <b>@TempData["error"]</b>
-            </p>
-        </div>
-    }
-
-
-    @if (TempData["success"] != null)
-    {
-        <div class="alert alert-success">
-            <p>
-            <b>@TempData["success"]</b>
-            </p>
-        </div>
-    }
     @{
         bool closed = Model.isClosed ?? false;
         if (closed)
@@ -175,36 +157,6 @@
                         </div>
                     </div>
                 </form>
-            </div>
-
-
-
-            @*------------------------------------------------Lead Technician Options Section------------------------------------------------*@
-            <div>
-                @{
-                    if (ViewBag.userType == "TechnicianLead")
-                    {
-                        <br />
-                        <hr>
-                        <h4>Lead Technician Options</h4>
-                        <div style="max-width: 300px; background-color: #F1F1F1; padding: 10px; border-radius: 10px">
-                            <form id="assignTechnicianForm" method="post" asp-action="AssignTechnician">
-                                <h5>Assign ticket to a technician</h5>
-                                <div class="form-group">
-                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                    <label asp-for="assignID">Technician ID:</label>
-                                    <input asp-for="assignID" class="form-control" min="1"/>
-                                    <input asp-for="id" type="hidden" value="@Model.ticket.TicketId" />
-                                    <button style="margin-top: 10px" type="submit" class="btn btn-primary">Assign to Ticket</button>
-                                </div>
-                            </form>
-                        </div>
-                    }
-                    else
-                    {
-                        <br />
-                    }
-                }
             </div>
 
             @*------------------------------------------------General Ticket Options Section------------------------------------------------*@

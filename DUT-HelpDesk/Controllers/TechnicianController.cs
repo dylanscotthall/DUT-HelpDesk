@@ -92,6 +92,21 @@ namespace DUT_HelpDesk.Controllers
             return View("TechnicianTicketQueue", StateManager.GetAllTickets());
         }
 
+        public IActionResult AssignTicketFromView(int? id, int? techId)
+        {
+            StateManager.CreateTicketTechnician((int)id, (int)techId);
+            ViewBag.user = StateManager.user;
+            ViewBag.technician = StateManager.technician;
+            return RedirectToAction("TechViewTicket", new { id });
+        }
+
+        public IActionResult UnassignTicketFromView(int? id, int? techId)
+        {
+            StateManager.UnassignTicketTechnician((int)id, (int)techId);
+            ViewBag.technician = StateManager.technician;
+            return RedirectToAction("TechViewTicket", new { id });
+        }
+
         //When a ticket is unassigned from the technician's assigned tickets page, the technician is returned an updated view of the assigned tickets page.
         public IActionResult UnassignTicketToTechnician(int? id, int? techId)
         {
@@ -177,11 +192,14 @@ namespace DUT_HelpDesk.Controllers
 
         public IActionResult TechViewTicket(int id)
         {
+            ViewBag.userType = StateManager.getUserType();
             Ticket ticket = StateManager.GetTicket(id);
             List<Reply> replies = StateManager.GetTicketReplies(id);
             ViewBag.replies = replies;
             List<User> users = StateManager.GetUsers();
             ViewBag.users = users;
+            List<Technician> techs = StateManager.GetAllTechnicians();
+            ViewBag.technicians = techs;
             if (ticket == null)
             {
                 return StatusCode(400);
@@ -189,6 +207,7 @@ namespace DUT_HelpDesk.Controllers
             else
             {
                 ReplyTicketViewModel model = new ReplyTicketViewModel();
+                model.isClosed = StateManager.TicketIsClosed(id);
                 model.ticket = ticket;
                 return View(model);
             }
@@ -271,38 +290,5 @@ namespace DUT_HelpDesk.Controllers
 
             return RedirectToAction("FaqDashboard");
         }
-
-        [HttpPost]
-        public IActionResult AssignTechnician(ReplyTicketViewModel vm)
-        {
-            if (vm.assignID.HasValue)
-            {
-                Technician? tech =  StateManager.GetTech(vm.assignID.Value);
-                if (tech != null)
-                {
-                    if (StateManager.TechIsAssigned(vm.id, tech.TechnicianId))
-                    {
-                        TempData["error"] = "The specified technician is already assigned to this ticket!";
-                    }
-                    else
-                    {
-                        //Ticket Assignment Logic Goes Here....
-                        TempData["success"] = "Technician successfully assigned to ticket!";
-                    }
-                }
-                else
-                {
-                    TempData["error"] = "The specified technician does not exist!";
-                }
-
-            }
-            else
-            {
-                TempData["error"] = "No technician ID provided!";
-            }
-            return RedirectToAction("TechnicianDashboardDetail", new { id = vm.id });
-        }
-
-
     }
 }

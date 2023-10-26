@@ -188,7 +188,7 @@ namespace DUT_HelpDesk.Controllers
             }
         }
 
-        //create a ticket technician using technician ID and ticket ID
+        //create a ticket technician using technician ID and ticket ID - Assigned = true
         public static void CreateTicketTechnician(int id, int techId)
         {
             using (var db = new DutHelpdeskdbContext())

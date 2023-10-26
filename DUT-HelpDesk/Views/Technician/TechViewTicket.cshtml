@@ -7,6 +7,16 @@
 <p>
     <a href="javascript:void(0);" onclick="goBack()">Go Back</a>
 </p>
+
+@section scripts
+    {
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+    }
+
 <div style="background-color: #F1F1F1; padding: 10px; border-radius: 10px;">
     <h2>Ticket Details</h2>
     <table class="table">
@@ -118,11 +128,52 @@
     </table>
 </div>
 
-@section scripts
+<br />
+
+@*------------------------------------------------Assign Technicians Section------------------------------------------------*@
+@{
+    bool closed = Model.isClosed ?? false;
+    if (!closed)
     {
-    <script>
-        function goBack() {
-            window.history.back();
+        if (ViewBag.userType == "TechnicianLead")
+        {
+            <div style="background-color: #F1F1F1; padding: 10px; border-radius: 10px; width: 50%;">
+                <h4>Assign Technicians</h4>
+                <table class="table table-responsive table-hover">
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th></th>
+                    </tr>
+                    @if (Model != null)
+                    {
+                        @foreach (var technician in ViewBag.technicians)
+                        {
+                            if (technician != null)
+                            {
+                                <tr>
+                                    <td>@technician.TechnicianId</td>
+                                    <td>@((ViewBag.users as List<User>)?.FirstOrDefault(u => u.UserId == technician.UserId)?.Email)</td>
+                                    @{
+                                        if (StateManager.TechIsAssigned(Model.ticket.TicketId, technician.TechnicianId))
+                                        {
+                                            <td>
+                                                @Html.ActionLink("Unassign", "UnassignTicketFromView", "Technician", new { id=Model.ticket.TicketId, techId=technician.TechnicianId }, new { style = "color: #f00;" })
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                @Html.ActionLink("Assign", "AssignTicketFromView", "Technician", new { id =Model.ticket.TicketId, techId =technician.TechnicianId }, new { style = "color: #00c20d;" })
+                                            </td>
+                                        }
+                                    }
+                                </tr>
+                            }
+                        }
+                    }
+                </table>
+            </div>
         }
-    </script>
     }
+}
