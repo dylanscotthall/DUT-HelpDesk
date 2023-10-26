@@ -23,13 +23,13 @@ namespace DUT_HelpDesk.Controllers
         //returns a single user from the database
         public static DatabaseModels.User GetUser(int? id)
         {
-            return db.Users.Where(x => x.UserId == id).FirstOrDefault();
+            return db.Users.Where(x => x.UserId == id).FirstOrDefault()!;
         }
 
         //returns a single user from the database by firebase ID
         public static DatabaseModels.User GetUserByFBId(string id)
         {
-            return db.Users.Where(x => x.FbId == id).FirstOrDefault();
+            return db.Users.Where(x => x.FbId == id).FirstOrDefault()!;
         }
 
         //adds a user to the database
@@ -53,7 +53,7 @@ namespace DUT_HelpDesk.Controllers
         //returns a list of all tickets for a single user
         public static List<Ticket> GetUserTickets()
         {
-            return db.Tickets.Where(x => x.UserId == user.UserId).ToList();
+            return db.Tickets.Where(x => x.UserId == user!.UserId).ToList();
         }
 
         //returns a list of all FAQs
@@ -74,13 +74,13 @@ namespace DUT_HelpDesk.Controllers
         {
             using (var db = new DutHelpdeskdbContext())
             {
-                List<TicketTechnician> tt = db.TicketTechnicians.Where(x => x.TechnicianId == technician.TechnicianId).ToList();
+                List<TicketTechnician> tt = db.TicketTechnicians.Where(x => x.TechnicianId == technician!.TechnicianId).ToList();
                 List<Ticket> t = new List<Ticket>();
                 foreach (var item in tt)
                 {
-                    if (item.TechnicianId == technician.TechnicianId)
+                    if (item.TechnicianId == technician!.TechnicianId)
                     {
-                        t.Add(db.Tickets.Where(x => x.TicketId == item.TicketId && item.IsAssigned == true).FirstOrDefault());
+                        t.Add(db.Tickets.Where(x => x.TicketId == item.TicketId && item.IsAssigned == true).FirstOrDefault()!);
                     }
                 }
 
@@ -121,14 +121,14 @@ namespace DUT_HelpDesk.Controllers
                 List<int> toRemove = new List<int>();
                 foreach (var item in tt)
                 {
-                    if (!toRemove.Contains((int)item.TicketId) && item.IsAssigned == true)
+                    if (!toRemove.Contains((int)item.TicketId!) && item.IsAssigned == true)
                     {
                         toRemove.Add((int)item.TicketId);
                     }
                 }
                 foreach (var tr in toRemove)
                 {
-                    tickets.Remove(db.Tickets.Where(x => x.TicketId == tr).FirstOrDefault());
+                    tickets.Remove(db.Tickets.Where(x => x.TicketId == tr).FirstOrDefault()!);
                 }
                 return tickets;
             }
@@ -151,39 +151,44 @@ namespace DUT_HelpDesk.Controllers
         }
 
         //returns a bool to see if a user saved in state is a technician
-        public static string getUserType()
+        public static string? getUserType()
         {
-            return user.Type;
+            return user!.Type;
         }
 
         //returns a technician if the user is already assigned as a technician
-        public static Technician GetTechnician()
+        public static Technician? GetTechnician()
         {
             using (var db = new DutHelpdeskdbContext())
             {
-                return db.Technicians.Where(x => x.UserId == user.UserId).FirstOrDefault();
+                return db.Technicians.Where(x => x.UserId == user!.UserId).FirstOrDefault();
             }
         }
 
         //returns a single technician by user ID
-        public static Technician GetTechnician(int id)
+        public static Technician? GetTechnician(int userId)
         {
             using (var db = new DutHelpdeskdbContext())
             {
-                return db.Technicians.Where(x => x.UserId == id).FirstOrDefault();
+                Technician? technician = db.Technicians.Where(x => x.UserId == userId).FirstOrDefault();
+                db.Dispose();
+                return technician;
             }
+
         }
 
         //returns a single technician by technician ID
-        public static Technician GetTech(int techId)
+        public static Technician? GetTech(int techId)
         {
             using (var db = new DutHelpdeskdbContext())
             {
-                return db.Technicians.Where(x => x.TechnicianId == techId).FirstOrDefault();
+                Technician? technician = db.Technicians.Where(x => x.TechnicianId == techId).FirstOrDefault();
+                db.Dispose();
+                return technician;
             }
         }
 
-        //create a ticket technician using technician ID and ticket ID
+        //create a ticket technician using technician ID and ticket ID - Assigned = true
         public static void CreateTicketTechnician(int id, int techId)
         {
             using (var db = new DutHelpdeskdbContext())
@@ -192,10 +197,10 @@ namespace DUT_HelpDesk.Controllers
                 Ticket? t = db.Tickets.Include(i => i.TicketStatuses).ThenInclude(i => i.Status).Where(x => x.TicketId == id).FirstOrDefault();
 
                 //add active to ticketstatus for ticket
-                if (db.TicketStatuses.Where(x => x.TicketId == id).OrderByDescending(o => o.TimeStamp).FirstOrDefault().StatusId != 2)
+                if (db.TicketStatuses.Where(x => x.TicketId == id).OrderByDescending(o => o.TimeStamp).FirstOrDefault()!.StatusId != 2)
                 {
-                    Status status = db.Statuses.Where(x => x.StatusId == 2).FirstOrDefault();
-                    TicketStatus ticketStatus = new TicketStatus() { TicketId = t.TicketId, StatusId = status.StatusId, TimeStamp = DateTime.UtcNow, Status = status, Ticket = t };
+                    Status status = db.Statuses.Where(x => x.StatusId == 2).FirstOrDefault()!;
+                    TicketStatus ticketStatus = new TicketStatus() { TicketId = t!.TicketId, StatusId = status!.StatusId, TimeStamp = DateTime.UtcNow, Status = status, Ticket = t };
                     t.TicketStatuses.Add(ticketStatus);
                     db.Entry(t).State = EntityState.Modified;
                 }
@@ -225,18 +230,19 @@ namespace DUT_HelpDesk.Controllers
                 //finds all ticketTechnician records where isAssigned = true, this gets an accurate technician count for a ticket.
                 List<TicketTechnician> ticketIsAssigned = db.TicketTechnicians.Where(x => x.TicketId == id && x.IsAssigned == true).ToList();
                 int technicianCount = ticketIsAssigned.Count;
-                t.TechnicianCount = technicianCount;
+                t!.TechnicianCount = technicianCount;
                 db.Entry(t).State = EntityState.Modified;
 
                 db.SaveChanges(); //save changes to Ticket Table
+                db.Dispose();
             }
         }
 
         //unassign a ticket from a technician
         public static void UnassignTicketTechnician(int id, int techId)
         {
-            TicketTechnician tt = db.TicketTechnicians.Where(x => x.TicketId == id && x.TechnicianId == techId).FirstOrDefault();
-            Ticket t = db.Tickets.Where(x => x.TicketId == id).FirstOrDefault();
+            TicketTechnician tt = db.TicketTechnicians.Where(x => x.TicketId == id && x.TechnicianId == techId).FirstOrDefault()!;
+            Ticket t = db.Tickets.Where(x => x.TicketId == id).FirstOrDefault()!;
 
             //check whether ticket will be active or available after unassign
             List<TicketTechnician> ticketTechnicians = db.TicketTechnicians.Where(x => x.TicketId == id).ToList();
@@ -254,13 +260,13 @@ namespace DUT_HelpDesk.Controllers
             }
             if (!stillActive)
             {
-                db.TicketStatuses.Add(new TicketStatus() { TicketId = t.TicketId, StatusId = 1, TimeStamp = DateTime.UtcNow, Status = db.Statuses.Where(x => x.StatusId == 1).FirstOrDefault(), Ticket = t });
+                db.TicketStatuses.Add(new TicketStatus() { TicketId = t!.TicketId, StatusId = 1, TimeStamp = DateTime.UtcNow, Status = db.Statuses.Where(x => x.StatusId == 1).FirstOrDefault(), Ticket = t });
             }
             List<TicketTechnician> ticketIsAssigned = db.TicketTechnicians.Where(x => x.TicketId == id && x.IsAssigned == true).ToList();
             int technicianCount = ticketIsAssigned.Count - 1;
-            t.TechnicianCount = technicianCount;
+            t!.TechnicianCount = technicianCount;
 
-            tt.IsAssigned = false;
+            tt!.IsAssigned = false;
             db.Entry(tt).State = EntityState.Modified;
             db.Entry(t).State = EntityState.Modified;
             db.SaveChanges();
@@ -276,14 +282,14 @@ namespace DUT_HelpDesk.Controllers
         public static async Task CreateTicket(TicketViewModel model, FirebaseAuthProvider auth)
         {
             //get current user  
-            string token = StateManager.token;
+            string? token = StateManager.token;
             var userFbId = await auth.GetUserAsync(token);
 
             var currentUser = db.Users.Where(u => u.FbId.Equals(userFbId.LocalId)).FirstOrDefault();
             Ticket ticket = new Ticket()
             {
                 //userid 
-                UserId = StateManager.user.UserId,
+                UserId = user!.UserId,
                 //technicianid to be assigned later
                 Subject = model.Subject,
                 QueryBody = model.QueryBody,
@@ -291,9 +297,9 @@ namespace DUT_HelpDesk.Controllers
                 DateCreated = DateTime.UtcNow
             };
 
-            Status status = db.Statuses.Where(x => x.StatusId == 1).FirstOrDefault();
+            Status? status = db.Statuses.Where(x => x.StatusId == 1).FirstOrDefault();
             List<TicketStatus> ticketStatuses = new List<TicketStatus>();
-            TicketStatus ticketStatus = new TicketStatus() { TicketId = ticket.TicketId, StatusId = status.StatusId, TimeStamp = DateTime.UtcNow, Status = status, Ticket = ticket };
+            TicketStatus ticketStatus = new TicketStatus() { TicketId = ticket.TicketId, StatusId = status!.StatusId, TimeStamp = DateTime.UtcNow, Status = status, Ticket = ticket };
             ticketStatuses.Add(ticketStatus);
             ticket.TicketStatuses = ticketStatuses;
             await db.TicketStatuses.AddAsync(ticketStatus);
@@ -333,7 +339,7 @@ namespace DUT_HelpDesk.Controllers
                 TicketId = model.id,
                 Message = model.Message,
                 Date = DateTime.Now,
-                UserId = user.UserId,
+                UserId = user!.UserId,
 
             };
             await db.Replies.AddAsync(reply);
@@ -539,12 +545,12 @@ namespace DUT_HelpDesk.Controllers
                 $"{(averageDifference.Minutes != 0 ? $"{averageDifference.Minutes} min{(averageDifference.Minutes != 1 ? "s" : "")}\n" : "")}";
             return formattedDifference;
         }
-      
+
         // Delete FAQ
-        public static DatabaseModels.Faq GetFaq(int id)
+        public static Faq GetFaq(int id)
         {
             Faq? r = db.Faqs.Where(x => x.FaqId == id).FirstOrDefault();
-            return r;
+            return r!;
         }
 
         public static void DeleteFaq(DatabaseModels.Faq faq)
@@ -610,11 +616,11 @@ namespace DUT_HelpDesk.Controllers
             List<Feedback> feedbacks = new();
             double? avgRating = 0;
             double? numRatings = 0;
-            double? aggregateRating = 0;        
+            double? aggregateRating = 0;
             foreach (var ticket in tickets)
             {
                 Feedback? feedback = db.Feedbacks.Where(x => x.TicketId == ticket.TicketId).FirstOrDefault();
-                if(feedback != null)
+                if (feedback != null)
                 {
                     feedbacks.Add(feedback);
                 }
@@ -625,7 +631,7 @@ namespace DUT_HelpDesk.Controllers
                 numRatings++;
                 aggregateRating += f.Rating;
             }
-            if(numRatings > 0) 
+            if (numRatings > 0)
             {
                 avgRating = aggregateRating / numRatings;
 
@@ -636,7 +642,29 @@ namespace DUT_HelpDesk.Controllers
             {
                 return ($"No Ratings");
             }
-            
+
+        }
+
+        public static bool TechIsAssigned(int ticketId, int techId)
+        {
+            using var db = new DutHelpdeskdbContext();
+            Technician? tech = GetTech(techId);
+            if (tech == null) { return false; }
+
+            TicketTechnician? tt =
+                db.TicketTechnicians.Where(x =>
+                x.TicketId == ticketId &&
+                x.TechnicianId == techId &&
+                x.IsAssigned == true)
+                .FirstOrDefault();
+            if (tt != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

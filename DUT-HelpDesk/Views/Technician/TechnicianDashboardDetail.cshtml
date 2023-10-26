@@ -9,6 +9,7 @@
     <p>
         <a href="javascript:void(0);" onclick="goBack()">Go Back</a>
     </p>
+
     @{
         bool closed = Model.isClosed ?? false;
         if (closed)
@@ -40,7 +41,7 @@
             </tr>
             <tr>
                 <th>Priority</th>
-                @if (Model.ticket.Priority.Equals("Low"))
+                @if (Model.ticket.Priority!.Equals("Low"))
                 {
                     <td style="color: #00c20d">@Html.DisplayTextFor(model => model.ticket.Priority)</td>
                 }
@@ -156,35 +157,6 @@
                         </div>
                     </div>
                 </form>
-            </div>
-
-
-
-            @*------------------------------------------------Lead Technician Options Section------------------------------------------------*@
-            <div>
-                @{
-                    if (ViewBag.userType == "TechnicianLead")
-                    {
-                        <br />
-                        <hr>
-                        <h4>Lead Technician Options</h4>
-                        <div style="max-width: 300px; background-color: #F1F1F1; padding: 10px; border-radius: 10px">
-                            <form id="assignTechnicianForm" method="post" asp-action="AssignTechnician">
-                                <h5>Assign ticket to a technician</h5>
-                                <div class="form-group">
-                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                    <label asp-for="assignID">Technician ID:</label>
-                                    <input asp-for="assignID" class="form-control" maxlength="5" />
-                                    <button style="margin-top: 10px" type="submit" class="btn btn-primary">Assign to Ticket</button>
-                                </div>
-                            </form>
-                        </div>
-                    }
-                    else
-                    {
-                        <br />
-                    }
-                }
             </div>
 
             @*------------------------------------------------General Ticket Options Section------------------------------------------------*@

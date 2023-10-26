@@ -17,9 +17,6 @@ namespace DUT_HelpDesk.DatabaseModels{
         //The email to forward ticket details to.
         public string? forwardEmail { get; set; }
 
-        //The ID of the technician to assign the ticket to.
-        public int? assignID { get; set; }
-
         //Stores whether the ticket is closed or not.
         public bool? isClosed { get; set; }
 
