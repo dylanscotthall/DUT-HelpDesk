@@ -1,19 +1,34 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-@model DUT_HelpDesk.DatabaseModels.Faq
+﻿@model DUT_HelpDesk.DatabaseModels.Faq
 
 @using (Html.BeginForm("TechCreateFAQ", "Technician", FormMethod.Post))
 {
+    <br/>
+    <div style="display: flex; justify-content: center; align-items: center;">
+    <div style="background-color: #F1F1F1; padding: 10px; border-radius: 10px; width: 100%; max-width: 600px">
+        <h4 style="text-align:center">Create New FAQ</h4>
+        <br/>
     <div class="form-group">
         @Html.LabelFor(model => model.Question)
-        @Html.TextBoxFor(model => model.Question, new { @class = "form-control" })
+        @Html.TextAreaFor(model => model.Question, new { @class = "form-control" })
     </div>
+    <br/>
     <div class="form-group">
         @Html.LabelFor(model => model.Answer)
         @Html.TextAreaFor(model => model.Answer, new { @class = "form-control" })
     </div>
-    <button type="submit" class="btn btn-primary">Create FAQ</button>
+
+            @if (TempData["Msg"] != null)
+            {
+                <p>
+                <div class="alert alert-danger">
+                    <b>@TempData["Msg"]</b>
+                </div>
+                </p>
+            }
+
+    <br />
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+    </div>
+
 }

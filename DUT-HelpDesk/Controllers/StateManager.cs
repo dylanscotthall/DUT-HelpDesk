@@ -1,6 +1,7 @@
 using DUT_HelpDesk.DatabaseModels;
 using Firebase.Auth;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.Intrinsics.Arm;
 
 namespace DUT_HelpDesk.Controllers
 {
@@ -59,14 +60,22 @@ namespace DUT_HelpDesk.Controllers
         //returns a list of all FAQs
         public static List<Faq> GetAllFaqs()
         {
-            return db.Faqs.ToList();
+            using (var db = new DutHelpdeskdbContext())
+            {
+                return db.Faqs.ToList();
+            }
+
         }
 
         //creates a new FAQ in the database
         public static void CreateFaq(Faq faq)
         {
-            db.Faqs.Add(faq);
-            db.SaveChanges();
+            using (var db = new DutHelpdeskdbContext())
+            {
+                db.Faqs.Add(faq);
+                db.SaveChanges();
+                db.Dispose();
+            }
         }
 
         //returns a list of tickets a technician is working on
@@ -621,7 +630,9 @@ namespace DUT_HelpDesk.Controllers
         // Delete FAQ
         public static Faq GetFaq(int id)
         {
+            using var db = new DutHelpdeskdbContext();
             Faq? r = db.Faqs.Where(x => x.FaqId == id).FirstOrDefault();
+            db.Dispose();
             return r!;
         }
 

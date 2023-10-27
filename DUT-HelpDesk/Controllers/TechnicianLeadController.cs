@@ -9,18 +9,13 @@ namespace DUT_HelpDesk.Controllers
 
         public IActionResult TechniciansListDashboard()
         {
-            string userType = StateManager.getUserType();
-            if (userType.Equals("TechnicianLead"))
+            if (!StateManager.getUserType()!.Equals("TechnicianLead")) { return NotFound(); }
             {
                 ViewBag.user = StateManager.user;
                 ViewBag.technician = StateManager.technician;
                 ViewBag.UsersList = StateManager.GetUsers();
                 List<Technician> technicians = StateManager.GetAllTechnicians();
                 return View(technicians.ToList());
-            }
-            else
-            {
-                return NotFound();
             }
         }
 
@@ -31,8 +26,7 @@ namespace DUT_HelpDesk.Controllers
 
         public IActionResult TechnicianInformationDashboard(int techId, string? startDate, string? endDate)
         {
-            string userType = StateManager.getUserType();
-            if (userType.Equals("TechnicianLead"))
+            if (!StateManager.getUserType()!.Equals("TechnicianLead")) { return NotFound(); }
             {
                 Technician technician = StateManager.GetTech(techId);
                 List<User> users = StateManager.GetUsers();
@@ -68,10 +62,6 @@ namespace DUT_HelpDesk.Controllers
                 {
                     return NotFound();
                 }
-            }
-            else
-            {
-                return NotFound();
             }
         }
 

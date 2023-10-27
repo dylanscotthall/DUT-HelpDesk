@@ -8,6 +8,14 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/DUT_HelpDesk.styles.css" asp-append-version="true" />
+
+    <style>
+        @@media print {
+            .navbar {
+                display: none !important;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -47,11 +55,7 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="FaqDashboard">FAQs</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark navbar-fixed-top" asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>
-                            </li>
-                           
+                            </li>                          
                         }
                         else if (Html.Raw(httpContextaccessor.HttpContext.Session.GetString("_UserType")).ToString() == "Technician")
                         {
@@ -66,9 +70,6 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Technician" asp-action="TechnicianInsightsDashboard">Insights</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>
                             </li>
                         }
                         else if (Html.Raw(httpContextaccessor.HttpContext.Session.GetString("_UserType")).ToString() == "TechnicianLead")
@@ -92,20 +93,20 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="TechnicianLead" asp-action="ToolsDashboard">Tools</a>
                             </li>
-                            <li class="nav">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" @*asp-area="" asp-controller="Home" asp-action="Index"*@>Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" @*asp-area="" asp-controller="Home" asp-action="Privacy"*@>Privacy</a>
-                            </li>
                         }
                     </ul>
+                    @if (Html.Raw(httpContextaccessor.HttpContext.Session.GetString("_UserType")).ToString() != ""){
+                    <li class="nav">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>
+                    </li>
+                    }else{
+                        <li class="nav">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Login">Log In</a>
+                        </li>
+                        <li class="nav">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Register">Register</a>
+                        </li>
+                    }
                 </div>
             </div>
         </nav>
@@ -127,3 +128,4 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
