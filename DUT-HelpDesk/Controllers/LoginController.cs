@@ -69,7 +69,7 @@ namespace DUT_HelpDesk.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(LoginViewModel model)
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
             try
             {
@@ -110,8 +110,7 @@ namespace DUT_HelpDesk.Controllers
             catch (FirebaseAuthException ex)
             {
                 //var firebaseEx = JsonSerializer.Deserialize<FirebaseError>(ex.ResponseData);
-                ModelState.AddModelError(String.Empty, "Invalid Credentials");
-                ViewBag.errors = "Login failed. Please check that your credentials are correct.";
+                ModelState.AddModelError(String.Empty, "Registration Unsuccessful");
                 return View(model);
             }
             return View();

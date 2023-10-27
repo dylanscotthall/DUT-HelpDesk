@@ -16,13 +16,13 @@
             
             <div class="form-group">
                 <label asp-for="Subject" class="control-label"></label>
-                <input asp-for="Subject" class="form-control" />
+                <input asp-for="Subject" class="form-control" maxlength="70"/>
                 <span asp-validation-for="Subject" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
                 <label asp-for="QueryBody" class="control-label">Query</label>
-                <input asp-for="QueryBody" class="form-control" />
+                <textarea asp-for="QueryBody" class="form-control" maxlength="255"></textarea>
                 <span asp-validation-for="QueryBody" class="text-danger"></span>
             </div>
             <br />

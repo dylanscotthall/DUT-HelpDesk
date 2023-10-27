@@ -9,6 +9,7 @@ namespace DUT_HelpDesk.Controllers
     {
         public IActionResult TechnicianDashboard()
         {
+            if (StateManager.getUserType()!.Equals("Student")){return NotFound();}
             ViewBag.user = StateManager.user;
             ViewBag.technician = StateManager.technician;
             IEnumerable<Ticket> tickets = StateManager.GetTechnicianTickets();
@@ -16,6 +17,7 @@ namespace DUT_HelpDesk.Controllers
         }
         public IActionResult TechnicianDashboardDetail(int id)
         {
+            if (StateManager.getUserType()!.Equals("Student")) { return NotFound(); }
             ViewBag.feedback = StateManager.GetTicketFeedback(id);
             ViewBag.userType = StateManager.getUserType();
             Ticket ticket = StateManager.GetTicket(id);
@@ -38,6 +40,7 @@ namespace DUT_HelpDesk.Controllers
 
         public IActionResult TechnicianTicketQueue(string? sortBy, string? startDate, string? endDate, string? status)
         {
+            if (StateManager.getUserType()!.Equals("Student")) { return NotFound(); }
             ViewBag.user = StateManager.user;
             ViewBag.technician = StateManager.technician;
             IEnumerable<Ticket> tickets = StateManager.GetAllTickets();
@@ -86,6 +89,7 @@ namespace DUT_HelpDesk.Controllers
         }
         public IActionResult AssignTicketToTechnician(int? id, int? techId)
         {
+            if (StateManager.getUserType()!.Equals("Student")) { return NotFound(); }
             StateManager.CreateTicketTechnician((int)id, (int)techId);
             ViewBag.user = StateManager.user;
             ViewBag.technician = StateManager.technician;
@@ -94,6 +98,7 @@ namespace DUT_HelpDesk.Controllers
 
         public IActionResult AssignTicketFromView(int? id, int? techId)
         {
+            if (StateManager.getUserType()!.Equals("Student")) { return NotFound(); }
             StateManager.CreateTicketTechnician((int)id, (int)techId);
             ViewBag.user = StateManager.user;
             ViewBag.technician = StateManager.technician;
@@ -102,6 +107,7 @@ namespace DUT_HelpDesk.Controllers
 
         public IActionResult UnassignTicketFromView(int? id, int? techId)
         {
+            if (StateManager.getUserType()!.Equals("Student")) { return NotFound(); }
             StateManager.UnassignTicketTechnician((int)id, (int)techId);
             ViewBag.technician = StateManager.technician;
             return RedirectToAction("TechViewTicket", new { id });
@@ -110,6 +116,7 @@ namespace DUT_HelpDesk.Controllers
         //When a ticket is unassigned from the technician's assigned tickets page, the technician is returned an updated view of the assigned tickets page.
         public IActionResult UnassignTicketToTechnician(int? id, int? techId)
         {
+            if (StateManager.getUserType()!.Equals("Student")) { return NotFound(); }
             StateManager.UnassignTicketTechnician((int)id, (int)techId);
             ViewBag.technician = StateManager.technician;
             return View("TechnicianDashboard", StateManager.GetTechnicianTickets());
@@ -117,12 +124,14 @@ namespace DUT_HelpDesk.Controllers
         //When a ticket is unassigned from the technician ticket queue page, the technician is returned an updated view of the ticket queue.
         public IActionResult UnassignTicketToTechnicianFromTicketQueue(int? id, int? techId)
         {
+            if (StateManager.getUserType()!.Equals("Student")) { return NotFound(); }
             StateManager.UnassignTicketTechnician((int)id, (int)techId);
             ViewBag.technician = StateManager.technician;
             return View("TechnicianTicketQueue", StateManager.GetAllTickets());
         }
         public IActionResult TechCreateFAQ()
         {
+            if (StateManager.getUserType()!.Equals("Student")) { return NotFound(); }
             ViewBag.user = StateManager.user;
             ViewBag.technician = StateManager.technician;
             IEnumerable<Faq> tickets = StateManager.GetAllFaqs();
@@ -131,15 +140,25 @@ namespace DUT_HelpDesk.Controllers
         [HttpPost]
         public async Task<IActionResult> TechCreateFAQ(Faq faq)
         {
+            if (StateManager.getUserType()!.Equals("Student")) { return NotFound(); }
             ViewBag.user = StateManager.user;
             ViewBag.technician = StateManager.technician;
             faq.TechnicianId = StateManager.technician.TechnicianId;
-            StateManager.CreateFaq(faq);
+            if (faq.Question != null && faq.Answer != null)
+            {
+                StateManager.CreateFaq(faq);
+            }
+            else
+            {
+                TempData["Msg"] = "Please fill out all fields!";
+                return RedirectToAction("TechCreateFAQ");
+            }
             return RedirectToAction("FaqDashboard");
         }
 
         public IActionResult TechnicianTicketQueueReport()
         {
+            if (StateManager.getUserType()!.Equals("Student")) { return NotFound(); }
             ViewBag.technician = StateManager.technician;
             var pdf = new ViewAsPdf(StateManager.filteredTickets);
             return pdf;
@@ -149,6 +168,7 @@ namespace DUT_HelpDesk.Controllers
         [HttpPost]
         public async Task<IActionResult> MyReplies(ReplyTicketViewModel vm)
         {
+            if (StateManager.getUserType()!.Equals("Student")) { return NotFound(); }
             if (vm.Message != null)
             {
                 await StateManager.MyReplies(vm);
@@ -157,7 +177,7 @@ namespace DUT_HelpDesk.Controllers
         }
         public async Task<IActionResult> ViewReplyAttachment(int id)
         {
-
+            if (StateManager.getUserType()!.Equals("Student")) { return NotFound(); }
             DutHelpdeskdbContext db = new DutHelpdeskdbContext();
             var uploadedFile = await db.Attachments.FirstOrDefaultAsync(f => f.ReplyId == id);
 
@@ -170,6 +190,7 @@ namespace DUT_HelpDesk.Controllers
         }
         public async Task<IActionResult> ViewAttachment(int id)
         {
+            if (StateManager.getUserType()!.Equals("Student")) { return NotFound(); }
             DutHelpdeskdbContext db = new DutHelpdeskdbContext();
 
             var uploadedFile = await db.Attachments.FirstOrDefaultAsync(f => f.TicketId == id);
@@ -185,6 +206,7 @@ namespace DUT_HelpDesk.Controllers
 
         public IActionResult FaqDashboard()
         {
+            if (StateManager.getUserType()!.Equals("Student")) { return NotFound(); }
             List<Faq> faqs = StateManager.GetAllFaqs();
             return View(faqs);
 
@@ -192,6 +214,7 @@ namespace DUT_HelpDesk.Controllers
 
         public IActionResult TechViewTicket(int id)
         {
+            if (StateManager.getUserType()!.Equals("Student")) { return NotFound(); }
             ViewBag.userType = StateManager.getUserType();
             Ticket ticket = StateManager.GetTicket(id);
             List<Reply> replies = StateManager.GetTicketReplies(id);
@@ -215,6 +238,7 @@ namespace DUT_HelpDesk.Controllers
 
         public async Task<IActionResult> CloseTicket()
         {
+            if (StateManager.getUserType()!.Equals("Student")) { return NotFound(); }
             var vticketId = Request.Form["ticketId"];
             int ticketId = Convert.ToInt32(vticketId);
             await StateManager.CloseTicket(ticketId);
@@ -225,6 +249,7 @@ namespace DUT_HelpDesk.Controllers
         [HttpPost]
         public async Task<IActionResult> ChangePriority(ReplyTicketViewModel vm)
         {
+            if (StateManager.getUserType()!.Equals("Student")) { return NotFound(); }
             if (vm.Priority.HasValue)
             {
                 string p = vm.Priority.Value.ToString();
@@ -236,6 +261,7 @@ namespace DUT_HelpDesk.Controllers
 
         public IActionResult TechnicianInsightsDashboard(string? startDate, string? endDate)
         {
+            if (StateManager.getUserType()!.Equals("Student")) { return NotFound(); }
             Technician technician = StateManager.GetTechnician();
             List<User> users = StateManager.GetUsers();
             if (technician != null && users.Count>0)
@@ -275,6 +301,7 @@ namespace DUT_HelpDesk.Controllers
         //Delete FAQ
         public IActionResult Delete(int id)
         {
+            if (StateManager.getUserType()!.Equals("Student")) { return NotFound(); }
             Faq fq = StateManager.GetFaq(id);
             return View(fq);
         }
@@ -283,6 +310,7 @@ namespace DUT_HelpDesk.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (StateManager.getUserType()!.Equals("Student")) { return NotFound(); }
             Faq fq = StateManager.GetFaq(id);
 
             StateManager.DeleteFaq(fq);
