@@ -48,6 +48,9 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="FaqDashboard">FAQs</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark navbar-fixed-top" asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>
+                            </li>
                            
                         }
                         else if (Html.Raw(httpContextaccessor.HttpContext.Session.GetString("_UserType")).ToString() == "Technician")
@@ -63,6 +66,9 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Technician" asp-action="TechnicianInsightsDashboard">Insights</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>
                             </li>
                         }
                         else if (Html.Raw(httpContextaccessor.HttpContext.Session.GetString("_UserType")).ToString() == "TechnicianLead")
@@ -85,6 +91,9 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="TechnicianLead" asp-action="ToolsDashboard">Tools</a>
+                            </li>
+                            <li class="nav">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Logout">Logout</a>
                             </li>
                         }
                         else
