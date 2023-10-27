@@ -74,13 +74,18 @@ namespace DUT_HelpDesk.Controllers
         {
             using (var db = new DutHelpdeskdbContext())
             {
-                List<TicketTechnician> tt = db.TicketTechnicians.Where(x => x.TechnicianId == technician!.TechnicianId).ToList();
+                List<TicketTechnician> tt = db.TicketTechnicians
+                    .Where(x => x.TechnicianId == technician!.TechnicianId)
+                    .ToList();
                 List<Ticket> t = new List<Ticket>();
                 foreach (var item in tt)
                 {
                     if (item.TechnicianId == technician!.TechnicianId)
                     {
-                        t.Add(db.Tickets.Where(x => x.TicketId == item.TicketId && item.IsAssigned == true).FirstOrDefault()!);
+                        t.Add(db.Tickets
+                            .Where(x => x.TicketId == item.TicketId && 
+                            item.IsAssigned == true)
+                            .FirstOrDefault()!);
                     }
                 }
 
@@ -99,7 +104,11 @@ namespace DUT_HelpDesk.Controllers
         {
             using (var context = new DutHelpdeskdbContext())
             {
-                List<Ticket> tickets = context.Tickets.Include(i => i.TicketStatuses).ThenInclude(i => i.Status).Include(i => i.TicketTechnicians).ToList();
+                List<Ticket> tickets = context.Tickets
+                    .Include(i => i.TicketStatuses)
+                    .ThenInclude(i => i.Status)
+                    .Include(i => i.TicketTechnicians)
+                    .ToList();
                 return tickets;
             }
         }
@@ -128,7 +137,9 @@ namespace DUT_HelpDesk.Controllers
                 }
                 foreach (var tr in toRemove)
                 {
-                    tickets.Remove(db.Tickets.Where(x => x.TicketId == tr).FirstOrDefault()!);
+                    tickets.Remove(db.Tickets
+                        .Where(x => x.TicketId == tr)
+                        .FirstOrDefault()!);
                 }
                 return tickets;
             }
@@ -141,7 +152,9 @@ namespace DUT_HelpDesk.Controllers
             {
                 if (id != null)
                 {
-                    return db.Tickets.Where(x => x.TicketId == id).FirstOrDefault()!;
+                    return db.Tickets
+                        .Where(x => x.TicketId == id)
+                        .FirstOrDefault()!;
                 }
                 else
                 {
@@ -161,7 +174,9 @@ namespace DUT_HelpDesk.Controllers
         {
             using (var db = new DutHelpdeskdbContext())
             {
-                return db.Technicians.Where(x => x.UserId == user!.UserId).FirstOrDefault();
+                return db.Technicians
+                    .Where(x => x.UserId == user!.UserId)
+                    .FirstOrDefault();
             }
         }
 
@@ -170,7 +185,9 @@ namespace DUT_HelpDesk.Controllers
         {
             using (var db = new DutHelpdeskdbContext())
             {
-                Technician? technician = db.Technicians.Where(x => x.UserId == userId).FirstOrDefault();
+                Technician? technician = db.Technicians
+                    .Where(x => x.UserId == userId)
+                    .FirstOrDefault();
                 db.Dispose();
                 return technician;
             }
@@ -182,7 +199,9 @@ namespace DUT_HelpDesk.Controllers
         {
             using (var db = new DutHelpdeskdbContext())
             {
-                Technician? technician = db.Technicians.Where(x => x.TechnicianId == techId).FirstOrDefault();
+                Technician? technician = db.Technicians
+                    .Where(x => x.TechnicianId == techId)
+                    .FirstOrDefault();
                 db.Dispose();
                 return technician;
             }
@@ -193,14 +212,30 @@ namespace DUT_HelpDesk.Controllers
         {
             using (var db = new DutHelpdeskdbContext())
             {
-                TicketTechnician? tt = db.TicketTechnicians.Where(x => x.TicketId == id && x.TechnicianId == techId).FirstOrDefault();
-                Ticket? t = db.Tickets.Include(i => i.TicketStatuses).ThenInclude(i => i.Status).Where(x => x.TicketId == id).FirstOrDefault();
+                TicketTechnician? tt = db.TicketTechnicians
+                    .Where(x => x.TicketId == id && x.TechnicianId == techId)
+                    .FirstOrDefault();
+                Ticket? t = db.Tickets
+                    .Include(i => i.TicketStatuses)
+                    .ThenInclude(i => i.Status)
+                    .Where(x => x.TicketId == id)
+                    .FirstOrDefault();
 
                 //add active to ticketstatus for ticket
-                if (db.TicketStatuses.Where(x => x.TicketId == id).OrderByDescending(o => o.TimeStamp).FirstOrDefault()!.StatusId != 2)
+                if (db.TicketStatuses
+                    .Where(x => x.TicketId == id)
+                    .OrderByDescending(o => o.TimeStamp)
+                    .FirstOrDefault()!.StatusId != 2)
                 {
-                    Status status = db.Statuses.Where(x => x.StatusId == 2).FirstOrDefault()!;
-                    TicketStatus ticketStatus = new TicketStatus() { TicketId = t!.TicketId, StatusId = status!.StatusId, TimeStamp = DateTime.UtcNow, Status = status, Ticket = t };
+                    Status status = db.Statuses
+                        .Where(x => x.StatusId == 2)
+                        .FirstOrDefault()!;
+                    TicketStatus ticketStatus = new TicketStatus() { 
+                        TicketId = t!.TicketId, 
+                        StatusId = status!.StatusId, 
+                        TimeStamp = DateTime.UtcNow, 
+                        Status = status, 
+                        Ticket = t };
                     t.TicketStatuses.Add(ticketStatus);
                     db.Entry(t).State = EntityState.Modified;
                 }
@@ -228,7 +263,9 @@ namespace DUT_HelpDesk.Controllers
                 db.SaveChanges(); //save changes to TicketTechnician Table
 
                 //finds all ticketTechnician records where isAssigned = true, this gets an accurate technician count for a ticket.
-                List<TicketTechnician> ticketIsAssigned = db.TicketTechnicians.Where(x => x.TicketId == id && x.IsAssigned == true).ToList();
+                List<TicketTechnician> ticketIsAssigned = db.TicketTechnicians
+                    .Where(x => x.TicketId == id && x.IsAssigned == true)
+                    .ToList();
                 int technicianCount = ticketIsAssigned.Count;
                 t!.TechnicianCount = technicianCount;
                 db.Entry(t).State = EntityState.Modified;
@@ -241,11 +278,15 @@ namespace DUT_HelpDesk.Controllers
         //unassign a ticket from a technician
         public static void UnassignTicketTechnician(int id, int techId)
         {
-            TicketTechnician tt = db.TicketTechnicians.Where(x => x.TicketId == id && x.TechnicianId == techId).FirstOrDefault()!;
+            TicketTechnician tt = db.TicketTechnicians
+                .Where(x => x.TicketId == id && x.TechnicianId == techId)
+                .FirstOrDefault()!;
             Ticket t = db.Tickets.Where(x => x.TicketId == id).FirstOrDefault()!;
 
             //check whether ticket will be active or available after unassign
-            List<TicketTechnician> ticketTechnicians = db.TicketTechnicians.Where(x => x.TicketId == id).ToList();
+            List<TicketTechnician> ticketTechnicians = db.TicketTechnicians
+                .Where(x => x.TicketId == id)
+                .ToList();
             bool stillActive = false;
             foreach (TicketTechnician ticketTech in ticketTechnicians)
             {
@@ -260,9 +301,15 @@ namespace DUT_HelpDesk.Controllers
             }
             if (!stillActive)
             {
-                db.TicketStatuses.Add(new TicketStatus() { TicketId = t!.TicketId, StatusId = 1, TimeStamp = DateTime.UtcNow, Status = db.Statuses.Where(x => x.StatusId == 1).FirstOrDefault(), Ticket = t });
+                db.TicketStatuses.Add(new TicketStatus() { TicketId = t!.TicketId, 
+                    StatusId = 1, TimeStamp = DateTime.UtcNow, 
+                    Status = db.Statuses
+                    .Where(x => x.StatusId == 1)
+                    .FirstOrDefault(), Ticket = t });
             }
-            List<TicketTechnician> ticketIsAssigned = db.TicketTechnicians.Where(x => x.TicketId == id && x.IsAssigned == true).ToList();
+            List<TicketTechnician> ticketIsAssigned = db.TicketTechnicians
+                .Where(x => x.TicketId == id && x.IsAssigned == true)
+                .ToList();
             int technicianCount = ticketIsAssigned.Count - 1;
             t!.TechnicianCount = technicianCount;
 
@@ -285,7 +332,9 @@ namespace DUT_HelpDesk.Controllers
             string? token = StateManager.token;
             var userFbId = await auth.GetUserAsync(token);
 
-            var currentUser = db.Users.Where(u => u.FbId.Equals(userFbId.LocalId)).FirstOrDefault();
+            var currentUser = db.Users
+                .Where(u => u.FbId.Equals(userFbId.LocalId))
+                .FirstOrDefault();
             Ticket ticket = new Ticket()
             {
                 //userid 
@@ -299,7 +348,11 @@ namespace DUT_HelpDesk.Controllers
 
             Status? status = db.Statuses.Where(x => x.StatusId == 1).FirstOrDefault();
             List<TicketStatus> ticketStatuses = new List<TicketStatus>();
-            TicketStatus ticketStatus = new TicketStatus() { TicketId = ticket.TicketId, StatusId = status!.StatusId, TimeStamp = DateTime.UtcNow, Status = status, Ticket = ticket };
+            TicketStatus ticketStatus = new TicketStatus() { TicketId = ticket.TicketId, 
+                StatusId = status!.StatusId, 
+                TimeStamp = DateTime.UtcNow, 
+                Status = status, 
+                Ticket = ticket };
             ticketStatuses.Add(ticketStatus);
             ticket.TicketStatuses = ticketStatuses;
             await db.TicketStatuses.AddAsync(ticketStatus);
@@ -315,7 +368,9 @@ namespace DUT_HelpDesk.Controllers
 
                     stream.Seek(0, SeekOrigin.Begin);
 
-                    Ticket[] currentTicket = db.Tickets.Where(t => t == ticket).ToArray();
+                    Ticket[] currentTicket = db.Tickets
+                        .Where(t => t == ticket)
+                        .ToArray();
                     var uploadedFile = new Attachment()
                     {
                         TicketId = currentTicket[0].TicketId,
@@ -371,8 +426,13 @@ namespace DUT_HelpDesk.Controllers
         public static int GetTechnicianClosedTicketCount(int techId)
         {
             using var db = new DutHelpdeskdbContext();
-            List<TicketTechnician> tt = db.TicketTechnicians.Where(x => x.TechnicianId == techId && x.IsAssigned == true).ToList();
-            List<TicketStatus> ts = db.TicketStatuses.Where(x => x.StatusId == 3).ToList();
+            List<TicketTechnician> tt = db.TicketTechnicians
+                .Where(x => x.TechnicianId == techId && 
+                x.IsAssigned == true)
+                .ToList();
+            List<TicketStatus> ts = db.TicketStatuses
+                .Where(x => x.StatusId == 3)
+                .ToList();
             db.Dispose();
             List<TicketStatus> tts = new List<TicketStatus>();
             foreach (TicketTechnician ticketTechnician in tt)
@@ -393,7 +453,10 @@ namespace DUT_HelpDesk.Controllers
         {
             //gets the tickets latest status
             using var db = new DutHelpdeskdbContext();
-            TicketStatus? ts = db.TicketStatuses.Where(x => x.TicketId == ticketID).OrderByDescending(x => x.TimeStamp).FirstOrDefault();
+            TicketStatus? ts = db.TicketStatuses
+                .Where(x => x.TicketId == ticketID)
+                .OrderByDescending(x => x.TimeStamp)
+                .FirstOrDefault();
             db.Dispose();
             if (ts == null) //if no ticket status, ticket is not closed
             {
@@ -441,10 +504,15 @@ namespace DUT_HelpDesk.Controllers
         {
             //gets the tickets latest status
             using var db = new DutHelpdeskdbContext();
-            TicketStatus? ts = db.TicketStatuses.Where(x => x.TicketId == ticketID).OrderByDescending(x => x.TimeStamp).FirstOrDefault();
+            TicketStatus? ts = db.TicketStatuses
+                .Where(x => x.TicketId == ticketID)
+                .OrderByDescending(x => x.TimeStamp)
+                .FirstOrDefault();
             if (ts != null)
             {
-                Status? status = db.Statuses.Where(x => x.StatusId == ts.StatusId).FirstOrDefault();
+                Status? status = db.Statuses
+                    .Where(x => x.StatusId == ts.StatusId)
+                    .FirstOrDefault();
                 db.Dispose();
                 if (status != null && status.Name != null)
                 {
@@ -505,7 +573,8 @@ namespace DUT_HelpDesk.Controllers
         public static List<Ticket> GetTechClosedTickets(int techId)
         {
             using var db = new DutHelpdeskdbContext();
-            List<TicketTechnician> tt = db.TicketTechnicians.Where(x => x.TechnicianId == techId && x.IsAssigned == true).ToList();
+            List<TicketTechnician> tt = db.TicketTechnicians
+                .Where(x => x.TechnicianId == techId && x.IsAssigned == true).ToList();
             List<int?> ticketIds = tt.Select(ttItem => ttItem.TicketId).ToList();
 
             List<Ticket> tickets = db.Tickets
@@ -540,9 +609,12 @@ namespace DUT_HelpDesk.Controllers
             TimeSpan totalDifference = (TimeSpan)timeSpans.Aggregate((x, y) => x + y)!;
             TimeSpan averageDifference = TimeSpan.FromTicks(totalDifference.Ticks / timeSpans.Count);
             string formattedDifference =
-                $"{(averageDifference.Days != 0 ? $"{averageDifference.Days} day{(averageDifference.Days != 1 ? "s" : "")}\n" : "")}" +
-                $"{(averageDifference.Hours != 0 ? $"{averageDifference.Hours} hr{(averageDifference.Hours != 1 ? "s" : "")}\n" : "")}" +
-                $"{(averageDifference.Minutes != 0 ? $"{averageDifference.Minutes} min{(averageDifference.Minutes != 1 ? "s" : "")}\n" : "")}";
+                $"{(averageDifference.Days != 0 ? $"{averageDifference.Days} " +
+                $"day{(averageDifference.Days != 1 ? "s" : "")}\n" : "")}" +
+                $"{(averageDifference.Hours != 0 ? $"{averageDifference.Hours} " +
+                $"hr{(averageDifference.Hours != 1 ? "s" : "")}\n" : "")}" +
+                $"{(averageDifference.Minutes != 0 ? $"{averageDifference.Minutes} " +
+                $"min{(averageDifference.Minutes != 1 ? "s" : "")}\n" : "")}";
             return formattedDifference;
         }
 
@@ -619,7 +691,9 @@ namespace DUT_HelpDesk.Controllers
             double? aggregateRating = 0;
             foreach (var ticket in tickets)
             {
-                Feedback? feedback = db.Feedbacks.Where(x => x.TicketId == ticket.TicketId).FirstOrDefault();
+                Feedback? feedback = db.Feedbacks
+                    .Where(x => x.TicketId == ticket.TicketId)
+                    .FirstOrDefault();
                 if (feedback != null)
                 {
                     feedbacks.Add(feedback);
