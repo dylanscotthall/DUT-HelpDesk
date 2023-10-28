@@ -1,15 +1,15 @@
 ﻿@model DUT_HelpDesk.DatabaseModels.RegisterViewModel
 
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "RegisterTechnician";
 }
 <br />
 <div style="display: flex; justify-content: center; align-items: center;">
-    <div style="background-color: #F1F1F1; padding: 30px; border-radius: 10px; width: 100%; max-width: 500px; padding-inline:80px">
+    <div style="background-color: #F1F1F1; padding: 30px; border-radius: 10px; width: 100%; max-width: 500px; padding-inline: 80px">
         <br/>
-        <h4 style="text-align:center">Register new Account</h4>
+        <h4 style="text-align:center">Register new Technician</h4>
         <br />
-        <form asp-action="Register">
+        <form asp-action="RegisterTechnician">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
@@ -37,8 +37,6 @@
             </div>
         </form>
         <br />
-        <p style="font-size:smaller">Have an account? Login <a asp-controller="Login" asp-action="Login">here</a></p>
-
     </div>
 </div>
 

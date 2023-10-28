@@ -24,15 +24,15 @@
                 @if (Html.Raw(httpContextaccessor.HttpContext.Session.GetString("_UserType")).ToString() == "Technician")
                 {
                     @*Add FAQ*@
-                    <a class="navbar-brand" asp-area="" asp-controller="Technician" asp-action="TechnicianTicketQueue">DUT HelpDesk <sub>Technician</sub></a>
+                    <a class="navbar-brand">DUT HelpDesk  <sub><sub>Technician </sub></sub></a>
                 }
                 else if (Html.Raw(httpContextaccessor.HttpContext.Session.GetString("_UserType")).ToString() == "Student")
                 {
-                    <a class="navbar-brand" asp-area="" asp-controller="User" asp-action="Index">DUT HelpDesk</a>
+                    <a class="navbar-brand">DUT HelpDesk</a>
                 }
                 else if (Html.Raw(httpContextaccessor.HttpContext.Session.GetString("_UserType")).ToString() == "TechnicianLead")
                 {
-                    <a class="navbar-brand" asp-area="" asp-controller="TechnicianLead" asp-action="TechnicianLeadTicketQueue">DUT HelpDesk <sub>Lead Technician</sub></a>
+                    <a class="navbar-brand">DUT HelpDesk <sub><sub>Lead Technician</sub></sub></a>
                 }
                 else
                 {

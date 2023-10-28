@@ -53,10 +53,9 @@ namespace DUT_HelpDesk.Controllers
                     }
                 }
             }
-            catch(FirebaseAuthException ex)
+            catch(FirebaseAuthException)
             {
-                //var firebaseEx = JsonSerializer.Deserialize<FirebaseError>(ex.ResponseData);
-                ModelState.AddModelError(String.Empty, "Invalid Credentials");
+                ModelState.AddModelError(string.Empty, "Invalid Credentials");
                 ViewBag.errors = "Login failed. Please check that your credentials are correct.";
                 return View(model);
             }
@@ -107,10 +106,9 @@ namespace DUT_HelpDesk.Controllers
                     }
                 }
             }
-            catch (FirebaseAuthException ex)
+            catch (FirebaseAuthException)
             {
-                //var firebaseEx = JsonSerializer.Deserialize<FirebaseError>(ex.ResponseData);
-                ModelState.AddModelError(String.Empty, "Registration Unsuccessful");
+                ModelState.AddModelError(string.Empty, "Registration Unsuccessful");
                 return View(model);
             }
             return View();
@@ -118,10 +116,12 @@ namespace DUT_HelpDesk.Controllers
 
         public IActionResult Logout()
         {
+            StateManager.user = null;
+            StateManager.technician = null;
+            StateManager.filteredTickets = null;
+            StateManager.email = null;
             HttpContext.Session.Clear();
             return RedirectToAction("Login");
         }
-
-
     }
 }

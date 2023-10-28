@@ -1,5 +1,6 @@
 using DUT_HelpDesk.DatabaseModels;
 using Firebase.Auth;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.Intrinsics.Arm;
 
@@ -175,7 +176,7 @@ namespace DUT_HelpDesk.Controllers
         //returns a bool to see if a user saved in state is a technician
         public static string? getUserType()
         {
-            return user!.Type;
+            return user?.Type ?? string.Empty;
         }
 
         //returns a technician if the user is already assigned as a technician

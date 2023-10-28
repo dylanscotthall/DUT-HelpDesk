@@ -4,6 +4,14 @@
     ViewData["Title"] = "Information";
 }
 
+<style>
+    @@media print {
+        .hide-in-print {
+            display: none;
+        }
+    }
+</style>
+
 <div style="text-align: center;">
     <h2>Technician Information</h2>
 </div>
@@ -63,7 +71,9 @@
         <input style="width:15%;display:inline;" id="endDate" class="form-control col-sm-5" type="date" />
     }
     <span style="margin-inline: 10px"></span>
-    <input style="width:15%;display:inline;" id="filter" class="form-control col-sm-5" type="button" value="Apply Date Range" onclick="SetSort(startDate.value, endDate.value)" />
+    <div class="hide-in-print">  
+        <input style="width:15%;display:inline;" id="filter" class="form-control col-sm-5" type="button" value="Apply Date Range" onclick="SetSort(startDate.value, endDate.value)" />
+    </div>
 </div>
 <br />
 
@@ -103,7 +113,7 @@
         <th>Date Closed</th>
         <th>Priority</th>
         <th>Rating</th>
-        <th></th>
+        <th class="hide-in-print"></th>
     </tr>
     @if (Model != null)
     {
@@ -140,7 +150,7 @@
                         }
                     }
 
-                    <td>@Html.ActionLink("Details", "TechnicianDashboardDetail", "Technician", new { id=item.TicketId }, null)</td>
+                    <td class="hide-in-print">@Html.ActionLink("Details", "TechnicianDashboardDetail", "Technician", new { id=item.TicketId }, null)</td>
                 </tr>
             }
         }

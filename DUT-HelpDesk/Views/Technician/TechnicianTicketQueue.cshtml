@@ -15,10 +15,18 @@
     </script>
     }
 
+    <style>
+    @@media print {
+        .hide-in-print {
+            display: none;
+        }
+    }
+</style>
 
 <div>
     <h1>Ticket Queue</h1>
     <br />
+    <div class="hide-in-print">
     @Html.DropDownList("Sortby", new SelectListItem[] { new SelectListItem()
     { Text = "Date", Value = "Date" }, new SelectListItem()
     { Text = "Date Down", Value = "Date Down" }, new SelectListItem()
@@ -45,6 +53,8 @@
     { Text = "Closed", Value = "Closed" }, new SelectListItem()
     { Text = "Active", Value = "Active" }}, new {style="width:15%;display:inline;height:37px;border-color:lightgrey;border-radius:3px"})
     <input style="width:15%;display:inline;" id="filter" class="form-control col-sm-5" type="button" value="Filter" onclick="SetSort(Sortby.value, startDate.value, endDate.value, Status.value)" />
+    </div>
+    <br />
     <br />
     <table class="table table-responsive table-hover">
         <tr>
@@ -54,8 +64,8 @@
             <th>Priority</th>
             <th>Status</th>
             <th>Technicians</th>
-            <th></th>
-            <th></th>
+            <th class ="hide-in-print"></th>
+            <th class="hide-in-print"></th>
         </tr>
         @if (Model != null)
         {
@@ -89,24 +99,24 @@
                         {
                             <td>@Html.DisplayFor(modelItem => item.TechnicianCount)</td>
                         }
-                        <td>@Html.ActionLink("Details", "TechViewTicket", "Technician", new { id=item.TicketId }, null)</td>
+                        <td class="hide-in-print">@Html.ActionLink("Details", "TechViewTicket", "Technician", new { id=item.TicketId }, null)</td>
                         @{
                             if(ticketStatus != "Closed")
                             {
                                 if (item.TicketTechnicians.Where(x => x.TechnicianId == ViewBag.technician.TechnicianId && x.IsAssigned == true).FirstOrDefault() != null)
                                 {
-                                    <td>@Html.ActionLink("Unaccept", "UnassignTicketToTechnicianFromTicketQueue", "Technician", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId }, new { style = "color: #f00;" })</td>
+                                    <td class="hide-in-print">@Html.ActionLink("Unaccept", "UnassignTicketToTechnicianFromTicketQueue", "Technician", new { id=item.TicketId, techId=ViewBag.technician.TechnicianId }, new { style = "color: #f00;" })</td>
                                 }
                                 else
                                 {
-                                    <td>
+                                    <td class="hide-in-print">
                                         @Html.ActionLink("Accept", "AssignTicketToTechnician", "Technician", new { id = item.TicketId, techId = ViewBag.technician.TechnicianId }, new { style = "color: #00c20d;" })
                                     </td>
                                 }
                             }
                             else
                             {
-                                <td></td>
+                                <td class="hide-in-print"></td>
                             }
                         }
                     </tr>
@@ -114,9 +124,6 @@
             }
         }
     </table>
-    <div>
-        <a asp-controller="Technician" asp-action="TechnicianTicketQueueReport">Export to PDF</a>
-    </div>
 </div>
 
 
