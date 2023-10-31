@@ -369,6 +369,7 @@ namespace DUT_HelpDesk.Controllers
             await db.Tickets.AddAsync(ticket);
             await db.SaveChangesAsync();
 
+            Email.CreatedTicketMailAsync(userFbId.Email,ticket.TicketId);
             if (model.File != null)
             {
 
