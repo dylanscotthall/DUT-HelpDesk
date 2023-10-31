@@ -22,6 +22,14 @@ namespace DUT_HelpDesk.DatabaseModels{
 
         public int id { get; set; }
 
+        public string? subject { get; set; }
+
+        public string? body { get; set; }
+
+        public DateTime? openDate { get; set; }
+
+        public string? priority { get; set; }
+
         [Required]
         public Priority? Priority { get; set; }
 

@@ -172,6 +172,11 @@
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <label asp-for="forwardEmail">Email:</label>
                             <input asp-for="forwardEmail" class="form-control" maxlength="100" />
+                            <input asp-for="id" type="hidden" value="@Model.ticket.TicketId" />
+                            <input asp-for="openDate" type="hidden" value="@Model.ticket.DateCreated"/>
+                            <input asp-for="priority" type="hidden" value="@Model.ticket.Priority" />
+                            <input asp-for="subject" type="hidden" value="@Model.ticket.Subject"/>
+                            <input asp-for="body" type="hidden" value="@Model.ticket.QueryBody"/>
                             <button style="margin-top: 10px" type="submit" class="btn btn-primary">Forward</button>
                         </div>
                     </form>

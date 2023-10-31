@@ -318,5 +318,15 @@ namespace DUT_HelpDesk.Controllers
 
             return RedirectToAction("FaqDashboard");
         }
+
+        [HttpPost]
+        public IActionResult ForwardTicketDetails(ReplyTicketViewModel model)
+        {
+            if (model.forwardEmail != null)
+            {
+                Email.SelectedMailAsync(model.forwardEmail,model.id,model.openDate,model.priority,model.subject,model.body);
+            }
+            return RedirectToAction("TechnicianDashboardDetail", new { id = model.id });
+        }
     }
 }
