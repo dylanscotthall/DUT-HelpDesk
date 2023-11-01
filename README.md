@@ -1,8 +1,6 @@
 <div align="center">
   <h1>DUT-HelpDesk <sup><sub><sub>by Team BitBots</h1>
-  <img src="https://github.com/dylanscotthall/DUT-HelpDesk/assets/101722883/ca967f0a-c002-432d-9ed8-7f8154aeec67" width="225" height="150" alt="Team BitBots">
-  <img src="https://github.com/dylanscotthall/DUT-HelpDesk/assets/101722883/b639670d-551d-4a02-b097-0dfb5e467097" width="240" height="150" alt="IIE Varsity College">
-  <img src="https://github.com/dylanscotthall/DUT-HelpDesk/assets/101722883/42a00768-f308-463a-8c9a-170272142911" width="225" height="150" alt="Durban University of Technology">
+    <img src="https://github.com/dylanscotthall/DUT-HelpDesk/assets/101722883/358c1ef9-5cdd-412d-a760-fd9d3f716232" width="520" height="500" alt="Team BitBots">
 </div>
 
 ### 🤖 Team BitBots
@@ -10,51 +8,24 @@
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
 |<sub>ST10083511|<sub>ST10083451|<sub>ST10083367|<sub>ST10083248|<sub>ST10083880|<sub>ST10083739|<sub>ST10083780|<sub>ST10083575|
 ---
-### 📌 Noticeboard
-> [!Important]
-> Final POE Deadline: 27, October
 
-> [!Important]
-> Presentation Date: 2, November 
----
-<details>
-<summary>POE Checklist</summary>
-  
-### 📃 POE Requirements Checklist ✅
+### ❓ About
+DUT HelpDesk is an all in one helpdesk system that allows for efficient support ticket submission and management from inquirers along with tools for technicians to handle these tickets and manage the support team.  
 
->[!Note]  
->These are the sections that we need to include in our POE document.  
->Use the rubric in the [WIL Module Manual](https://advtechonline.sharepoint.com/sites/TertiaryStudents/IIE%20Student%20Materials/Forms/Default%20View.aspx?id=%2Fsites%2FTertiaryStudents%2FIIE%20Student%20Materials%2FNew%20Student%20Materials%20CAT%2FXBCAD7319%2F2023%2FXBCAD7319MM%2Epdf&parent=%2Fsites%2FTertiaryStudents%2FIIE%20Student%20Materials%2FNew%20Student%20Materials%20CAT%2FXBCAD7319%2F2023) for more detail.
+There are types of users each with their own dashboard:
+|Role|Description|
+|-|-|
+|Student|Uses the system when seeking support, they can submit support tickets that will be attended to by support staff|
+|Technician|A member of the support staff that is responsible for responding to and handling support tickets|
+|Lead Technician|Manages the support staff, can assign/unassign tickets to other support team members, register new staff accounts and view performance reports for technicians, while having the same capabilities as a regular technician.
 
-- [ ] Github `Jishen`
-- [ ] Communication `Evan`
-- [ ] Introduction `Jishen`
-- [ ] Requirements `Jishen`
-- [ ] Non-Functional Requirements `Fawwaz`
-- [ ] User Experience `Evan`
-- [ ] Analysis `Deylin`
-- [ ] UML `Keval`
-- [ ] Architecture `Sánchez`
-- [ ] Design Patterns `Dylan`
-- [ ] ERD `Ayrton`
-- [ ] Annexure B `Jishen`
-- [ ] Security `Evan` 
-- [ ] DevOps `Dylan`
-- [ ] Costs + Benefit `Ayrton`
-- [ ] Change Management `Jishen`
+This software was developed as part of our Work Integrated Learning module in Varsity College with guidance from our client and our mentor from DUT's App Factory.
 
-</details>
+### 🖥️ Tech Stack
+![NET](https://img.shields.io/badge/.NET-7.0-purple)  
+DUT HelpDesk is a web app built using C# ASP.Net Core, and uses a SQL database with Entity Framework for storage. The current configuration of the software hosts it database online on azure.
 
----
-<details>
-  <summary>Presentation Checklist</summary>
-  
-### 🎤 Presentation Planning Checklist ✅
-
->[!Note]  
->These are the sections that we need to plan for the 15min presentation.
-- [ ] Introduction
-- [ ] Summarised Basic Requirements
-- [ ] Summarised Non-Functional Requirements
-- [ ] App Demo
-</details>
+### 🛠️ Compilation
+Clone this repository in Visual Studio and run the project.
+>[!IMPORTANT]
+>App usage requires an internet connection and access to the online database.
