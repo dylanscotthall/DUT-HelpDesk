@@ -128,15 +128,27 @@
                     <td>@string.Format("{0:dd, MMM yyyy - HH:mm}", item.DateClosed)</td>
                     @if (item.Priority.Equals("Low"))
                     {
-                        <td style="color: #00c20d">@Html.DisplayTextFor(model => item.Priority)</td>
+                        <td>
+                            <span style="background-color: #00c20d; color: white; padding: 4px 8px; border-radius: 10px;">
+                                @Html.DisplayTextFor(model => item.Priority)
+                            </span>
+                        </td>
                     }
                     @if (item.Priority.Equals("Normal"))
                     {
-                        <td style="color: darkorange">@Html.DisplayTextFor(model => item.Priority)</td>
+                        <td>
+                            <span style="background-color: darkorange; color: white; padding: 4px 8px; border-radius: 10px;">
+                                @Html.DisplayTextFor(model => item.Priority)
+                            </span>
+                        </td>
                     }
                     @if (item.Priority.Equals("High"))
                     {
-                        <td style="color: red">@Html.DisplayTextFor(model => item.Priority)</td>
+                        <td>
+                            <span style="background-color: red; color: white; padding: 4px 8px; border-radius: 10px;">
+                                @Html.DisplayTextFor(model => item.Priority)
+                            </span>
+                        </td>
                     }
                     @{
                         Feedback? feedback = StateManager.GetTicketFeedback(item.TicketId);

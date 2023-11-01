@@ -4,25 +4,26 @@
 }
 
 <div>
-    <h1>FAQ</h1>
+    <h1 style="text-align: center">FAQ</h1>
     <br />
-    <table class="table table-responsive table-hover">
-        <tr>
-            <th>Question</th>
-            <th>Anwser</th>
-        </tr>
-        <br />
-        @foreach (var item in Model)
+    @foreach (var item in Model)
+    {
+        @if (item != null)
         {
-            @if (item != null)
-            {
-                <tr>
-                    <td>@Html.DisplayFor(modelItem => item.Question)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Answer)</td>
-                  
-                  
-                </tr>
-            }
+            <div style="background-color: #F1F1F1; padding: 10px; border-radius: 10px;">
+                <table class="table">
+                    <tr>
+                    <th style="width:2%">Q:</th>
+                    <td style="width:90%"><strong>@Html.DisplayFor(modelItem => item.Question)</strong></td>
+                    </tr>
+                    <tr>
+                        <th style="width:2%">A:</th>
+                        <td style="width:90%">@Html.DisplayFor(modelItem => item.Answer)</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+            <br />
         }
-    </table>
+    }
 </div>
