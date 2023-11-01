@@ -40,15 +40,27 @@
                 <th>Priority</th>
                 @if (Model.ticket.Priority.Equals("Low"))
                 {
-                    <td style="color: #00c20d">@Html.DisplayTextFor(model => model.ticket.Priority)</td>
+                    <td>
+                        <span style="background-color: #00c20d; color: white; padding: 4px 8px; border-radius: 10px;">
+                            @Html.DisplayTextFor(model => model.ticket.Priority)
+                        </span>
+                    </td>
                 }
                 @if (Model.ticket.Priority.Equals("Normal"))
                 {
-                    <td style="color: darkorange">@Html.DisplayTextFor(model => model.ticket.Priority)</td>
+                    <td>
+                        <span style="background-color: darkorange; color: white; padding: 4px 8px; border-radius: 10px;">
+                            @Html.DisplayTextFor(model => model.ticket.Priority)
+                        </span>
+                    </td>
                 }
                 @if (Model.ticket.Priority.Equals("High"))
                 {
-                    <td style="color: red">@Html.DisplayTextFor(model => model.ticket.Priority)</td>
+                    <td>
+                        <span style="background-color: red; color: white; padding: 4px 8px; border-radius: 10px;">
+                            @Html.DisplayTextFor(model => model.ticket.Priority)
+                        </span>
+                    </td>
                 }
             </tr>
             <tr>

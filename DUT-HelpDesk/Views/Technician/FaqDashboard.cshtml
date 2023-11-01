@@ -15,25 +15,28 @@
     <br />
     <a asp-controller="Technician" asp-action="TechCreateFAQ">Create FAQ</a>
     <br />
-    <table class="table table-responsive table-hover">
-        <tr>
-            <th>Question</th>
-            <th>Answer</th>
-            <th></th>
-        </tr>
-        <br />
-        @foreach (var item in Model)
+    <br />
+    @foreach (var item in Model)
+    {
+        @if (item != null)
         {
-            @if (item != null)
-            {
-                <tr>
-                    <td>@Html.DisplayFor(modelItem => item.Question)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Answer)</td>
-                    @*each entry*@
-                    <td><a asp-action="Delete" asp-route-id="@item.FaqId">Delete</a></td>
+            <div style="background-color: #F1F1F1; padding: 10px; border-radius: 10px;">
+                <table class="table">
+                    <tr>
+                        <th style="width:2%">Q:</th>
+                        <td style ="width:90%"><strong>@Html.DisplayFor(modelItem => item.Question)</strong></td>
 
-                </tr>
-            }
+                        <td><a asp-action="Delete" asp-route-id="@item.FaqId" style="color: red;">Delete</a></td>
+
+                    </tr>
+                    <tr>
+                        <th style="width:2%">A:</th>
+                        <td style="width:90%">@Html.DisplayFor(modelItem => item.Answer)</td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+            <br />
         }
-    </table>
+    }
 </div>
